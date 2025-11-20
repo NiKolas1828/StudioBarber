@@ -16,7 +16,6 @@ import com.dsmovil.studiobarber.R // Make sure to place the logo in your drawabl
 import androidx.compose.ui.res.colorResource
 
 
-
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
@@ -27,7 +26,7 @@ fun RegisterScreen(
     if (state.success) {
         onRegisterSuccess()
     }
-    Column (
+    Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(id = R.color.background_color)), // Set your desired background color
@@ -66,7 +65,8 @@ fun RegisterScreen(
                     unfocusedLabelColor = Color.LightGray,
                     focusedPlaceholderColor = Color.LightGray,
                     unfocusedPlaceholderColor = Color.Gray
-                ))
+                )
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -87,7 +87,8 @@ fun RegisterScreen(
                     unfocusedLabelColor = Color.LightGray,
                     focusedPlaceholderColor = Color.LightGray,
                     unfocusedPlaceholderColor = Color.Gray
-                ))
+                )
+            )
             Spacer(modifier = Modifier.height(16.dp))
 
 
@@ -108,7 +109,8 @@ fun RegisterScreen(
                     unfocusedLabelColor = Color.LightGray,
                     focusedPlaceholderColor = Color.LightGray,
                     unfocusedPlaceholderColor = Color.Gray
-                ))
+                )
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -129,7 +131,8 @@ fun RegisterScreen(
                     unfocusedLabelColor = Color.LightGray,
                     focusedPlaceholderColor = Color.LightGray,
                     unfocusedPlaceholderColor = Color.Gray
-                ))
+                )
+            )
 
             Spacer(modifier = Modifier.height(16.dp))
 
@@ -154,7 +157,6 @@ fun RegisterScreen(
                 )
             )
             Spacer(modifier = Modifier.height(16.dp))
-
 
 
             // confirmPassword text field
@@ -188,7 +190,8 @@ fun RegisterScreen(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.button_color), // Use colorResource to get the color
                     contentColor = Color.White // The color for the text inside the button
-                )            ) {
+                )
+            ) {
                 if (state.loading) {
                     CircularProgressIndicator(modifier = Modifier.size(18.dp))
                 } else {
