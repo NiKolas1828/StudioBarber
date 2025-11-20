@@ -1,21 +1,18 @@
 package com.dsmovil.studiobarber.ui.screens.register
+
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
-import com.dsmovil.studiobarber.di.AppModule.loginUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
-import com.dsmovil.studiobarber.ui.screens.register.RegisterUiState
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class RegisterViewModel(
-    private val registerUseCase: RegisterUseCase
-) : ViewModel() {
-
+@HiltViewModel
+class RegisterViewModel @Inject constructor(private val registerUseCase: RegisterUseCase) : ViewModel() {
     var uiState by mutableStateOf(RegisterUiState())
         private set
 

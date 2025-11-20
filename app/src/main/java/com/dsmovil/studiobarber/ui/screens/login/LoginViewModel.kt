@@ -6,15 +6,13 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
-import com.dsmovil.studiobarber.di.AppModule.loginUseCase
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-
-class LoginViewModel(
-    private val loginUseCase: LoginUseCase
-) : ViewModel() {
-
+@HiltViewModel
+class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
     var uiState by mutableStateOf(LoginUiState())
         private set
 

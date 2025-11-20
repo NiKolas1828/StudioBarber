@@ -4,28 +4,31 @@ import com.dsmovil.studiobarber.data.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
-import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
-import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
+@Module
+@InstallIn(SingletonComponent::class)
 object AppModule {
 
-    val authRepository: AuthRepository by lazy {
-        AuthRepositoryImpl()
+    @Provides
+    @Singleton
+    fun provideAuthRepository(): AuthRepository {
+        return AuthRepositoryImpl()
     }
 
-    val loginUseCase: LoginUseCase by lazy {
-        LoginUseCase(authRepository)
+    @Provides
+    @Singleton
+    fun provideLoginUseCase(repository: AuthRepository): LoginUseCase {
+        return LoginUseCase(repository)
     }
 
-    val registerUseCase: RegisterUseCase by lazy {
-        RegisterUseCase(authRepository)
-    }
-
-    fun provideLoginViewModel(): LoginViewModel {
-        return LoginViewModel(loginUseCase)
-    }
-
-    fun provideRegisterViewModel(): RegisterViewModel {
-        return RegisterViewModel(registerUseCase)
+    @Provides
+    @Singleton
+    fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
+        return RegisterUseCase(repository)
     }
 }

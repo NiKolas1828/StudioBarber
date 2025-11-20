@@ -2,13 +2,11 @@ package com.dsmovil.studiobarber.data.repositories
 
 import com.dsmovil.studiobarber.domain.models.User
 
-import android.util.Log
-
 class AuthRepositoryImpl : AuthRepository {
 
-    override suspend fun login(email: String, password: String): Result<User> {
-        return if (email == "test@test.com" && password == "123456") {
-            println("Login successful for user: $email")
+    override suspend fun login(username: String, password: String): Result<User> {
+        return if (username == "test@test.com" && password == "123456") {
+            println("Login successful for user: $username")
             Result.success(User("1", "Anderson"))
         } else {
             Result.failure(Exception("Invalid credentials"))

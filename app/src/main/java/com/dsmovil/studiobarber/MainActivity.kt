@@ -4,26 +4,21 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
-import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
-import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
 import com.dsmovil.studiobarber.ui.screens.home.HomeScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
-import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
-import com.dsmovil.studiobarber.ui.screens.login.LoginViewModelFactory
-import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -52,9 +47,7 @@ class MainActivity : ComponentActivity() {
                     // Pantalla de LOGIN real
                     // ----------------------------
                     composable("login") {
-                        val loginViewModel: LoginViewModel = viewModel(
-                            factory = LoginViewModelFactory()
-                        )
+                        val loginViewModel: LoginViewModel = hiltViewModel()
 
                         LoginScreen(
                             viewModel = loginViewModel,
@@ -70,9 +63,7 @@ class MainActivity : ComponentActivity() {
                     // Pantalla de REGISTRO
                     // ----------------------------
                     composable("register") {
-                        val registerViewModel: RegisterViewModel = viewModel(
-                            factory = RegisterViewModelFactory()
-                        )
+                        val registerViewModel: RegisterViewModel = hiltViewModel()
 
                         RegisterScreen(
                             viewModel = registerViewModel,
