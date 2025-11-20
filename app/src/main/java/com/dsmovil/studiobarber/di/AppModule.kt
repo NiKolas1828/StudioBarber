@@ -4,6 +4,7 @@ import com.dsmovil.studiobarber.data.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
+import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -12,23 +13,22 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
-
-    @Provides
+abstract class AppModule {
+    @Binds
     @Singleton
-    fun provideAuthRepository(): AuthRepository {
-        return AuthRepositoryImpl()
-    }
+    abstract fun bindAuthRepository(authRepositoryImpl: AuthRepositoryImpl) : AuthRepository
 
-    @Provides
-    @Singleton
-    fun provideLoginUseCase(repository: AuthRepository): LoginUseCase {
-        return LoginUseCase(repository)
-    }
+    companion object {
+        @Provides
+        @Singleton
+        fun provideLoginUseCase(repository: AuthRepository): LoginUseCase {
+            return LoginUseCase(repository)
+        }
 
-    @Provides
-    @Singleton
-    fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
-        return RegisterUseCase(repository)
+        @Provides
+        @Singleton
+        fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
+            return RegisterUseCase(repository)
+        }
     }
 }
