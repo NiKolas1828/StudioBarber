@@ -107,7 +107,7 @@ private fun AdminToolsSection(
             title = "Servicios",
             description = "Accede al listado de servicios en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_services),
-            iconColor = Color(0xFF03A9F4),
+            iconColor = Color(R.color.icon_color_blue),
             onClick = onNavigateToServices
         )
 
@@ -117,7 +117,7 @@ private fun AdminToolsSection(
             title = "Barberos",
             description = "Accede al listado de barberos en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_barber_pole),
-            iconColor = Color(0xFFF44336),
+            iconColor = Color(R.color.icon_color_red),
             onClick = onNavigateToBarbers
         )
 
@@ -127,7 +127,7 @@ private fun AdminToolsSection(
             title = "Reservas",
             description = "Accede al listado de reservas en donde podrás ver información detallada de cada una",
             icon = ImageVector.vectorResource(id = R.drawable.ic_reservations),
-            iconColor = Color(0xFF03A9F4),
+            iconColor = Color(R.color.icon_color_blue),
             onClick = onNavigateToReservations
         )
     }
@@ -141,7 +141,7 @@ private fun AdminLogoutButton(
     Icon(
         imageVector = Icons.AutoMirrored.Filled.ExitToApp,
         contentDescription = "Cerrar Sesión",
-        tint = Color(0xFFF44336),
+        tint = Color(R.color.icon_color_red),
         modifier = modifier
             .size(40.dp)
             .clickable { onClick() }
