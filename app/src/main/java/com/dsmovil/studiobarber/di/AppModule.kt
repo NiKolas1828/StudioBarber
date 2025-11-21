@@ -3,6 +3,7 @@ package com.dsmovil.studiobarber.di
 import com.dsmovil.studiobarber.data.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
+import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
 import dagger.Binds
 import dagger.Module
@@ -29,6 +30,12 @@ abstract class AppModule {
         @Singleton
         fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
             return RegisterUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideLogoutUseCase(repository: AuthRepository): LogoutUseCase {
+            return LogoutUseCase(repository)
         }
     }
 }
