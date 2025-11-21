@@ -11,5 +11,6 @@
     <color name="button_color">#12ACE1</color> <!-- Blue color for buttons -->
     <color name="text_color">#FFFFFF</color> <!-- White color for text -->
     <color name="error_color">#D32F2F</color> <!-- Red color for errors -->
-
+    <color name="icon_color_blue">#03A9F4</color>
+    <color name="icon_color_red">#F44336</color>
 </resources>
