@@ -8,6 +8,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
+import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
@@ -30,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "auth"
+                    startDestination = "admin_home"
                 ) {
 
                     // ----------------------------
@@ -80,6 +82,28 @@ class MainActivity : ComponentActivity() {
                     // ----------------------------
                     composable("home") {
                         HomeScreen()
+                    }
+
+                    composable("admin_home") {
+                        val adminViewModel: AdminDashboardViewModel = hiltViewModel()
+
+                        AdminDashboardScreen(
+                            viewModel = adminViewModel,
+                            onNavigateToServices = {
+                                // TODO: ruta para ir a los servicios
+                            },
+                            onNavigateToBarbers = {
+                                // TODO: ruta para ir a los barberos
+                            },
+                            onNavigateToReservations = {
+                                // TODO: ruta para ir a las reservas
+                            },
+                            onLogout = {
+                                navController.navigate("auth") {
+                                    popUpTo("admin_home") {inclusive = true}
+                                }
+                            }
+                        )
                     }
                 }
             }
