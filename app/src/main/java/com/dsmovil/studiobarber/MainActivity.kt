@@ -100,7 +100,7 @@ class MainActivity : ComponentActivity() {
                             },
                             onLogout = {
                                 navController.navigate("auth") {
-                                    popUpTo("admin_home") {inclusive = true}
+                                    popUpTo("admin_home") { inclusive = true }
                                 }
                             }
                         )
