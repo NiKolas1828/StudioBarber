@@ -1,6 +1,5 @@
 package com.dsmovil.studiobarber.ui.screens.admin.home
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -8,12 +7,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ExitToApp
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -107,7 +106,7 @@ private fun AdminToolsSection(
             title = "Servicios",
             description = "Accede al listado de servicios en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_services),
-            iconColor = Color(R.color.icon_color_blue),
+            iconColor = colorResource(R.color.icon_color_blue),
             onClick = onNavigateToServices
         )
 
@@ -117,7 +116,7 @@ private fun AdminToolsSection(
             title = "Barberos",
             description = "Accede al listado de barberos en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_barber_pole),
-            iconColor = Color(R.color.icon_color_red),
+            iconColor = colorResource(R.color.icon_color_red),
             onClick = onNavigateToBarbers
         )
 
@@ -127,7 +126,7 @@ private fun AdminToolsSection(
             title = "Reservas",
             description = "Accede al listado de reservas en donde podrás ver información detallada de cada una",
             icon = ImageVector.vectorResource(id = R.drawable.ic_reservations),
-            iconColor = Color(R.color.icon_color_blue),
+            iconColor = colorResource(R.color.icon_color_blue),
             onClick = onNavigateToReservations
         )
     }
@@ -138,12 +137,14 @@ private fun AdminLogoutButton(
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {
-    Icon(
-        imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-        contentDescription = "Cerrar Sesión",
-        tint = Color(R.color.icon_color_red),
+    IconButton(
+        onClick = onClick,
         modifier = modifier
-            .size(40.dp)
-            .clickable { onClick() }
-    )
+    ) {
+        Icon(
+            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
+            contentDescription = "Cerrar Sesión",
+            tint = colorResource(R.color.icon_color_red),
+        )
+    }
 }
