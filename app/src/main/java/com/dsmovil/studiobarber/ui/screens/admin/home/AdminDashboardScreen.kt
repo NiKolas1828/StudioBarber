@@ -9,10 +9,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.ui.components.DashboardCard
+import com.dsmovil.studiobarber.ui.components.LogoutButton
 
 @Composable
 fun AdminDashboardScreen(
@@ -61,7 +58,7 @@ fun AdminDashboardScreen(
                 Spacer(modifier = Modifier.height(80.dp))
             }
 
-            AdminLogoutButton(
+            LogoutButton(
                 modifier = Modifier.align(Alignment.BottomStart),
                 onClick = {
                     viewModel.onLogout { onLogout() }
@@ -128,23 +125,6 @@ private fun AdminToolsSection(
             icon = ImageVector.vectorResource(id = R.drawable.ic_reservations),
             iconColor = colorResource(R.color.icon_color_blue),
             onClick = onNavigateToReservations
-        )
-    }
-}
-
-@Composable
-private fun AdminLogoutButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-            contentDescription = "Cerrar Sesión",
-            tint = colorResource(R.color.icon_color_red),
         )
     }
 }
