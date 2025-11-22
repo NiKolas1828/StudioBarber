@@ -1,11 +1,12 @@
 package com.dsmovil.studiobarber.ui.screens.admin.barbers
 
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.usecases.DeleteBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.UpdateBarberUseCase
+import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -17,8 +18,9 @@ import javax.inject.Inject
 class ManageBarbersViewModel @Inject constructor(
     private val getBarbersUseCase: GetBarbersUseCase,
     private val deleteBarberUseCase: DeleteBarberUseCase,
-    private val updateBarberUseCase: UpdateBarberUseCase
-) : ViewModel() {
+    private val updateBarberUseCase: UpdateBarberUseCase,
+    logoutUseCase: LogoutUseCase
+) : BaseAdminViewModel(logoutUseCase) {
     private val _uiState = MutableStateFlow<ManageBarbersUiState>(ManageBarbersUiState.Loading)
     val uiState: StateFlow<ManageBarbersUiState> = _uiState.asStateFlow()
 

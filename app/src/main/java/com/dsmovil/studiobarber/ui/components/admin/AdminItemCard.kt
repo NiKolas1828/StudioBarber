@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.components
+package com.dsmovil.studiobarber.ui.components.admin
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -26,6 +26,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.ui.components.ActionButtons
 
 @Composable
 fun AdminItemCard(

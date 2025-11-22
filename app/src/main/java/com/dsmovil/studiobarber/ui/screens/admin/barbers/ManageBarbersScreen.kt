@@ -19,11 +19,9 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -31,33 +29,31 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Barber
-import com.dsmovil.studiobarber.ui.components.AdminEditableCard
-import com.dsmovil.studiobarber.ui.components.AdminItemCard
+import com.dsmovil.studiobarber.ui.components.admin.AdminEditableCard
+import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
+import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 
 @Composable
 fun ManageBarbersScreen(
     viewModel: ManageBarbersViewModel,
-    onNavigateBack: () -> Unit
+    onNavigateBack: () -> Unit,
+    onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        containerColor = colorResource(id = R.color.background_color),
+    AdminScreenLayout(
+        viewModel = viewModel,
         floatingActionButton = {
-            AddBarberFab(onClick = {})
+            AddBarberFab(modifier = Modifier.padding(bottom = 60.dp), onClick = {})
         },
-        floatingActionButtonPosition = FabPosition.Center
-    ) { paddingValues ->
+        onLogoutSuccess = onLogout
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 24.dp)
         ) {
             ManageBarbersHeader(onNavigateBack = onNavigateBack)
 
@@ -195,8 +191,8 @@ private fun SuccessView(
 }
 
 @Composable
-private fun AddBarberFab(onClick: () -> Unit) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun AddBarberFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = modifier) {
         FloatingActionButton(
             onClick = onClick,
             containerColor = Color.White,
