@@ -1,6 +1,6 @@
 package com.dsmovil.studiobarber.domain.usecases
 
-import com.dsmovil.studiobarber.data.repositories.AuthRepository
+import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import com.dsmovil.studiobarber.domain.models.User
 
 
