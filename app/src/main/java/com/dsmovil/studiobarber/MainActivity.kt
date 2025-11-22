@@ -8,6 +8,8 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
+import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
@@ -84,6 +86,7 @@ class MainActivity : ComponentActivity() {
                         HomeScreen()
                     }
 
+                    // Pantalla ADMIN HOME
                     composable("admin_home") {
                         val adminViewModel: AdminDashboardViewModel = hiltViewModel()
 
@@ -93,7 +96,7 @@ class MainActivity : ComponentActivity() {
                                 // TODO: ruta para ir a los servicios
                             },
                             onNavigateToBarbers = {
-                                // TODO: ruta para ir a los barberos
+                                navController.navigate("admin_barbers")
                             },
                             onNavigateToReservations = {
                                 // TODO: ruta para ir a las reservas
@@ -104,6 +107,12 @@ class MainActivity : ComponentActivity() {
                                 }
                             }
                         )
+                    }
+
+                    composable("admin_barbers") {
+                        val barbersViewModel: ManageBarbersViewModel = hiltViewModel()
+
+                        ManageBarbersScreen(viewModel = barbersViewModel, onNavigateBack = { navController.popBackStack() })
                     }
                 }
             }
