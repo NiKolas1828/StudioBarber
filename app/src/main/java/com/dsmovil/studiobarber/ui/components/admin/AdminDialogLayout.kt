@@ -59,7 +59,12 @@ fun AdminDialogLayout(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                BarberDialogButtons(onDismiss = onDismiss, onConfirm = onConfirm, confirmButtonText = confirmButtonText, cancelButtonText = cancelButtonText)
+                BarberDialogButtons(
+                    onDismiss = onDismiss,
+                    onConfirm = onConfirm,
+                    confirmButtonText = confirmButtonText,
+                    cancelButtonText = cancelButtonText
+                )
             }
         }
     }

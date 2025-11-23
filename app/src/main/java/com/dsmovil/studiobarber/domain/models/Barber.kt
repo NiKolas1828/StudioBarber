@@ -1,6 +1,6 @@
 package com.dsmovil.studiobarber.domain.models
 
-data class Barber (
+data class Barber(
     val id: Long,
     val name: String,
     val email: String,

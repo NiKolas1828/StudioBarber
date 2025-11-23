@@ -34,7 +34,8 @@ fun CustomSnackbarHost(
     ) { data ->
         val isError = data.visuals.actionLabel == "ERROR_TYPE"
 
-        val containerColor = if (isError) colorResource(id = R.color.message_error) else colorResource(id = R.color.message_success)
+        val containerColor =
+            if (isError) colorResource(id = R.color.message_error) else colorResource(id = R.color.message_success)
 
         Surface(
             modifier = Modifier

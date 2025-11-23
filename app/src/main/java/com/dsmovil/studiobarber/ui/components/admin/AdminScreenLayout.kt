@@ -35,10 +35,15 @@ fun AdminScreenLayout(
         snackbarHost = snackbarHost
     ) { paddingValues ->
         Column(
-            modifier = modifier.fillMaxSize().padding(paddingValues).padding(16.dp)
+            modifier = modifier
+                .fillMaxSize()
+                .padding(paddingValues)
+                .padding(16.dp)
         ) {
             Box(
-                modifier = Modifier.weight(1f).fillMaxWidth()
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxWidth()
             ) {
                 content()
             }

@@ -73,7 +73,10 @@ fun ManageBarbersScreen(
     AdminScreenLayout(
         viewModel = viewModel,
         floatingActionButton = {
-            AddBarberFab(modifier = Modifier.padding(bottom = 16.dp), onClick = viewModel::openAddDialog)
+            AddBarberFab(
+                modifier = Modifier.padding(bottom = 16.dp),
+                onClick = viewModel::openAddDialog
+            )
         },
         onLogoutSuccess = onLogout,
         snackbarHost = {
@@ -228,7 +231,10 @@ private fun AddBarberFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-private fun BarberSnackbar(viewModel: ManageBarbersViewModel, snackbarHostState: SnackbarHostState) {
+private fun BarberSnackbar(
+    viewModel: ManageBarbersViewModel,
+    snackbarHostState: SnackbarHostState
+) {
     LaunchedEffect(Unit) {
         viewModel.messageChannel.collectLatest { uiMessage ->
             snackbarHostState.showSnackbar(
