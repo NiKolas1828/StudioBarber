@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.client.home
+package com.dsmovil.studiobarber.ui.screens.client.home
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn

@@ -5,10 +5,12 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.dsmovil.studiobarber.ui.client.home.ClientHomeScreen
+import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
+import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
@@ -16,6 +18,7 @@ import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
+import com.dsmovil.studiobarber.ui.screens.home.HomeScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +35,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "client_home"
+                    startDestination = "admin_home"
                 ) {
 
                     // ----------------------------
@@ -54,7 +57,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             viewModel = loginViewModel,
                             onLoginSuccess = {
-                                navController.navigate("client_home") {
+                                navController.navigate("home") {
                                     popUpTo("auth") { inclusive = true }
                                 }
                             }
@@ -70,24 +73,21 @@ class MainActivity : ComponentActivity() {
                         RegisterScreen(
                             viewModel = registerViewModel,
                             onRegisterSuccess = {
-                                navController.navigate("client_home") {
+                                navController.navigate("home") {
                                     popUpTo("auth") { inclusive = true }
                                 }
                             }
                         )
                     }
 
-                    composable("client_home") {
-                        ClientHomeScreen(
-                            onNavigateToClientReservarionts = {
-                                // TODO: ruta para ir a las reservas del cliente
-                            },
-                            onContinueClick = {
-                                // TODO: ruta para continuar con la reserva
-                            }
-                        )
+                    // ----------------------------
+                    // Pantalla HOME
+                    // ----------------------------
+                    composable("home") {
+                        HomeScreen()
                     }
 
+                    // Pantalla ADMIN HOME
                     composable("admin_home") {
                         val adminViewModel: AdminDashboardViewModel = hiltViewModel()
 
@@ -97,20 +97,37 @@ class MainActivity : ComponentActivity() {
                                 // TODO: ruta para ir a los servicios
                             },
                             onNavigateToBarbers = {
-                                // TODO: ruta para ir a los barberos
+                                navController.navigate("admin_barbers")
                             },
                             onNavigateToReservations = {
                                 // TODO: ruta para ir a las reservas
                             },
                             onLogout = {
-                                navController.navigate("auth") {
-                                    popUpTo("admin_home") { inclusive = true }
-                                }
+                                navigateToAuthAndClearStack(navController)
+                            }
+                        )
+                    }
+
+                    composable("admin_barbers") {
+                        val barbersViewModel: ManageBarbersViewModel = hiltViewModel()
+
+                        ManageBarbersScreen(
+                            viewModel = barbersViewModel,
+                            onNavigateBack = { navController.popBackStack() },
+                            onLogout = {
+                                navigateToAuthAndClearStack(navController)
                             }
                         )
                     }
                 }
             }
         }
+    }
+}
+
+private fun navigateToAuthAndClearStack(navController: NavController) {
+    navController.navigate("auth") {
+        popUpTo(0) { inclusive = true }
+        launchSingleTop = true
     }
 }
