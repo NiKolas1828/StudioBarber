@@ -1,4 +1,5 @@
-package com.dsmovil.studiobarber.data.repositories
+package com.dsmovil.studiobarber.domain.repositories
+
 import com.dsmovil.studiobarber.domain.models.User
 
 interface AuthRepository {

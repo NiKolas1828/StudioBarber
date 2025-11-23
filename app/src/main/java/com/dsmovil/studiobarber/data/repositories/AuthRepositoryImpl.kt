@@ -1,8 +1,11 @@
 package com.dsmovil.studiobarber.data.repositories
 
 import com.dsmovil.studiobarber.domain.models.User
+import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class AuthRepositoryImpl @Inject constructor() : AuthRepository {
 
     override suspend fun login(username: String, password: String): Result<User> {
