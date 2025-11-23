@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.screens.admin.barbers
 
+import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.usecases.admin.DeleteBarberUseCase
@@ -50,6 +51,74 @@ class ManageBarbersViewModel @Inject constructor(
         }
     }
 
+    private fun validateInput(name: String, email: String, phone: String, password: String): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (name.isBlank()) {
+            errors.add("• Falta el nombre")
+        }
+
+        if (email.isBlank()) {
+            errors.add("• Falta el correo")
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errors.add("• Correo inválido")
+        }
+
+        if (phone.isBlank()) {
+            errors.add("• Falta el teléfono")
+        } else if (phone.length != 10) {
+            errors.add("• Teléfono inválido")
+        }
+
+        val isCreating = _selectedBarber.value == null
+        if (isCreating && password.isBlank()) {
+            errors.add("• Falta la contraseña")
+        }
+
+        return errors
+    }
+
+    private fun saveBarber(name: String, email: String, phone: String, password: String) {
+        viewModelScope.launch {
+            _showDialog.value = false
+            val currentBarber = _selectedBarber.value
+
+            val result = if (currentBarber == null) {
+                val newBarber = Barber(
+                    id = System.currentTimeMillis(),
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    password = password,
+                    isActive = true
+                )
+
+                addBarberUseCase(newBarber)
+            } else {
+                val finalPassword = password.ifBlank { currentBarber.password }
+
+                val updatedBarber = currentBarber.copy(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    password = finalPassword
+                )
+
+                updateBarberUseCase(updatedBarber)
+            }
+
+            if (result.isSuccess) {
+                loadBarbers()
+                showMessage(if (currentBarber == null) "Barbero creado" else "Barbero actualizado")
+            } else {
+                val errorMsg = result.exceptionOrNull()?.message ?: "Error desconocido"
+                showMessage("Error: $errorMsg", isError = true)
+            }
+
+            _selectedBarber.value = null
+        }
+    }
+
     fun loadBarbers() {
         viewModelScope.launch {
             _uiState.value = ManageBarbersUiState.Loading
@@ -85,49 +154,17 @@ class ManageBarbersViewModel @Inject constructor(
     }
 
     fun onConfirmDialog(name: String, email: String, phone: String, password: String) {
-        if (name.isBlank() || email.isBlank() || phone.isBlank()) {
-            showMessage("El nombre, correo o teléfono están vacíos", true)
+        val validationErrors = validateInput(name, email, phone, password)
+
+        if (validationErrors.isNotEmpty()) {
+            val finalMessage = validationErrors.joinToString("\n")
+            showMessage(finalMessage, true)
             _showDialog.value = false
+
             return
         }
 
-        viewModelScope.launch {
-            _showDialog.value = false
-
-            val currentBarber = _selectedBarber.value
-
-            val result = if (currentBarber == null) {
-                val newBarber = Barber(
-                    id = System.currentTimeMillis(),
-                    name = name,
-                    email = email,
-                    password = password,
-                    phone = phone,
-                    isActive = true
-                )
-
-                addBarberUseCase(newBarber)
-            } else {
-                val updatedBarber = currentBarber.copy(
-                    name = name,
-                    email = email,
-                    phone = phone,
-                    password = password
-                )
-
-                updateBarberUseCase(updatedBarber)
-            }
-
-            if (result.isSuccess) {
-                loadBarbers()
-                showMessage("Guardado correctamente")
-            } else {
-                val errorMsg = result.exceptionOrNull()?.message ?: "Ha ocurrido un error inesperado"
-                showMessage("Error: $errorMsg", true)
-            }
-
-            _selectedBarber.value = null
-        }
+        saveBarber(name, email, phone, password)
     }
 
     fun deleteBarber(barberId: Long) {
