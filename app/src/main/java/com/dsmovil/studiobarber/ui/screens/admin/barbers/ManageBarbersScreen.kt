@@ -36,6 +36,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
@@ -190,12 +192,36 @@ private fun SuccessView(
             key = { barber -> barber.id }
         ) { barber ->
             AdminItemCard(
-                label = "Nombre",
-                text = barber.name,
                 icon = ImageVector.vectorResource(id = R.drawable.ic_user),
                 iconBackgroundColor = Color.Transparent,
                 onEditClick = { onEditClick(barber) },
-                onDeleteClick = { onDeleteClick(barber.id) }
+                onDeleteClick = { onDeleteClick(barber.id) },
+                textContent = {
+                    Text(
+                        text = barber.name,
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Text(
+                        text = barber.email,
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+
+                    Text(
+                        text = barber.phone,
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        maxLines = 1,
+                        overflow = TextOverflow.Ellipsis
+                    )
+                }
             )
         }
 
