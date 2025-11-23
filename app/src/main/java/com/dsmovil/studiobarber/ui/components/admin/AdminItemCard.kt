@@ -61,7 +61,9 @@ fun AdminItemCard(
                 firstIconTint = colorResource(id = R.color.icon_color_red),
                 secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
                 onSecondClick = onDeleteClick,
-                secondIconTint = colorResource(id = R.color.icon_color_red)
+                secondIconTint = colorResource(id = R.color.icon_color_red),
+                firstContentDescription = "Editar",
+                secondContentDescription = "Eliminar"
             )
         }
     }

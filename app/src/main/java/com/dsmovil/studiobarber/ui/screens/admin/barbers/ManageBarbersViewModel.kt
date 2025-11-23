@@ -86,7 +86,7 @@ class ManageBarbersViewModel @Inject constructor(
 
     fun onConfirmDialog(name: String, email: String, phone: String, password: String) {
         if (name.isBlank() || email.isBlank() || phone.isBlank()) {
-            showMessage("El nombre, correo o telefono están vacios", true)
+            showMessage("El nombre, correo o teléfono están vacíos", true)
             _showDialog.value = false
             return
         }

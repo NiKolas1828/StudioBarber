@@ -21,7 +21,9 @@ fun ActionButtons(
     onSecondClick: () -> Unit,
     modifier: Modifier = Modifier,
     firstIconTint: Color = colorResource(id = R.color.icon_color_red),
-    secondIconTint: Color = colorResource(id = R.color.icon_color_red)
+    secondIconTint: Color = colorResource(id = R.color.icon_color_red),
+    firstContentDescription: String,
+    secondContentDescription: String
 ) {
     Row(
         modifier = modifier,
@@ -31,7 +33,7 @@ fun ActionButtons(
             Icon(
                 modifier = Modifier.size(22.dp),
                 imageVector = firstIcon,
-                contentDescription = null,
+                contentDescription = firstContentDescription,
                 tint = firstIconTint
             )
         }
@@ -40,7 +42,7 @@ fun ActionButtons(
             Icon(
                 modifier = Modifier.size(22.dp),
                 imageVector = secondIcon,
-                contentDescription = null,
+                contentDescription = secondContentDescription,
                 tint = secondIconTint
             )
         }

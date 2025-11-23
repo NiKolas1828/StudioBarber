@@ -112,7 +112,8 @@ class MainActivity : ComponentActivity() {
                         val barbersViewModel: ManageBarbersViewModel = hiltViewModel()
 
                         ManageBarbersScreen(
-                            viewModel = barbersViewModel, onNavigateBack = { navController.popBackStack() },
+                            viewModel = barbersViewModel,
+                            onNavigateBack = { navController.popBackStack() },
                             onLogout = {
                                 navigateToAuthAndClearStack(navController)
                             }
