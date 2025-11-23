@@ -46,7 +46,7 @@ fun ServiceCard(
 
             Column {
                 Text(name, fontWeight = FontWeight.Bold)
-                Text("Descripción: $description", fontSize = 12.sp)
+                Text("Descripción: $description", fontSize = 12.sp, color = Color.Gray)
             }
 
             Spacer(modifier = Modifier.weight(1f))
