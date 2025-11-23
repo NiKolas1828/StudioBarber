@@ -5,8 +5,7 @@ import com.dsmovil.studiobarber.domain.models.Barber
 sealed class ManageBarbersUiState {
     data object Loading: ManageBarbersUiState()
     data class Success(
-        val barbers: List<Barber>,
-        val editingBarberId: Long? = null
+        val barbers: List<Barber>
     ) : ManageBarbersUiState()
     data class Error(
         val message: String

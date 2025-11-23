@@ -2,10 +2,11 @@ package com.dsmovil.studiobarber.ui.screens.admin.barbers
 
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Barber
-import com.dsmovil.studiobarber.domain.usecases.DeleteBarberUseCase
-import com.dsmovil.studiobarber.domain.usecases.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.DeleteBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
-import com.dsmovil.studiobarber.domain.usecases.UpdateBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.AddBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.UpdateBarberUseCase
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -19,10 +20,19 @@ class ManageBarbersViewModel @Inject constructor(
     private val getBarbersUseCase: GetBarbersUseCase,
     private val deleteBarberUseCase: DeleteBarberUseCase,
     private val updateBarberUseCase: UpdateBarberUseCase,
+    private val addBarberUseCase: AddBarberUseCase,
     logoutUseCase: LogoutUseCase
 ) : BaseAdminViewModel(logoutUseCase) {
+    // Estados de la UI
     private val _uiState = MutableStateFlow<ManageBarbersUiState>(ManageBarbersUiState.Loading)
     val uiState: StateFlow<ManageBarbersUiState> = _uiState.asStateFlow()
+
+    // Estados del dialogo
+    private val _showDialog = MutableStateFlow(false)
+    val showDialog: StateFlow<Boolean> = _showDialog.asStateFlow()
+
+    private val _selectedBarber = MutableStateFlow<Barber?>(null)
+    val selectedBarber: StateFlow<Barber?> = _selectedBarber.asStateFlow()
 
     init {
         loadBarbers()
@@ -47,50 +57,65 @@ class ManageBarbersViewModel @Inject constructor(
         }
     }
 
+    fun openAddDialog() {
+        _selectedBarber.value = null
+        _showDialog.value = true
+    }
+
+    fun openEditDialog(barber: Barber) {
+        _selectedBarber.value = barber
+        _showDialog.value = true
+    }
+
+    fun closeDialog() {
+        _showDialog.value = false
+        _selectedBarber.value = null
+    }
+
+    fun onConfirmDialog(name: String, email: String, phone: String, password: String) {
+        viewModelScope.launch {
+            _showDialog.value = false
+
+            val currentBarber = _selectedBarber.value
+
+            val result = if (currentBarber == null) {
+                val newBarber = Barber(
+                    id = System.currentTimeMillis(),
+                    name = name,
+                    email = email,
+                    password = password,
+                    phone = phone,
+                    isActive = true
+                )
+
+                addBarberUseCase(newBarber)
+            } else {
+                val updatedBarber = currentBarber.copy(
+                    name = name,
+                    email = email,
+                    phone = phone,
+                    password = password
+                )
+
+                updateBarberUseCase(updatedBarber)
+            }
+
+            if (result.isSuccess) {
+                loadBarbers()
+            } else {
+                // Aquí podrías manejar el error (Toast, Snackbar, etc.)
+                println("Error: ${result.exceptionOrNull()?.message}")
+            }
+
+            _selectedBarber.value = null
+        }
+    }
+
     fun deleteBarber(barberId: Long) {
         viewModelScope.launch {
             val result = deleteBarberUseCase(barberId)
 
-            if (result.isSuccess) {
-                loadBarbers()
-            } else {
-                _uiState.value = ManageBarbersUiState.Error(
-                    message = result.exceptionOrNull()?.message ?: "No se pudo eliminar el barbero"
-                )
-            }
-        }
-    }
-
-    fun onEditClick(barberId: Long) {
-        val currentState = _uiState.value
-
-        if (currentState is ManageBarbersUiState.Success) {
-            _uiState.value = currentState.copy(editingBarberId = barberId)
-        }
-    }
-
-    fun onCancelEdit() {
-        val currentState = _uiState.value
-
-        if (currentState is ManageBarbersUiState.Success) {
-            _uiState.value = currentState.copy(editingBarberId = null)
-        }
-    }
-
-    fun onSaveEdit(barber: Barber, newName: String) {
-        viewModelScope.launch {
-            val updatedBarber = barber.copy(name = newName)
-
-            val result = updateBarberUseCase(updatedBarber)
-
-            if (result.isSuccess) {
-                loadBarbers()
-
-            } else {
-                _uiState.value = ManageBarbersUiState.Error(
-                    message = result.exceptionOrNull()?.message ?: "No se pudo actualizar el barbero"
-                )
-            }
+            if (result.isSuccess) loadBarbers()
         }
     }
 
