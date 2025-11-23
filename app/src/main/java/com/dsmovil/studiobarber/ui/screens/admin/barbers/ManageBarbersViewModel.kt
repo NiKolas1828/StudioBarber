@@ -71,8 +71,8 @@ class ManageBarbersViewModel @Inject constructor(
         }
 
         val isCreating = _selectedBarber.value == null
-        if (isCreating && password.isBlank()) {
-            errors.add("• Falta la contraseña")
+        if (isCreating && password.length < 8) {
+            errors.add("• La contraseña debe ser almenos de 8 caracteres")
         }
 
         return errors
