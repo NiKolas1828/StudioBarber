@@ -23,16 +23,21 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 import com.dsmovil.studiobarber.ui.components.admin.BarberDialog
@@ -47,6 +52,10 @@ fun ManageBarbersScreen(
     val showDialog by viewModel.showDialog.collectAsState()
     val selectedBarber by viewModel.selectedBarber.collectAsState()
 
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    barberSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
+
     if (showDialog) {
         BarberDialog(
             barberToEdit = selectedBarber,
@@ -60,9 +69,12 @@ fun ManageBarbersScreen(
     AdminScreenLayout(
         viewModel = viewModel,
         floatingActionButton = {
-            AddBarberFab(modifier = Modifier.padding(bottom = 60.dp), onClick = viewModel::openAddDialog)
+            AddBarberFab(modifier = Modifier.padding(bottom = 16.dp), onClick = viewModel::openAddDialog)
         },
-        onLogoutSuccess = onLogout
+        onLogoutSuccess = onLogout,
+        snackbarHost = {
+            CustomSnackbarHost(hostState = snackbarHostState)
+        }
     ) {
         Column(
             modifier = Modifier
@@ -158,7 +170,7 @@ private fun SuccessView(
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        contentPadding = PaddingValues(bottom = 80.dp)
+        contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         items(
             items = barbers,
@@ -200,6 +212,20 @@ private fun AddBarberFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
                 imageVector = Icons.Default.Add,
                 contentDescription = "Agregar Barbero",
                 modifier = Modifier.size(32.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun barberSnackbar(viewModel: ManageBarbersViewModel, snackbarHostState: SnackbarHostState) {
+    LaunchedEffect(Unit) {
+        viewModel.messageChannel.collect { uiMessage ->
+            snackbarHostState.showSnackbar(
+                message = uiMessage.message,
+                actionLabel = if (uiMessage.isError) "ERROR_TYPE" else "SUCCESS_TYPE",
+                withDismissAction = true,
+                duration = SnackbarDuration.Short
             )
         }
     }

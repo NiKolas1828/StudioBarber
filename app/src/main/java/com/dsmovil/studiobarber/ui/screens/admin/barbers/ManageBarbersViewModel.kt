@@ -9,9 +9,11 @@ import com.dsmovil.studiobarber.domain.usecases.admin.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.UpdateBarberUseCase
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -34,8 +36,18 @@ class ManageBarbersViewModel @Inject constructor(
     private val _selectedBarber = MutableStateFlow<Barber?>(null)
     val selectedBarber: StateFlow<Barber?> = _selectedBarber.asStateFlow()
 
+    // Estados del snackBar
+    private val _messageChannel = Channel<UiMessage>()
+    val messageChannel = _messageChannel.receiveAsFlow()
+
     init {
         loadBarbers()
+    }
+
+    private fun showMessage(message: String, isError: Boolean = false) {
+        viewModelScope.launch {
+            _messageChannel.send(UiMessage(message, isError))
+        }
     }
 
     fun loadBarbers() {
@@ -73,6 +85,12 @@ class ManageBarbersViewModel @Inject constructor(
     }
 
     fun onConfirmDialog(name: String, email: String, phone: String, password: String) {
+        if (name.isBlank() || email.isBlank() || phone.isBlank()) {
+            showMessage("El nombre, correo o telefono están vacios", true)
+            _showDialog.value = false
+            return
+        }
+
         viewModelScope.launch {
             _showDialog.value = false
 
@@ -102,9 +120,10 @@ class ManageBarbersViewModel @Inject constructor(
 
             if (result.isSuccess) {
                 loadBarbers()
+                showMessage("Guardado correctamente")
             } else {
-                // Aquí podrías manejar el error (Toast, Snackbar, etc.)
-                println("Error: ${result.exceptionOrNull()?.message}")
+                val errorMsg = result.exceptionOrNull()?.message ?: "Ha ocurrido un error inesperado"
+                showMessage("Error: $errorMsg", true)
             }
 
             _selectedBarber.value = null
@@ -115,7 +134,12 @@ class ManageBarbersViewModel @Inject constructor(
         viewModelScope.launch {
             val result = deleteBarberUseCase(barberId)
 
-            if (result.isSuccess) loadBarbers()
+            if (result.isSuccess) {
+                loadBarbers()
+                showMessage("Barbero eliminado")
+            } else {
+                showMessage("Error: No se pudo eliminar el barbero", true)
+            }
         }
     }
 

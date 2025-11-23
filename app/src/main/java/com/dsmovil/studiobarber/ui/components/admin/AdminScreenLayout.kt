@@ -2,7 +2,11 @@ package com.dsmovil.studiobarber.ui.components.admin
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.FabPosition
 import androidx.compose.material3.Scaffold
@@ -21,28 +25,37 @@ fun AdminScreenLayout(
     onLogoutSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     floatingActionButton: @Composable () -> Unit = {},
+    snackbarHost: @Composable () -> Unit = {},
     content: @Composable BoxScope.() -> Unit
 ) {
     Scaffold(
         containerColor = colorResource(id = R.color.background_color),
         floatingActionButton = floatingActionButton,
-        floatingActionButtonPosition = FabPosition.Center
+        floatingActionButtonPosition = FabPosition.Center,
+        snackbarHost = snackbarHost
     ) { paddingValues ->
-        Box(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp)
+        Column(
+            modifier = modifier.fillMaxSize().padding(paddingValues).padding(16.dp)
         ) {
-            content()
+            Box(
+                modifier = Modifier.weight(1f).fillMaxWidth()
+            ) {
+                content()
+            }
 
-            LogoutButton(
-                modifier = Modifier
-                    .align(Alignment.BottomStart),
-                onClick = {
-                    viewModel.onLogout(onLogoutSuccess)
-                }
-            )
+            Spacer(modifier = Modifier.height(12.dp))
+
+            Box(
+                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+            ) {
+                LogoutButton(
+                    modifier = Modifier
+                        .align(Alignment.BottomStart),
+                    onClick = {
+                        viewModel.onLogout(onLogoutSuccess)
+                    }
+                )
+            }
         }
     }
 }
