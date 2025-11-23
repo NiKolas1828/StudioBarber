@@ -33,9 +33,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.domain.models.Barber
-import com.dsmovil.studiobarber.ui.components.admin.AdminEditableCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
+import com.dsmovil.studiobarber.ui.components.admin.BarberDialog
 
 @Composable
 fun ManageBarbersScreen(
@@ -44,11 +44,23 @@ fun ManageBarbersScreen(
     onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
+    val showDialog by viewModel.showDialog.collectAsState()
+    val selectedBarber by viewModel.selectedBarber.collectAsState()
+
+    if (showDialog) {
+        BarberDialog(
+            barberToEdit = selectedBarber,
+            onDismiss = viewModel::closeDialog,
+            onConfirm = { name, email, phone, password ->
+                viewModel.onConfirmDialog(name, email, phone, password)
+            }
+        )
+    }
 
     AdminScreenLayout(
         viewModel = viewModel,
         floatingActionButton = {
-            AddBarberFab(modifier = Modifier.padding(bottom = 60.dp), onClick = {})
+            AddBarberFab(modifier = Modifier.padding(bottom = 60.dp), onClick = viewModel::openAddDialog)
         },
         onLogoutSuccess = onLogout
     ) {
@@ -62,9 +74,7 @@ fun ManageBarbersScreen(
 
             ManageBarbersContent(
                 uiState = uiState,
-                onStartEdit = viewModel::onEditClick,
-                onCancelEdit = viewModel::onCancelEdit,
-                onSaveEdit = viewModel::onSaveEdit,
+                onEditClick = viewModel::openEditDialog,
                 onDeleteClick = viewModel::deleteBarber,
                 onRetry = viewModel::clearError
             )
@@ -103,9 +113,7 @@ private fun ManageBarbersHeader(onNavigateBack: () -> Unit) {
 @Composable
 private fun ManageBarbersContent(
     uiState: ManageBarbersUiState,
-    onStartEdit: (Long) -> Unit,
-    onCancelEdit: () -> Unit,
-    onSaveEdit: (Barber, String) -> Unit,
+    onEditClick: (Barber) -> Unit,
     onDeleteClick: (Long) -> Unit,
     onRetry: () -> Unit
 ) {
@@ -113,10 +121,8 @@ private fun ManageBarbersContent(
         is ManageBarbersUiState.Loading -> LoadingView()
         is ManageBarbersUiState.Error -> ErrorView(message = uiState.message, onRetry = onRetry)
         is ManageBarbersUiState.Success -> SuccessView(
-            state = uiState,
-            onStartEdit = onStartEdit,
-            onCancelEdit = onCancelEdit,
-            onSaveEdit = onSaveEdit,
+            barbers = uiState.barbers,
+            onEditClick = onEditClick,
             onDeleteClick = onDeleteClick
         )
     }
@@ -146,10 +152,8 @@ private fun ErrorView(message: String, onRetry: () -> Unit) {
 
 @Composable
 private fun SuccessView(
-    state: ManageBarbersUiState.Success,
-    onStartEdit: (Long) -> Unit,
-    onCancelEdit: () -> Unit,
-    onSaveEdit: (Barber, String) -> Unit,
+    barbers: List<Barber>,
+    onEditClick: (Barber) -> Unit,
     onDeleteClick: (Long) -> Unit
 ) {
     LazyColumn(
@@ -157,28 +161,20 @@ private fun SuccessView(
         contentPadding = PaddingValues(bottom = 80.dp)
     ) {
         items(
-            items = state.barbers,
+            items = barbers,
             key = { barber -> barber.id }
         ) { barber ->
-            if (barber.id == state.editingBarberId) {
-                AdminEditableCard(
-                    initialName = barber.name,
-                    onSave = { newName -> onSaveEdit(barber, newName) },
-                    onCancel = onCancelEdit
-                )
-            } else {
-                AdminItemCard(
-                    label = "Nombre",
-                    text = barber.name,
-                    icon = Icons.Default.Person,
-                    iconBackgroundColor = Color(0xFF03A9F4), // Azul Cian
-                    onEditClick = { onStartEdit(barber.id) },
-                    onDeleteClick = { onDeleteClick(barber.id) }
-                )
-            }
+            AdminItemCard(
+                label = "Nombre",
+                text = barber.name,
+                icon = Icons.Default.Person,
+                iconBackgroundColor = Color(0xFF03A9F4),
+                onEditClick = { onEditClick(barber) },
+                onDeleteClick = { onDeleteClick(barber.id) }
+            )
         }
 
-        if (state.barbers.isEmpty()) {
+        if (barbers.isEmpty()) {
             item {
                 Text(
                     text = "No hay barberos registrados.",
