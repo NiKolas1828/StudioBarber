@@ -127,7 +127,7 @@ class MainActivity : ComponentActivity() {
 
 private fun navigateToAuthAndClearStack(navController: NavController) {
     navController.navigate("auth") {
-        popUpTo("auth") { inclusive = true }
+        popUpTo(0) { inclusive = true }
         launchSingleTop = true
     }
 }
