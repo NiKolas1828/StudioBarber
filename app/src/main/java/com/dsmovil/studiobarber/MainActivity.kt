@@ -8,6 +8,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.dsmovil.studiobarber.ui.client.home.ClientHomeScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
@@ -15,7 +16,6 @@ import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
-import com.dsmovil.studiobarber.ui.screens.home.HomeScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +32,7 @@ class MainActivity : ComponentActivity() {
 
                 NavHost(
                     navController = navController,
-                    startDestination = "admin_home"
+                    startDestination = "client_home"
                 ) {
 
                     // ----------------------------
@@ -54,7 +54,7 @@ class MainActivity : ComponentActivity() {
                         LoginScreen(
                             viewModel = loginViewModel,
                             onLoginSuccess = {
-                                navController.navigate("home") {
+                                navController.navigate("client_home") {
                                     popUpTo("auth") { inclusive = true }
                                 }
                             }
@@ -70,18 +70,22 @@ class MainActivity : ComponentActivity() {
                         RegisterScreen(
                             viewModel = registerViewModel,
                             onRegisterSuccess = {
-                                navController.navigate("home") {
+                                navController.navigate("client_home") {
                                     popUpTo("auth") { inclusive = true }
                                 }
                             }
                         )
                     }
 
-                    // ----------------------------
-                    // Pantalla HOME
-                    // ----------------------------
-                    composable("home") {
-                        HomeScreen()
+                    composable("client_home") {
+                        ClientHomeScreen(
+                            onNavigateToClientReservarionts = {
+                                // TODO: ruta para ir a las reservas del cliente
+                            },
+                            onContinueClick = {
+                                // TODO: ruta para continuar con la reserva
+                            }
+                        )
                     }
 
                     composable("admin_home") {
