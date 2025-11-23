@@ -109,9 +109,9 @@ private fun BarberTextField(
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = colorResource(id = R.color.background_color),
             unfocusedTextColor = colorResource(id = R.color.background_color),
-            focusedBorderColor = colorResource(id = R.color.icon_color_blue),
-            focusedLabelColor = colorResource(id = R.color.icon_color_blue),
-            cursorColor = colorResource(id = R.color.icon_color_blue)
+            focusedBorderColor = colorResource(id = R.color.icon_color_red),
+            focusedLabelColor = colorResource(id = R.color.icon_color_red),
+            cursorColor = colorResource(id = R.color.background_color)
         )
     )
 }

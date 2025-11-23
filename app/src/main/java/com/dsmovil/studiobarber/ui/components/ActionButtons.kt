@@ -2,6 +2,7 @@ package com.dsmovil.studiobarber.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -24,18 +25,20 @@ fun ActionButtons(
 ) {
     Row(
         modifier = modifier,
-        horizontalArrangement = Arrangement.spacedBy((-10).dp)
+        horizontalArrangement = Arrangement.spacedBy((-5).dp)
     ) {
-        IconButton(onClick = onFirstClick) {
+        IconButton(modifier = Modifier.size(42.dp), onClick = onFirstClick) {
             Icon(
+                modifier = Modifier.size(22.dp),
                 imageVector = firstIcon,
                 contentDescription = null,
                 tint = firstIconTint
             )
         }
 
-        IconButton(onClick = onSecondClick) {
+        IconButton(modifier = Modifier.size(42.dp), onClick = onSecondClick) {
             Icon(
+                modifier = Modifier.size(22.dp),
                 imageVector = secondIcon,
                 contentDescription = null,
                 tint = secondIconTint

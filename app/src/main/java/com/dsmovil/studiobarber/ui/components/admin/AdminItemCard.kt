@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -24,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -58,10 +56,10 @@ fun AdminItemCard(
             CardInfo(icon, iconBackgroundColor, label, text)
 
             ActionButtons(
-                firstIcon = Icons.Default.Edit,
+                firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
                 onFirstClick = onEditClick,
                 firstIconTint = colorResource(id = R.color.icon_color_red),
-                secondIcon = Icons.Default.Delete,
+                secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
                 onSecondClick = onDeleteClick,
                 secondIconTint = colorResource(id = R.color.icon_color_red)
             )
@@ -90,7 +88,7 @@ private fun CardInfo(
             Icon(
                 imageVector = icon,
                 contentDescription = null,
-                tint = Color.White,
+                tint = colorResource(id = R.color.icon_color_blue),
                 modifier = Modifier.size(32.dp)
             )
         }
@@ -99,7 +97,7 @@ private fun CardInfo(
             Text(
                 text = label,
                 color = Color.Black,
-                fontSize = 14.sp
+                fontSize = 16.sp
             )
             Text(
                 text = text,

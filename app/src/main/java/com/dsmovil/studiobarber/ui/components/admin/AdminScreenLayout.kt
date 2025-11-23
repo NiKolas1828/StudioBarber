@@ -43,10 +43,10 @@ fun AdminScreenLayout(
                 content()
             }
 
-            Spacer(modifier = Modifier.height(12.dp))
+            Spacer(modifier = Modifier.height(36.dp))
 
             Box(
-                modifier = Modifier.fillMaxWidth().padding(vertical = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 LogoutButton(
                     modifier = Modifier
