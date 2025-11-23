@@ -6,8 +6,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -24,13 +25,15 @@ fun ServiceCard(
     selected: Boolean,
     onClick: () -> Unit
 ) {
-    Surface(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        color = Color.White
+        colors = CardDefaults.cardColors(
+            containerColor = if (selected) Color(0xFF03A9F4).copy(alpha = 0.2f) else Color(0xFF2C2C2C)
+        )
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
@@ -39,14 +42,22 @@ fun ServiceCard(
             Icon(
                 Icons.Default.Edit,
                 contentDescription = null,
-                tint = Color.Red
+                tint = if (selected) Color(0xFF03A9F4) else Color.White.copy(alpha = 0.6f)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text(name, fontWeight = FontWeight.Bold)
-                Text("Descripción: $description", fontSize = 12.sp)
+                Text(
+                    name,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White
+                )
+                Text(
+                    "Descripción: $description",
+                    fontSize = 12.sp,
+                    color = Color.White.copy(alpha = 0.6f)
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
