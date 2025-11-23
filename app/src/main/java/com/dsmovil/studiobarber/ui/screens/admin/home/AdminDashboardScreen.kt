@@ -1,19 +1,11 @@
 package com.dsmovil.studiobarber.ui.screens.admin.home
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ExitToApp
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -27,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.ui.components.DashboardCard
+import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 
 @Composable
 fun AdminDashboardScreen(
@@ -36,37 +29,24 @@ fun AdminDashboardScreen(
     onNavigateToReservations: () -> Unit,
     onLogout: () -> Unit
 ) {
-    Scaffold(
-        containerColor = colorResource(id = R.color.background_color)
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(24.dp)
+    AdminScreenLayout(
+        viewModel = viewModel,
+        onLogoutSuccess = onLogout
+    ) {
+        Column(
+            modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            Column(
-                modifier = Modifier.verticalScroll(rememberScrollState())
-            ) {
-                AdminHeader()
+            AdminHeader()
 
-                Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-                AdminToolsSection(
-                    onNavigateToServices = onNavigateToServices,
-                    onNavigateToBarbers = onNavigateToBarbers,
-                    onNavigateToReservations = onNavigateToReservations
-                )
-
-                Spacer(modifier = Modifier.height(80.dp))
-            }
-
-            AdminLogoutButton(
-                modifier = Modifier.align(Alignment.BottomStart),
-                onClick = {
-                    viewModel.onLogout { onLogout() }
-                }
+            AdminToolsSection(
+                onNavigateToServices = onNavigateToServices,
+                onNavigateToBarbers = onNavigateToBarbers,
+                onNavigateToReservations = onNavigateToReservations
             )
+
+            Spacer(modifier = Modifier.height(80.dp))
         }
     }
 }
@@ -128,23 +108,6 @@ private fun AdminToolsSection(
             icon = ImageVector.vectorResource(id = R.drawable.ic_reservations),
             iconColor = colorResource(R.color.icon_color_blue),
             onClick = onNavigateToReservations
-        )
-    }
-}
-
-@Composable
-private fun AdminLogoutButton(
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit
-) {
-    IconButton(
-        onClick = onClick,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = Icons.AutoMirrored.Filled.ExitToApp,
-            contentDescription = "Cerrar Sesión",
-            tint = colorResource(R.color.icon_color_red),
         )
     }
 }
