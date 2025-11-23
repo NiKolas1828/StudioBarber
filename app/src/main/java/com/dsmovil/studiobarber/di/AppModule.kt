@@ -4,12 +4,13 @@ import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.data.repositories.BarberRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
-import com.dsmovil.studiobarber.domain.usecases.DeleteBarberUseCase
-import com.dsmovil.studiobarber.domain.usecases.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.DeleteBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
-import com.dsmovil.studiobarber.domain.usecases.UpdateBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.AddBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.UpdateBarberUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -63,6 +64,12 @@ abstract class AppModule {
         @Singleton
         fun provideUpdateBarberUseCase(repository: BarberRepository): UpdateBarberUseCase {
             return UpdateBarberUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideAddBarberUseCase(repository: BarberRepository): AddBarberUseCase {
+            return AddBarberUseCase(repository)
         }
     }
 }

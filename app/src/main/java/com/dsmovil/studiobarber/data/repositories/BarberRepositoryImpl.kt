@@ -8,11 +8,11 @@ import javax.inject.Singleton
 
 @Singleton
 class BarberRepositoryImpl @Inject constructor() : BarberRepository {
-    private val mockBarbers = mutableListOf<Barber>(
-        Barber(1, "Juan", "juan@gmail.com", "3125178190"),
-        Barber(2, "Nicolas", "nicolas@gmail.com", "3208147189"),
-        Barber(3, "Alexis", "alexis@gmail.com", "3004178190"),
-        Barber(4, "Ander", "ander@gmail.com", "3114517518")
+    private val mockBarbers = mutableListOf(
+        Barber(1, "Juan", "juan@gmail.com", "12345","3125178190"),
+        Barber(2, "Nicolas", "nicolas@gmail.com", "12345", "3208147189"),
+        Barber(3, "Alexis", "alexis@gmail.com", "12345", "3004178190"),
+        Barber(4, "Ander", "ander@gmail.com", "12345", "3114517518")
     )
 
     override suspend fun getBarbers(): Result<List<Barber>> {
