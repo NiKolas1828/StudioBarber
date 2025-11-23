@@ -44,6 +44,7 @@ import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 import com.dsmovil.studiobarber.ui.components.admin.BarberDialog
+import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun ManageBarbersScreen(
@@ -57,7 +58,7 @@ fun ManageBarbersScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    barberSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
+    BarberSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
 
     if (showDialog) {
         BarberDialog(
@@ -227,9 +228,9 @@ private fun AddBarberFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
 }
 
 @Composable
-private fun barberSnackbar(viewModel: ManageBarbersViewModel, snackbarHostState: SnackbarHostState) {
+private fun BarberSnackbar(viewModel: ManageBarbersViewModel, snackbarHostState: SnackbarHostState) {
     LaunchedEffect(Unit) {
-        viewModel.messageChannel.collect { uiMessage ->
+        viewModel.messageChannel.collectLatest { uiMessage ->
             snackbarHostState.showSnackbar(
                 message = uiMessage.message,
                 actionLabel = if (uiMessage.isError) "ERROR_TYPE" else "SUCCESS_TYPE",
