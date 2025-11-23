@@ -16,10 +16,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Barber
 
 @Composable
@@ -105,11 +107,11 @@ private fun BarberTextField(
         keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
         visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
         colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = Color.Black,
-            unfocusedTextColor = Color.Black,
-            focusedBorderColor = Color(0xFF03A9F4),
-            focusedLabelColor = Color(0xFF03A9F4),
-            cursorColor = Color(0xFF03A9F4)
+            focusedTextColor = colorResource(id = R.color.background_color),
+            unfocusedTextColor = colorResource(id = R.color.background_color),
+            focusedBorderColor = colorResource(id = R.color.icon_color_blue),
+            focusedLabelColor = colorResource(id = R.color.icon_color_blue),
+            cursorColor = colorResource(id = R.color.icon_color_blue)
         )
     )
 }

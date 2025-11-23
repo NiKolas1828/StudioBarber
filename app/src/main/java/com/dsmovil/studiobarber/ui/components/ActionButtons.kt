@@ -8,7 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.dsmovil.studiobarber.R
 
 @Composable
 fun ActionButtons(
@@ -17,8 +19,8 @@ fun ActionButtons(
     onFirstClick: () -> Unit,
     onSecondClick: () -> Unit,
     modifier: Modifier = Modifier,
-    firstIconTint: Color = Color(0xFFF44336),
-    secondIconTint: Color = Color(0xFFF44336)
+    firstIconTint: Color = colorResource(id = R.color.icon_color_red),
+    secondIconTint: Color = colorResource(id = R.color.icon_color_red)
 ) {
     Row(
         modifier = modifier,

@@ -23,9 +23,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.ui.components.ActionButtons
 
 @Composable
@@ -58,10 +60,10 @@ fun AdminItemCard(
             ActionButtons(
                 firstIcon = Icons.Default.Edit,
                 onFirstClick = onEditClick,
-                firstIconTint = Color(0xFFF44336),
+                firstIconTint = colorResource(id = R.color.icon_color_red),
                 secondIcon = Icons.Default.Delete,
                 onSecondClick = onDeleteClick,
-                secondIconTint = Color(0xFFF44336)
+                secondIconTint = colorResource(id = R.color.icon_color_red)
             )
         }
     }

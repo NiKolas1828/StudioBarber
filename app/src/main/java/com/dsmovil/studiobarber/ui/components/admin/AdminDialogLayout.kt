@@ -20,10 +20,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import com.dsmovil.studiobarber.R
 
 @Composable
 fun AdminDialogLayout(
@@ -83,9 +85,9 @@ private fun BarberDialogButtons(
 
         Button(
             onClick = onConfirm,
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF03A9F4))
+            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.icon_color_red))
         ) {
-            Text(confirmButtonText)
+            Text(confirmButtonText, color = Color.White)
         }
     }
 }

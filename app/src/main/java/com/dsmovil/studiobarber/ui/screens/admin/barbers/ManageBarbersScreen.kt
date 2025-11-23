@@ -34,8 +34,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
@@ -103,7 +105,7 @@ private fun ManageBarbersHeader(onNavigateBack: () -> Unit) {
             onClick = onNavigateBack,
             modifier = Modifier
                 .align(Alignment.CenterStart)
-                .background(Color(0xFFF44336), shape = RoundedCornerShape(8.dp))
+                .background(colorResource(id = R.color.icon_color_red), shape = RoundedCornerShape(8.dp))
                 .size(40.dp)
         ) {
             Icon(
@@ -143,7 +145,7 @@ private fun ManageBarbersContent(
 @Composable
 private fun LoadingView() {
     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        CircularProgressIndicator(color = Color(0xFF03A9F4))
+        CircularProgressIndicator(color = colorResource(id = R.color.icon_color_blue))
     }
 }
 
@@ -180,7 +182,7 @@ private fun SuccessView(
                 label = "Nombre",
                 text = barber.name,
                 icon = Icons.Default.Person,
-                iconBackgroundColor = Color(0xFF03A9F4),
+                iconBackgroundColor = colorResource(id = R.color.icon_color_blue),
                 onEditClick = { onEditClick(barber) },
                 onDeleteClick = { onDeleteClick(barber.id) }
             )
@@ -204,7 +206,7 @@ private fun AddBarberFab(modifier: Modifier = Modifier, onClick: () -> Unit) {
         FloatingActionButton(
             onClick = onClick,
             containerColor = Color.White,
-            contentColor = Color(0xFF03A9F4),
+            contentColor = colorResource(id = R.color.icon_color_blue),
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.size(64.dp)
         ) {
