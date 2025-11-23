@@ -17,8 +17,8 @@ import com.dsmovil.studiobarber.ui.theme.StudioBarberTheme
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
+import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
-import com.dsmovil.studiobarber.ui.screens.home.HomeScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -84,7 +84,7 @@ class MainActivity : ComponentActivity() {
                     // Pantalla HOME
                     // ----------------------------
                     composable("home") {
-                        HomeScreen()
+                        ClientHomeScreen()
                     }
 
                     // Pantalla ADMIN HOME
