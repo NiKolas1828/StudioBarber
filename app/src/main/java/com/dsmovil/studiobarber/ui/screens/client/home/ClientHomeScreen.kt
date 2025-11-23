@@ -1,12 +1,9 @@
-package com.dsmovil.studiobarber.ui.screens.home
+package com.dsmovil.studiobarber.ui.screens.client.home
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,17 +13,19 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.ui.components.BarberCard
+import com.dsmovil.studiobarber.ui.components.ServiceCard
 
 @Composable
-fun HomeScreen(
-    userName: String = "Usuario", // Parámetro para el nombre del usuario
-    onMyReservationsClick: () -> Unit = {},
+fun ClientHomeScreen(
+    userName: String = "Usuario",
+    onNavigateToClientReservarionts: () -> Unit = {},
     onContinueClick: () -> Unit = {}
 ) {
-    // Estado para manejar qué barbero está seleccionado
     var selectedBarberId by remember { mutableStateOf<Int?>(null) }
+    var selectedServiceId by remember { mutableStateOf<Int?>(null) }
 
-    // Lista de barberos (esto debería venir de un ViewModel)
+    var selectOption by remember { mutableStateOf("barbero") }
+
     val barbers = remember {
         listOf(
             Barber(1, "Carlos Martínez"),
@@ -36,12 +35,19 @@ fun HomeScreen(
         )
     }
 
+    val services = remember {
+        listOf(
+            Service(1, "Corte de cabello", "Corte profesional"),
+            Service(2, "Barba", "Arreglo de barba"),
+            Service(3, "Cejas", "Perfilado de cejas")
+        )
+    }
+
     Scaffold(
         containerColor = Color(0xFF1E1E1E), // Fondo oscuro
         bottomBar = {
-            // Botón continuar fijo al fondo
             BottomActionBar(
-                enabled = selectedBarberId != null,
+                enabled = (selectedBarberId != null && selectedServiceId != null),
                 onClick = onContinueClick
             )
         }
@@ -58,40 +64,61 @@ fun HomeScreen(
                 Spacer(modifier = Modifier.height(8.dp))
                 HomeHeader(
                     userName = userName,
-                    onMyReservationsClick = onMyReservationsClick
+                    onMyReservationsClick = onNavigateToClientReservarionts
                 )
             }
 
-            // Sección de servicio
             item {
-                ServiceSection()
-            }
-
-            // Lista de barberos
-            item {
-                Text(
-                    text = "Selecciona tu barbero",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.padding(vertical = 8.dp)
+                HomeOptionsSelector(
+                    selected = selectOption,
+                    onSelectedChange =  { selectOption = it }
                 )
             }
 
-            items(barbers) { barber ->
-                BarberCard(
-                    name = barber.name,
-                    selected = selectedBarberId == barber.id,
-                    onClick = {
-                        selectedBarberId = barber.id
+            when (selectOption) {
+                "barbero" -> {
+                    item {
+                        Text(
+                            text = "Selecciona tu barbero",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
                     }
-                )
+
+                    items(barbers) { barber ->
+                        BarberCard(
+                            name = barber.name,
+                            selected = selectedBarberId == barber.id,
+                            onClick = { selectedBarberId = barber.id }
+                        )
+                    }
+                }
+
+                "servicio" -> {
+                    item {
+                        Text(
+                            text = "Selecciona el servicio",
+                            color = Color.White,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(vertical = 8.dp)
+                        )
+                    }
+
+                    items(services) { service ->
+                        ServiceCard(
+                            name = service.name,
+                            description = service.description,
+                            selected = selectedServiceId == service.id,
+                            onClick = { selectedServiceId = service.id })
+                    }
+                }
             }
 
-            // Espaciado final
-            item {
-                Spacer(modifier = Modifier.height(16.dp))
-            }
+            item { Spacer(modifier = Modifier.height(16.dp)) }
+
         }
     }
 }
@@ -137,40 +164,44 @@ private fun HomeHeader(
 }
 
 @Composable
-private fun ServiceSection() {
-    Column {
-        Text(
-            text = "Servicio",
-            color = Color.White,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-
+fun HomeOptionsSelector(
+    selected: String,
+    onSelectedChange: (String) -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 12.dp),
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        // Botón Servicio
         Button(
-            onClick = { /* Cambiar servicio */ },
-            modifier = Modifier
-                .padding(top = 8.dp)
-                .fillMaxWidth(),
-            shape = RoundedCornerShape(12.dp),
+            onClick = { onSelectedChange("servicio") },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF2C2C2C),
-                contentColor = Color(0xFF03A9F4)
+                containerColor = if (selected == "servicio") Color(0xFF03A9F4) else Color.Transparent,
+                contentColor = if (selected == "servicio") Color.White else Color(0xFF03A9F4)
             ),
-            contentPadding = PaddingValues(16.dp)
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.width(140.dp)
         ) {
-            Icon(
-                imageVector = Icons.Default.Edit,
-                contentDescription = null,
-                modifier = Modifier.size(20.dp)
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "Corte de cabello",
-                fontSize = 16.sp
-            )
+            Text("Servicio")
+        }
+
+        // Botón Barbero
+        Button(
+            onClick = { onSelectedChange("barbero") },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (selected == "barbero") Color(0xFF03A9F4) else Color.Transparent,
+                contentColor = if (selected == "barbero") Color.White else Color(0xFF03A9F4)
+            ),
+            shape = RoundedCornerShape(12.dp),
+            modifier = Modifier.width(140.dp)
+        ) {
+            Text("Barbero")
         }
     }
 }
+
 
 @Composable
 private fun BottomActionBar(
@@ -209,8 +240,13 @@ private fun BottomActionBar(
     }
 }
 
-// Data class para representar un barbero
 data class Barber(
     val id: Int,
     val name: String
+)
+
+data class Service(
+    val id: Int,
+    val name: String,
+    val description: String
 )
