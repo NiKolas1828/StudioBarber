@@ -57,7 +57,6 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
 }
 
 fun NavGraphBuilder.adminGraph(navController: NavController) {
-
     composable(Screen.AdminHome.route) {
         val viewModel: AdminDashboardViewModel = hiltViewModel()
 
