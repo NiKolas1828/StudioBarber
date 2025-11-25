@@ -4,6 +4,7 @@ import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.data.repositories.BarberRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
+import com.dsmovil.studiobarber.domain.repositories.ServiceRepository
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
@@ -11,6 +12,10 @@ import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.AddServiceUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.DeleteServiceUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.UpdateServiceUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -28,6 +33,10 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindBarberRepository(barberRepositoryImpl: BarberRepositoryImpl): BarberRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindServiceRepository(serviceRepositoryImpl: BarberRepositoryImpl): ServiceRepository
 
     companion object {
         @Provides
@@ -70,6 +79,30 @@ abstract class AppModule {
         @Singleton
         fun provideAddBarberUseCase(repository: BarberRepository): AddBarberUseCase {
             return AddBarberUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideGetServicesUseCase(repository: ServiceRepository): GetServicesUseCase {
+            return GetServicesUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideAddServiceUseCase(repository: ServiceRepository): AddServiceUseCase {
+            return AddServiceUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideUpdateServiceUseCase(repository: ServiceRepository): UpdateServiceUseCase {
+            return UpdateServiceUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideDeleteServiceUseCase(repository: ServiceRepository): DeleteServiceUseCase {
+            return DeleteServiceUseCase(repository)
         }
     }
 }
