@@ -12,8 +12,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.ui.components.LogoutButton
 import com.dsmovil.studiobarber.ui.components.client.BarberCard
+import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
 import com.dsmovil.studiobarber.ui.components.client.ServiceCard
 
 @Composable
@@ -26,91 +28,35 @@ fun ClientHomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-    Scaffold(
-        containerColor = Color(0xFF1E1E1E),
-    ) { paddingValues ->
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-        ){
-            LazyColumn(
+
+    ClientScreenLayout{
+        Box(modifier = Modifier.fillMaxSize()) {
+
+            Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(paddingValues)
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 100.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
+                    .padding(bottom = 140.dp)
             ) {
-                // Header
-                item {
-                    Spacer(modifier = Modifier.height(8.dp))
-                    HomeHeader(
-                        userName = userName,
-                        onMyReservationsClick = onNavigateToClientReservarionts
-                    )
-                }
+                Spacer(modifier = Modifier.height(8.dp))
 
-                item {
-                    HomeOptionsSelector(
-                        selected = state.selectedOption,
-                        onSelectedChange =  viewModel::changeOption
-                    )
-                }
+                HomeHeader(
+                    userName = userName,
+                    onMyReservationsClick = onNavigateToClientReservarionts
+                )
 
-                when (state.selectedOption) {
-                    "barbero" -> {
-                        item {
-                            Title("Selecciona tu barbero")
-                        }
+                Spacer(modifier = Modifier.height(16.dp))
 
-                        when (val barberState = state.barbersState) {
-                            is ClientHomeUiState.BarbersDataState.Loading ->
-                                item { LoadingShimmer () }
+                HomeOptionsSelector(
+                    selected = state.selectedOption,
+                    onSelectedChange =  viewModel::changeOption
+                )
 
-                            is ClientHomeUiState.BarbersDataState.Error ->
-                                item { ErrorMessage(barberState.message) }
-
-                            is ClientHomeUiState.BarbersDataState.Success ->
-                                items(barberState.barbers) { barber ->
-                                    BarberCard(
-                                        name = barber.name,
-                                        selected = state.selectedBarberId == barber.id,
-                                        onClick = { viewModel.selectBarber(barber.id) }
-                                    )
-
-                                }
-
-                        }
-
-                    }
-
-                    "servicio" -> {
-                        item {
-                            Title("Selecciona el servicio")
-                        }
-
-                        when (val serviceState = state.servicesState) {
-                            is ClientHomeUiState.ServicesDataState.Loading ->
-                                item { LoadingShimmer() }
-
-                            is ClientHomeUiState.ServicesDataState.Error ->
-                                item { ErrorMessage(serviceState.message) }
-
-                            is ClientHomeUiState.ServicesDataState.Success -> {
-                                items(serviceState.services) { service ->
-                                    ServiceCard(
-                                        name = service.name,
-                                        description = service.description,
-                                        selected = state.selectedServiceId == service.id,
-                                        onClick = { viewModel.selectService(service.id) }
-                                    )
-                                }
-                            }
-                        }
-                    }
-                }
+                ClientHomeContent(
+                    contentState = state,
+                    viewModel = viewModel
+                )
             }
+
             BottomActionBar(
                 enabled = state.isContinueButtonEnabled,
                 onClick = onContinueClick,
@@ -119,16 +65,105 @@ fun ClientHomeScreen(
                     .padding(bottom = 70.dp)
             )
 
-            // 🔵 BOTÓN LOGOUT — abajo izquierda
             LogoutButton(
                 onClick = onLogout,
                 modifier = Modifier
                     .align(Alignment.BottomStart)
                     .padding(start = 16.dp, bottom = 16.dp)
             )
+        }
+    }
+}
+
+@Composable
+private fun ClientHomeContent(
+    contentState: ClientHomeUiState,
+    viewModel: ClientHomeViewModel
+){
+    when(contentState.selectedOption){
+        "barbero" -> {
+            Title("Selecciona tu barbero")
+
+            when (val barberState = contentState.barbersState) {
+                is ClientHomeUiState.BarbersDataState.Loading ->
+                    LoadingShimmer()
+
+                is ClientHomeUiState.BarbersDataState.Error ->
+                    ErrorMessage(barberState.message)
+
+                is ClientHomeUiState.BarbersDataState.Success ->
+                    BarberList(
+                        selected = contentState.selectedBarberId,
+                        barbers = barberState.barbers,
+                        viewModel = viewModel
+                    )
+            }
+        }
+
+        "servicio" -> {
+            Title("Selecciona el servicio")
+
+            when (val serviceState = contentState.servicesState) {
+                is ClientHomeUiState.ServicesDataState.Loading ->
+                    LoadingShimmer()
+
+                is ClientHomeUiState.ServicesDataState.Error ->
+                    ErrorMessage(serviceState.message)
+
+                is ClientHomeUiState.ServicesDataState.Success -> {
+                    ServiceList(
+                        selected = contentState.selectedServiceId,
+                        services = serviceState.services,
+                        viewModel = viewModel
+                    )
+
+                }
+
+            }
 
         }
 
+    }
+}
+
+@Composable
+private fun BarberList(
+    selected: Long?,
+    barbers: List<Barber>,
+    viewModel: ClientHomeViewModel
+){
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(barbers) { barber ->
+            BarberCard(
+                name = barber.name,
+                selected = selected == barber.id,
+                onClick = { viewModel.selectBarber(barber.id) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ServiceList(
+    selected: Long?,
+    services: List<Service>,
+    viewModel: ClientHomeViewModel
+){
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(services) { service ->
+            ServiceCard (
+                name = service.name,
+                description = service.description,
+                selected = selected == service.id,
+                onClick = { viewModel.selectService(service.id) }
+            )
+        }
     }
 }
 
@@ -146,7 +181,7 @@ private fun HomeHeader(
             Text(
                 text = "Bienvenido",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
+                fontSize = 25.sp
             )
             Text(
                 text = userName,
@@ -158,6 +193,9 @@ private fun HomeHeader(
 
         Button(
             onClick = onMyReservationsClick,
+            modifier = Modifier
+                .width(150.dp)
+                .height(45.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF03A9F4),
@@ -180,7 +218,7 @@ fun HomeOptionsSelector(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 15.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         // Botón Servicio

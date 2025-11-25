@@ -1,28 +1,31 @@
 package com.dsmovil.studiobarber.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
+import com.dsmovil.studiobarber.domain.models.Reservation
+import androidx.compose.material3.Text
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
 
 @Composable
 fun ReservationCard(
+    reservation: Reservation,
     modifier: Modifier = Modifier,
     onDeleteClick: (() -> Unit)? = null,
-    textContent: @Composable ColumnScope.() -> Unit
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -34,16 +37,13 @@ fun ReservationCard(
     ) {
         Row(
             modifier = Modifier
-                .padding(16.dp)
+                .padding(12.dp)
                 .fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-
-            Column(
-                verticalArrangement = Arrangement.Center,
-                content = textContent
-            )
+            ReservationContent(reservation = reservation)
+            Spacer(modifier = Modifier.width(38.dp))
 
             if (onDeleteClick != null) {
                 ActionButtons(
@@ -62,35 +62,31 @@ fun ReservationCard(
     }
 }
 
-
 @Composable
-private fun ReservationCardInfo(
-    icon: ImageVector,
-    iconBackgroundColor: Color,
-    textContent: @Composable ColumnScope.() -> Unit
-) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.spacedBy(16.dp)
+private fun ReservationContent(reservation: Reservation) {
+    Column(
+        verticalArrangement = Arrangement.Center
     ) {
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .background(iconBackgroundColor),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = colorResource(id = R.color.icon_color_blue),
-                modifier = Modifier.size(32.dp)
+        val labelStyle = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Black)
+        val valueStyle = SpanStyle(color = Color.DarkGray)
+        val fontSize = 15.sp
+
+        val items = listOf(
+            "Fecha" to reservation.date,
+            "Hora" to reservation.timeStart,
+            "Servicio" to reservation.nameService,
+            "Barbero" to reservation.nameBarber
+        )
+
+        // Iteramos sobre la lista para renderizar cada línea
+        items.forEach { (label, value) ->
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = labelStyle) { append("$label: ") }
+                    withStyle(style = valueStyle) { append(value.toString()) }
+                },
+                fontSize = fontSize
             )
         }
-
-        Column(
-            verticalArrangement = Arrangement.Center,
-            content = textContent
-        )
     }
 }

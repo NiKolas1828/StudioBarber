@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -16,13 +17,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.ui.components.Footer
 import com.dsmovil.studiobarber.ui.components.LogoutButton
@@ -30,6 +29,11 @@ import com.dsmovil.studiobarber.ui.components.ReservationCard
 import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
 import com.dsmovil.studiobarber.ui.screens.client.home.ErrorMessage
 import com.dsmovil.studiobarber.ui.screens.client.home.LoadingShimmer
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.ui.Alignment
+
 
 @Composable
 fun ClientReservationsScreen(
@@ -42,26 +46,41 @@ fun ClientReservationsScreen(
     val state by viewModel.uiState.collectAsState()
 
     ClientScreenLayout{
-        Spacer(modifier = Modifier.height(8.dp))
+        Box(modifier = Modifier.fillMaxSize()) {
 
-        ClientReservationsHeader(
-            userName = userName,
-            onMyReservationsClick = onNavigateToClientHome
-        )
+            Column(modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = 100.dp)
+                .align(Alignment.TopStart)
+            ) {
+                Spacer(modifier = Modifier.height(8.dp))
 
-        Spacer(modifier = Modifier.height(16.dp))
+                ClientReservationsHeader(
+                    userName = userName,
+                    onMyReservationsClick = onNavigateToClientHome
+                )
 
-        ClientReservationsContent(
-            reservationState = state.reservationState,
-            viewModel = viewModel
-        )
+                Spacer(modifier = Modifier.height(16.dp))
 
-        Footer(
-            message = "Gracias por preferirnos",
-            actions = {
-                LogoutButton(onClick = onLogout)
+                ClientReservationsContent(
+                    reservationState = state.reservationState,
+                    viewModel = viewModel
+                )
             }
-        )
+
+            Footer(
+                message = "Gracias por preferirnos",
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .fillMaxWidth(),
+                actions = { LogoutButton(
+                    onClick = onLogout,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start)
+                )},
+            )
+        }
     }
 }
 
@@ -79,7 +98,7 @@ private fun ClientReservationsHeader(
             Text(
                 text = "Bienvenido",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
+                fontSize = 25.sp
             )
             Text(
                 text = userName,
@@ -91,6 +110,9 @@ private fun ClientReservationsHeader(
 
         Button(
             onClick = onMyReservationsClick,
+            modifier = Modifier
+                .width(150.dp)
+                .height(45.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFFF44336),
@@ -122,7 +144,8 @@ private fun ClientReservationsContent(
         is ClientReservationUiState.ReservationDataState.Success -> {
             ReservationsList(
                 reservations = reservationState.reservations,
-                viewModel = viewModel)
+                viewModel = viewModel
+            )
         }
     }
 }
@@ -137,13 +160,9 @@ private fun ReservationsList(
     ) {
         items(reservations) { reservation ->
             ReservationCard(
-                onDeleteClick = { viewModel.deleteReservation(reservation.id) }
-            ){
-                Text("Fecha: ${reservation.date}")
-                Text("Hora: ${reservation.timeStart}")
-                Text("Servicio: ${reservation.nameService}")
-                Text("Barbero: ${reservation.nameBarber}")
-            }
+                onDeleteClick = { viewModel.deleteReservation(reservation.id) },
+                reservation = reservation
+            )
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.components
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.runtime.Composable
@@ -22,28 +23,23 @@ fun Footer(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(0.dp)
+            .background(Color.White)
+            .padding(vertical = 12.dp, horizontal = 16.dp),
     ) {
-        // Contenedor blanco del footer
-        Column(
+        // Texto principal
+        Text(
+            text = message,
+            fontSize = 25.sp,
+            color = Color.Black,
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 12.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
+                .align(Alignment.CenterHorizontally)
+                .padding(top = 25.dp)
+        )
 
-            // Texto principal
-            Text(
-                text = message,
-                fontSize = 18.sp,
-                color = Color.Black
-            )
-
-            // Slot para botones u otros elementos opcionales
-            actions?.let {
-                Spacer(modifier = Modifier.height(8.dp))
-                it()
-            }
+        // Slot para botones u otros elementos opcionales
+        actions?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            it()
         }
     }
 }
