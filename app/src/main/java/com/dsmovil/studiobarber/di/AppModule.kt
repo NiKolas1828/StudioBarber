@@ -3,6 +3,7 @@ package com.dsmovil.studiobarber.di
 import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.data.repositories.BarberRepositoryImpl
+import com.dsmovil.studiobarber.data.repositories.ServiceRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
 import com.dsmovil.studiobarber.domain.repositories.ServiceRepository
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
@@ -36,7 +37,7 @@ abstract class AppModule {
 
     @Binds
     @Singleton
-    abstract fun bindServiceRepository(serviceRepositoryImpl: BarberRepositoryImpl): ServiceRepository
+    abstract fun bindServiceRepository(serviceRepositoryImpl: ServiceRepositoryImpl): ServiceRepository
 
     companion object {
         @Provides
