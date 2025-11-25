@@ -29,9 +29,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -42,7 +40,8 @@ import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AddButtonFab
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
-import com.dsmovil.studiobarber.ui.components.admin.ServiceDialog
+import com.dsmovil.studiobarber.ui.components.admin.services.ServiceDialog
+import com.dsmovil.studiobarber.ui.components.utils.getIconForServiceType
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
@@ -176,7 +175,7 @@ private fun ServicesList(
     ) {
         items(items = services, key = { it.id }) { service ->
             AdminItemCard(
-                icon = ImageVector.vectorResource(id = R.drawable.ic_services),
+                icon = getIconForServiceType(service.type),
                 iconColor = colorResource(id = R.color.icon_color_red),
                 iconBackgroundColor = Color.Transparent,
                 onEditClick = { onEditClick(service) },

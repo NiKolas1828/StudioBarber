@@ -43,7 +43,7 @@ import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AddButtonFab
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
-import com.dsmovil.studiobarber.ui.components.admin.BarberDialog
+import com.dsmovil.studiobarber.ui.components.admin.barbers.BarberDialog
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable

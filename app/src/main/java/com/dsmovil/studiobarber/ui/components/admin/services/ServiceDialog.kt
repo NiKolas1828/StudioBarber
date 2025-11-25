@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.components.admin
+package com.dsmovil.studiobarber.ui.components.admin.services
 
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -13,6 +13,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Service
+import com.dsmovil.studiobarber.ui.components.admin.AdminDialogLayout
+import com.dsmovil.studiobarber.ui.components.admin.AdminTextField
 
 @Composable
 fun ServiceDialog(
