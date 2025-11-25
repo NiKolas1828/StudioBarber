@@ -3,7 +3,9 @@ package com.dsmovil.studiobarber.di
 import com.dsmovil.studiobarber.domain.repositories.AuthRepository
 import com.dsmovil.studiobarber.data.repositories.AuthRepositoryImpl
 import com.dsmovil.studiobarber.data.repositories.BarberRepositoryImpl
+import com.dsmovil.studiobarber.data.repositories.ReservationRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
+import com.dsmovil.studiobarber.domain.repositories.ReservationRepository
 import com.dsmovil.studiobarber.domain.usecases.admin.DeleteBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
@@ -28,6 +30,10 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindBarberRepository(barberRepositoryImpl: BarberRepositoryImpl): BarberRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReservationRepository(reservationRepositoryImpl: ReservationRepositoryImpl) : ReservationRepository
 
     companion object {
         @Provides

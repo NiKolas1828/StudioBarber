@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.components
+package com.dsmovil.studiobarber.ui.components.client
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border

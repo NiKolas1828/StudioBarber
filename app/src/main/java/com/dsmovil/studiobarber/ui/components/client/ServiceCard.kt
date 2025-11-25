@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.components
+package com.dsmovil.studiobarber.ui.components.client
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

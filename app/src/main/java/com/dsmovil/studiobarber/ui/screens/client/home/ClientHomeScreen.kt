@@ -12,114 +12,123 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dsmovil.studiobarber.ui.components.BarberCard
-import com.dsmovil.studiobarber.ui.components.ServiceCard
+import com.dsmovil.studiobarber.ui.components.LogoutButton
+import com.dsmovil.studiobarber.ui.components.client.BarberCard
+import com.dsmovil.studiobarber.ui.components.client.ServiceCard
 
 @Composable
 fun ClientHomeScreen(
+    viewModel: ClientHomeViewModel,
     userName: String = "Usuario",
     onNavigateToClientReservarionts: () -> Unit = {},
-    onContinueClick: () -> Unit = {}
+    onContinueClick: () -> Unit = {},
+    onLogout: () -> Unit ={}
 ) {
-    var selectedBarberId by remember { mutableStateOf<Int?>(null) }
-    var selectedServiceId by remember { mutableStateOf<Int?>(null) }
-
-    var selectOption by remember { mutableStateOf("barbero") }
-
-    val barbers = remember {
-        listOf(
-            Barber(1, "Carlos Martínez"),
-            Barber(2, "Juan Pérez"),
-            Barber(3, "Pedro García"),
-            Barber(4, "Luis Rodríguez")
-        )
-    }
-
-    val services = remember {
-        listOf(
-            Service(1, "Corte de cabello", "Corte profesional"),
-            Service(2, "Barba", "Arreglo de barba"),
-            Service(3, "Cejas", "Perfilado de cejas")
-        )
-    }
+    val state by viewModel.uiState.collectAsState()
 
     Scaffold(
-        containerColor = Color(0xFF1E1E1E), // Fondo oscuro
-        bottomBar = {
-            BottomActionBar(
-                enabled = (selectedBarberId != null && selectedServiceId != null),
-                onClick = onContinueClick
-            )
-        }
+        containerColor = Color(0xFF1E1E1E),
     ) { paddingValues ->
-        LazyColumn(
+        Box(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Header
-            item {
-                Spacer(modifier = Modifier.height(8.dp))
-                HomeHeader(
-                    userName = userName,
-                    onMyReservationsClick = onNavigateToClientReservarionts
-                )
-            }
-
-            item {
-                HomeOptionsSelector(
-                    selected = selectOption,
-                    onSelectedChange =  { selectOption = it }
-                )
-            }
-
-            when (selectOption) {
-                "barbero" -> {
-                    item {
-                        Text(
-                            text = "Selecciona tu barbero",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
-
-                    items(barbers) { barber ->
-                        BarberCard(
-                            name = barber.name,
-                            selected = selectedBarberId == barber.id,
-                            onClick = { selectedBarberId = barber.id }
-                        )
-                    }
+        ){
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(paddingValues)
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 100.dp),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                // Header
+                item {
+                    Spacer(modifier = Modifier.height(8.dp))
+                    HomeHeader(
+                        userName = userName,
+                        onMyReservationsClick = onNavigateToClientReservarionts
+                    )
                 }
 
-                "servicio" -> {
-                    item {
-                        Text(
-                            text = "Selecciona el servicio",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
+                item {
+                    HomeOptionsSelector(
+                        selected = state.selectedOption,
+                        onSelectedChange =  viewModel::changeOption
+                    )
+                }
+
+                when (state.selectedOption) {
+                    "barbero" -> {
+                        item {
+                            Title("Selecciona tu barbero")
+                        }
+
+                        when (val barberState = state.barbersState) {
+                            is ClientHomeUiState.BarbersDataState.Loading ->
+                                item { LoadingShimmer () }
+
+                            is ClientHomeUiState.BarbersDataState.Error ->
+                                item { ErrorMessage(barberState.message) }
+
+                            is ClientHomeUiState.BarbersDataState.Success ->
+                                items(barberState.barbers) { barber ->
+                                    BarberCard(
+                                        name = barber.name,
+                                        selected = state.selectedBarberId == barber.id,
+                                        onClick = { viewModel.selectBarber(barber.id) }
+                                    )
+
+                                }
+
+                        }
+
                     }
 
-                    items(services) { service ->
-                        ServiceCard(
-                            name = service.name,
-                            description = service.description,
-                            selected = selectedServiceId == service.id,
-                            onClick = { selectedServiceId = service.id })
+                    "servicio" -> {
+                        item {
+                            Title("Selecciona el servicio")
+                        }
+
+                        when (val serviceState = state.servicesState) {
+                            is ClientHomeUiState.ServicesDataState.Loading ->
+                                item { LoadingShimmer() }
+
+                            is ClientHomeUiState.ServicesDataState.Error ->
+                                item { ErrorMessage(serviceState.message) }
+
+                            is ClientHomeUiState.ServicesDataState.Success -> {
+                                items(serviceState.services) { service ->
+                                    ServiceCard(
+                                        name = service.name,
+                                        description = service.description,
+                                        selected = state.selectedServiceId == service.id,
+                                        onClick = { viewModel.selectService(service.id) }
+                                    )
+                                }
+                            }
+                        }
                     }
                 }
             }
+            BottomActionBar(
+                enabled = state.isContinueButtonEnabled,
+                onClick = onContinueClick,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 70.dp)
+            )
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+            // 🔵 BOTÓN LOGOUT — abajo izquierda
+            LogoutButton(
+                onClick = onLogout,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 16.dp)
+            )
 
         }
+
     }
 }
 
@@ -206,10 +215,11 @@ fun HomeOptionsSelector(
 @Composable
 private fun BottomActionBar(
     enabled: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = Color(0xFF1E1E1E),
         tonalElevation = 8.dp
     ) {
@@ -240,13 +250,36 @@ private fun BottomActionBar(
     }
 }
 
-data class Barber(
-    val id: Int,
-    val name: String
-)
+@Composable
+fun Title(text: String) {
+    Text(
+        text = text,
+        color = Color.White,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
+@Composable
+fun LoadingShimmer() {
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun ErrorMessage(message: String) {
+    Text(
+        text = message,
+        color = Color.Red,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
 
 data class Service(
-    val id: Int,
+    val id: Long,
     val name: String,
     val description: String
 )

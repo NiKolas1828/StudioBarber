@@ -10,6 +10,9 @@ import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeScreen
+import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeViewModel
+import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationViewModel
+import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationsScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
@@ -29,7 +32,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         LoginScreen(
             viewModel = viewModel,
             onLoginSuccess = {
-                navController.navigate(Screen.Home.route) {
+                navController.navigate(Screen.ClientHome.route) {
                     popUpTo(Screen.AuthChooser.route) { inclusive = true }
                 }
             }
@@ -42,7 +45,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         RegisterScreen(
             viewModel = viewModel,
             onRegisterSuccess = {
-                navController.navigate(Screen.Home.route) {
+                navController.navigate(Screen.ClientHome.route) {
                     popUpTo(Screen.AuthChooser.route) { inclusive = true }
                 }
             }
@@ -51,8 +54,24 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 }
 
 fun NavGraphBuilder.clientGraph(navController: NavController) {
-    composable(Screen.Home.route) {
-        ClientHomeScreen()
+    composable(Screen.ClientHome.route) {
+        val viewModel: ClientHomeViewModel = hiltViewModel()
+
+        ClientHomeScreen(
+            onNavigateToClientReservarionts = { navController.navigate(Screen.ClientReservations.route) },
+            onLogout = { navigateToAuthAndClearStack(navController) },
+            viewModel = viewModel
+        )
+    }
+
+    composable(Screen.ClientReservations.route) {
+        val viewModel: ClientReservationViewModel = hiltViewModel()
+
+        ClientReservationsScreen(
+            onNavigateToClientHome = { navController.navigate(Screen.ClientHome.route) },
+            viewModel = viewModel,
+            onLogout = { navigateToAuthAndClearStack(navController)}
+        )
     }
 }
 
