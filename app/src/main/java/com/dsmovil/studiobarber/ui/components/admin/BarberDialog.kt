@@ -12,8 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Barber
 
 @Composable
@@ -34,7 +36,8 @@ fun BarberDialog(
     AdminDialogLayout(
         title = dialogTitle,
         onConfirm = { onConfirm(name, email, phone, password) },
-        onDismiss = onDismiss
+        onDismiss = onDismiss,
+        colorSaveButton = colorResource(id = R.color.icon_color_red)
     ) {
         AdminTextField(
             value = name,

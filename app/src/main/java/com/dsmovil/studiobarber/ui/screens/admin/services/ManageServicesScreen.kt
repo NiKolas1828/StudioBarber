@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.screens.admin.barbers
+package com.dsmovil.studiobarber.ui.screens.admin.services
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -38,60 +37,52 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
-import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.domain.models.Service
 import com.dsmovil.studiobarber.ui.components.CustomSnackbarHost
 import com.dsmovil.studiobarber.ui.components.admin.AddButtonFab
 import com.dsmovil.studiobarber.ui.components.admin.AdminItemCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
-import com.dsmovil.studiobarber.ui.components.admin.BarberDialog
+import com.dsmovil.studiobarber.ui.components.admin.ServiceDialog
 import kotlinx.coroutines.flow.collectLatest
 
 @Composable
-fun ManageBarbersScreen(
-    viewModel: ManageBarbersViewModel,
+fun ManageServicesScreen(
+    viewModel: ManageServicesViewModel,
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     val showDialog by viewModel.showDialog.collectAsState()
-    val selectedBarber by viewModel.selectedBarber.collectAsState()
-
+    val selectedService by viewModel.selectedService.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    BarberSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
+    ServiceSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
 
     if (showDialog) {
-        BarberDialog(
-            barberToEdit = selectedBarber,
+        ServiceDialog(
+            serviceToEdit = selectedService,
             onDismiss = viewModel::closeDialog,
-            onConfirm = { name, email, phone, password ->
-                viewModel.onConfirmDialog(name, email, phone, password)
-            }
+            onConfirm = viewModel::onConfirmDialog
         )
     }
 
     AdminScreenLayout(
         viewModel = viewModel,
+        onLogoutSuccess = onLogout,
+        snackbarHost = { CustomSnackbarHost(hostState = snackbarHostState) },
         floatingActionButton = {
             AddButtonFab(onClick = viewModel::openAddDialog)
-        },
-        onLogoutSuccess = onLogout,
-        snackbarHost = {
-            CustomSnackbarHost(hostState = snackbarHostState)
         }
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-        ) {
-            ManageBarbersHeader(onNavigateBack = onNavigateBack)
+        Column(modifier = Modifier.fillMaxSize()) {
+            ManageServicesHeader(onNavigateBack)
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            ManageBarbersContent(
+            ManageServicesContent(
                 uiState = uiState,
                 onEditClick = viewModel::openEditDialog,
-                onDeleteClick = viewModel::deleteBarber,
+                onDeleteClick = viewModel::deleteService,
                 onRetry = viewModel::clearError
             )
         }
@@ -99,22 +90,18 @@ fun ManageBarbersScreen(
 }
 
 @Composable
-private fun ManageBarbersHeader(onNavigateBack: () -> Unit) {
+private fun ManageServicesHeader(onNavigateBack: () -> Unit) {
     Spacer(modifier = Modifier.height(24.dp))
-
     Box(modifier = Modifier.fillMaxWidth()) {
         Button(
             onClick = onNavigateBack,
             shape = RoundedCornerShape(4.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = colorResource(id = R.color.icon_color_red),
+                containerColor = colorResource(id = R.color.icon_color_blue),
                 contentColor = Color.White
             ),
             contentPadding = PaddingValues(0.dp),
-            modifier = Modifier
-                .align(Alignment.CenterStart)
-                .width(60.dp)
-                .height(30.dp)
+            modifier = Modifier.align(Alignment.CenterStart).width(60.dp).height(30.dp)
         ) {
             Icon(
                 modifier = Modifier.fillMaxSize(),
@@ -122,9 +109,8 @@ private fun ManageBarbersHeader(onNavigateBack: () -> Unit) {
                 contentDescription = "Volver"
             )
         }
-
         Text(
-            text = "Barberos",
+            text = "Servicios",
             color = Color.White,
             fontSize = 24.sp,
             modifier = Modifier.align(Alignment.Center)
@@ -133,20 +119,26 @@ private fun ManageBarbersHeader(onNavigateBack: () -> Unit) {
 }
 
 @Composable
-private fun ManageBarbersContent(
-    uiState: ManageBarbersUiState,
-    onEditClick: (Barber) -> Unit,
+private fun ManageServicesContent(
+    uiState: ManageServicesUiState,
+    onEditClick: (Service) -> Unit,
     onDeleteClick: (Long) -> Unit,
     onRetry: () -> Unit
 ) {
     when (uiState) {
-        is ManageBarbersUiState.Loading -> LoadingView()
-        is ManageBarbersUiState.Error -> ErrorView(message = uiState.message, onRetry = onRetry)
-        is ManageBarbersUiState.Success -> BarbersList(
-            barbers = uiState.barbers,
-            onEditClick = onEditClick,
-            onDeleteClick = onDeleteClick
-        )
+        is ManageServicesUiState.Loading -> {
+            LoadingView()
+        }
+        is ManageServicesUiState.Error -> {
+            ErrorView(uiState.message, onRetry)
+        }
+        is ManageServicesUiState.Success -> {
+            ServicesList(
+                services = uiState.services,
+                onEditClick = onEditClick,
+                onDeleteClick = onDeleteClick
+            )
+        }
     }
 }
 
@@ -173,46 +165,44 @@ private fun ErrorView(message: String, onRetry: () -> Unit) {
 }
 
 @Composable
-private fun BarbersList(
-    barbers: List<Barber>,
-    onEditClick: (Barber) -> Unit,
+private fun ServicesList(
+    services: List<Service>,
+    onEditClick: (Service) -> Unit,
     onDeleteClick: (Long) -> Unit
 ) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(bottom = 16.dp)
     ) {
-        items(
-            items = barbers,
-            key = { barber -> barber.id }
-        ) { barber ->
+        items(items = services, key = { it.id }) { service ->
             AdminItemCard(
-                icon = ImageVector.vectorResource(id = R.drawable.ic_user),
-                iconColor = colorResource(id = R.color.icon_color_blue),
+                icon = ImageVector.vectorResource(id = R.drawable.ic_services),
+                iconColor = colorResource(id = R.color.icon_color_red),
                 iconBackgroundColor = Color.Transparent,
-                onEditClick = { onEditClick(barber) },
-                onDeleteClick = { onDeleteClick(barber.id) },
+                onEditClick = { onEditClick(service) },
+                onDeleteClick = { onDeleteClick(service.id) },
                 textContent = {
                     Text(
-                        text = barber.name,
+                        text = service.name,
                         color = Color.Black,
-                        fontSize = 18.sp,
+                        fontSize = 16.sp,
                         fontWeight = FontWeight.Bold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = barber.email,
-                        color = Color.Gray,
+                        text = service.description,
+                        lineHeight = 18.sp,
+                        color = Color.Black,
                         fontSize = 14.sp,
-                        maxLines = 1,
+                        maxLines = 2,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = barber.phone,
-                        color = Color.Gray,
+                        text = "$ ${service.price}",
+                        color = Color.Black,
                         fontSize = 14.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
@@ -220,22 +210,12 @@ private fun BarbersList(
                 }
             )
         }
-
-        if (barbers.isEmpty()) {
-            item {
-                Text(
-                    text = "No hay barberos registrados.",
-                    color = Color.Gray,
-                    modifier = Modifier.padding(top = 32.dp)
-                )
-            }
-        }
     }
 }
 
 @Composable
-private fun BarberSnackbar(
-    viewModel: ManageBarbersViewModel,
+private fun ServiceSnackbar(
+    viewModel: ManageServicesViewModel,
     snackbarHostState: SnackbarHostState
 ) {
     LaunchedEffect(Unit) {

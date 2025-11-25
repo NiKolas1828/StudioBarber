@@ -9,6 +9,7 @@ import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
+import com.dsmovil.studiobarber.ui.screens.admin.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,7 +38,7 @@ class ManageBarbersViewModel @Inject constructor(
     private val _selectedBarber = MutableStateFlow<Barber?>(null)
     val selectedBarber: StateFlow<Barber?> = _selectedBarber.asStateFlow()
 
-    // Estados del snackBar
+    // Estados del snackbar
     private val _messageChannel = Channel<UiMessage>()
     val messageChannel = _messageChannel.receiveAsFlow()
 

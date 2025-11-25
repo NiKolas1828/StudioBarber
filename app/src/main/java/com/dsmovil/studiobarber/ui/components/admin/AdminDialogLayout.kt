@@ -34,6 +34,7 @@ fun AdminDialogLayout(
     onConfirm: () -> Unit,
     confirmButtonText: String = "Guardar",
     cancelButtonText: String = "Cancelar",
+    colorSaveButton: Color,
     content: @Composable ColumnScope.() -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -63,7 +64,8 @@ fun AdminDialogLayout(
                     onDismiss = onDismiss,
                     onConfirm = onConfirm,
                     confirmButtonText = confirmButtonText,
-                    cancelButtonText = cancelButtonText
+                    cancelButtonText = cancelButtonText,
+                    colorSaveButton = colorSaveButton
                 )
             }
         }
@@ -76,7 +78,8 @@ private fun BarberDialogButtons(
     onDismiss: () -> Unit,
     onConfirm: () -> Unit,
     confirmButtonText: String,
-    cancelButtonText: String
+    cancelButtonText: String,
+    colorSaveButton: Color
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -90,7 +93,7 @@ private fun BarberDialogButtons(
 
         Button(
             onClick = onConfirm,
-            colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.icon_color_red))
+            colors = ButtonDefaults.buttonColors(containerColor = colorSaveButton)
         ) {
             Text(confirmButtonText, color = Color.White)
         }

@@ -29,18 +29,18 @@ fun ActionButtons(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy((-5).dp)
     ) {
-        IconButton(modifier = Modifier.size(42.dp), onClick = onFirstClick) {
+        IconButton(modifier = Modifier.size(36.dp), onClick = onFirstClick) {
             Icon(
-                modifier = Modifier.size(22.dp),
+                modifier = Modifier.size(18.dp),
                 imageVector = firstIcon,
                 contentDescription = firstContentDescription,
                 tint = firstIconTint
             )
         }
 
-        IconButton(modifier = Modifier.size(42.dp), onClick = onSecondClick) {
+        IconButton(modifier = Modifier.size(36.dp), onClick = onSecondClick) {
             Icon(
-                modifier = Modifier.size(22.dp),
+                modifier = Modifier.size(18.dp),
                 imageVector = secondIcon,
                 contentDescription = secondContentDescription,
                 tint = secondIconTint
