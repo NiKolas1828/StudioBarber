@@ -1,0 +1,92 @@
+package com.dsmovil.studiobarber.ui.components
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.R
+import com.dsmovil.studiobarber.domain.models.Reservation
+import androidx.compose.material3.Text
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.withStyle
+
+@Composable
+fun ReservationCard(
+    reservation: Reservation,
+    modifier: Modifier = Modifier,
+    onDeleteClick: (() -> Unit)? = null,
+) {
+    Card(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(12.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White
+        ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 2.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .padding(12.dp)
+                .fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            ReservationContent(reservation = reservation)
+            Spacer(modifier = Modifier.width(38.dp))
+
+            if (onDeleteClick != null) {
+                ActionButtons(
+                    firstIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                    onFirstClick = onDeleteClick,
+                    firstIconTint = colorResource(id = R.color.icon_color_red),
+                    firstContentDescription = "Eliminar",
+
+                    secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                    onSecondClick = {},
+                    secondIconTint = Color.Transparent,
+                    secondContentDescription = ""
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ReservationContent(reservation: Reservation) {
+    Column(
+        verticalArrangement = Arrangement.Center
+    ) {
+        val labelStyle = SpanStyle(fontWeight = FontWeight.Bold, color = Color.Black)
+        val valueStyle = SpanStyle(color = Color.DarkGray)
+        val fontSize = 15.sp
+
+        val items = listOf(
+            "Fecha" to reservation.date,
+            "Hora" to reservation.timeStart,
+            "Servicio" to reservation.nameService,
+            "Barbero" to reservation.nameBarber
+        )
+
+        // Iteramos sobre la lista para renderizar cada línea
+        items.forEach { (label, value) ->
+            Text(
+                text = buildAnnotatedString {
+                    withStyle(style = labelStyle) { append("$label: ") }
+                    withStyle(style = valueStyle) { append(value.toString()) }
+                },
+                fontSize = fontSize
+            )
+        }
+    }
+}

@@ -12,113 +12,157 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dsmovil.studiobarber.ui.components.BarberCard
-import com.dsmovil.studiobarber.ui.components.ServiceCard
+import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.ui.components.LogoutButton
+import com.dsmovil.studiobarber.ui.components.client.BarberCard
+import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
+import com.dsmovil.studiobarber.ui.components.client.ServiceCard
 
 @Composable
 fun ClientHomeScreen(
+    viewModel: ClientHomeViewModel,
     userName: String = "Usuario",
     onNavigateToClientReservarionts: () -> Unit = {},
-    onContinueClick: () -> Unit = {}
+    onContinueClick: () -> Unit = {},
+    onLogout: () -> Unit ={}
 ) {
-    var selectedBarberId by remember { mutableStateOf<Int?>(null) }
-    var selectedServiceId by remember { mutableStateOf<Int?>(null) }
+    val state by viewModel.uiState.collectAsState()
 
-    var selectOption by remember { mutableStateOf("barbero") }
 
-    val barbers = remember {
-        listOf(
-            Barber(1, "Carlos Martínez"),
-            Barber(2, "Juan Pérez"),
-            Barber(3, "Pedro García"),
-            Barber(4, "Luis Rodríguez")
-        )
-    }
+    ClientScreenLayout{
+        Box(modifier = Modifier.fillMaxSize()) {
 
-    val services = remember {
-        listOf(
-            Service(1, "Corte de cabello", "Corte profesional"),
-            Service(2, "Barba", "Arreglo de barba"),
-            Service(3, "Cejas", "Perfilado de cejas")
-        )
-    }
-
-    Scaffold(
-        containerColor = Color(0xFF1E1E1E), // Fondo oscuro
-        bottomBar = {
-            BottomActionBar(
-                enabled = (selectedBarberId != null && selectedServiceId != null),
-                onClick = onContinueClick
-            )
-        }
-    ) { paddingValues ->
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(paddingValues)
-                .padding(horizontal = 16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
-        ) {
-            // Header
-            item {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(bottom = 140.dp)
+            ) {
                 Spacer(modifier = Modifier.height(8.dp))
+
                 HomeHeader(
                     userName = userName,
                     onMyReservationsClick = onNavigateToClientReservarionts
                 )
-            }
 
-            item {
+                Spacer(modifier = Modifier.height(16.dp))
+
                 HomeOptionsSelector(
-                    selected = selectOption,
-                    onSelectedChange =  { selectOption = it }
+                    selected = state.selectedOption,
+                    onSelectedChange =  viewModel::changeOption
+                )
+
+                ClientHomeContent(
+                    contentState = state,
+                    viewModel = viewModel
                 )
             }
 
-            when (selectOption) {
-                "barbero" -> {
-                    item {
-                        Text(
-                            text = "Selecciona tu barbero",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
+            BottomActionBar(
+                enabled = state.isContinueButtonEnabled,
+                onClick = onContinueClick,
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .padding(bottom = 70.dp)
+            )
 
-                    items(barbers) { barber ->
-                        BarberCard(
-                            name = barber.name,
-                            selected = selectedBarberId == barber.id,
-                            onClick = { selectedBarberId = barber.id }
-                        )
-                    }
+            LogoutButton(
+                onClick = onLogout,
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp, bottom = 16.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun ClientHomeContent(
+    contentState: ClientHomeUiState,
+    viewModel: ClientHomeViewModel
+){
+    when(contentState.selectedOption){
+        "barbero" -> {
+            Title("Selecciona tu barbero")
+
+            when (val barberState = contentState.barbersState) {
+                is ClientHomeUiState.BarbersDataState.Loading ->
+                    LoadingShimmer()
+
+                is ClientHomeUiState.BarbersDataState.Error ->
+                    ErrorMessage(barberState.message)
+
+                is ClientHomeUiState.BarbersDataState.Success ->
+                    BarberList(
+                        selected = contentState.selectedBarberId,
+                        barbers = barberState.barbers,
+                        viewModel = viewModel
+                    )
+            }
+        }
+
+        "servicio" -> {
+            Title("Selecciona el servicio")
+
+            when (val serviceState = contentState.servicesState) {
+                is ClientHomeUiState.ServicesDataState.Loading ->
+                    LoadingShimmer()
+
+                is ClientHomeUiState.ServicesDataState.Error ->
+                    ErrorMessage(serviceState.message)
+
+                is ClientHomeUiState.ServicesDataState.Success -> {
+                    ServiceList(
+                        selected = contentState.selectedServiceId,
+                        services = serviceState.services,
+                        viewModel = viewModel
+                    )
+
                 }
 
-                "servicio" -> {
-                    item {
-                        Text(
-                            text = "Selecciona el servicio",
-                            color = Color.White,
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(vertical = 8.dp)
-                        )
-                    }
-
-                    items(services) { service ->
-                        ServiceCard(
-                            name = service.name,
-                            description = service.description,
-                            selected = selectedServiceId == service.id,
-                            onClick = { selectedServiceId = service.id })
-                    }
-                }
             }
 
-            item { Spacer(modifier = Modifier.height(16.dp)) }
+        }
 
+    }
+}
+
+@Composable
+private fun BarberList(
+    selected: Long?,
+    barbers: List<Barber>,
+    viewModel: ClientHomeViewModel
+){
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(barbers) { barber ->
+            BarberCard(
+                name = barber.name,
+                selected = selected == barber.id,
+                onClick = { viewModel.selectBarber(barber.id) }
+            )
+        }
+    }
+}
+
+@Composable
+private fun ServiceList(
+    selected: Long?,
+    services: List<Service>,
+    viewModel: ClientHomeViewModel
+){
+    LazyColumn(
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        items(services) { service ->
+            ServiceCard (
+                name = service.name,
+                description = service.description,
+                selected = selected == service.id,
+                onClick = { viewModel.selectService(service.id) }
+            )
         }
     }
 }
@@ -137,7 +181,7 @@ private fun HomeHeader(
             Text(
                 text = "Bienvenido",
                 color = Color.White.copy(alpha = 0.7f),
-                fontSize = 14.sp
+                fontSize = 25.sp
             )
             Text(
                 text = userName,
@@ -149,6 +193,9 @@ private fun HomeHeader(
 
         Button(
             onClick = onMyReservationsClick,
+            modifier = Modifier
+                .width(150.dp)
+                .height(45.dp),
             shape = RoundedCornerShape(12.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF03A9F4),
@@ -171,7 +218,7 @@ fun HomeOptionsSelector(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 12.dp),
+            .padding(vertical = 15.dp),
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         // Botón Servicio
@@ -206,10 +253,11 @@ fun HomeOptionsSelector(
 @Composable
 private fun BottomActionBar(
     enabled: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         color = Color(0xFF1E1E1E),
         tonalElevation = 8.dp
     ) {
@@ -240,13 +288,36 @@ private fun BottomActionBar(
     }
 }
 
-data class Barber(
-    val id: Int,
-    val name: String
-)
+@Composable
+fun Title(text: String) {
+    Text(
+        text = text,
+        color = Color.White,
+        fontSize = 18.sp,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
+}
+
+@Composable
+fun LoadingShimmer() {
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+        CircularProgressIndicator()
+    }
+}
+
+@Composable
+fun ErrorMessage(message: String) {
+    Text(
+        text = message,
+        color = Color.Red,
+        fontWeight = FontWeight.Bold,
+        modifier = Modifier.fillMaxWidth()
+    )
+}
 
 data class Service(
-    val id: Int,
+    val id: Long,
     val name: String,
     val description: String
 )

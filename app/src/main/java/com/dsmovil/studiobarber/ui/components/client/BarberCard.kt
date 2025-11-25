@@ -1,11 +1,11 @@
-package com.dsmovil.studiobarber.ui.components
+package com.dsmovil.studiobarber.ui.components.client
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
-import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.Person // 👈 Importamos el ícono de Persona
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -18,35 +18,45 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun ServiceCard(
+fun BarberCard(
     name: String,
-    description: String,
     selected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit = {},
+    modifier: Modifier = Modifier
 ) {
     Surface(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp)
             .clickable { onClick() },
         shape = RoundedCornerShape(12.dp),
-        color = Color.White
+        color = Color.White,
+        shadowElevation = if (selected) 8.dp else 2.dp
     ) {
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
-                Icons.Default.Edit,
-                contentDescription = null,
-                tint = Color.Red
+                Icons.Default.Person,
+                contentDescription = "Barbero",
+                tint = Color(0xFF03A9F4),
+                modifier = Modifier.size(32.dp)
             )
 
             Spacer(modifier = Modifier.width(12.dp))
 
             Column {
-                Text(name, fontWeight = FontWeight.Bold)
-                Text("Descripción: $description", fontSize = 12.sp, color = Color.Gray)
+                Text(
+                    text = name,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black
+                )
+                Text(
+                    text = "Barbero profesional",
+                    fontSize = 12.sp,
+                    color = Color.Gray
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
@@ -54,7 +64,7 @@ fun ServiceCard(
             if (selected) {
                 Icon(
                     Icons.Default.CheckCircle,
-                    contentDescription = null,
+                    contentDescription = "Seleccionado",
                     tint = Color(0xFF03A9F4)
                 )
             }

@@ -8,6 +8,8 @@ import com.dsmovil.studiobarber.domain.repositories.BarberRepository
 import com.dsmovil.studiobarber.domain.repositories.ServiceRepository
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
+import com.dsmovil.studiobarber.data.repositories.ReservationRepositoryImpl
+import com.dsmovil.studiobarber.domain.repositories.ReservationRepository
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
@@ -38,6 +40,10 @@ abstract class AppModule {
     @Binds
     @Singleton
     abstract fun bindServiceRepository(serviceRepositoryImpl: ServiceRepositoryImpl): ServiceRepository
+
+    @Binds
+    @Singleton
+    abstract fun bindReservationRepository(reservationRepositoryImpl: ReservationRepositoryImpl) : ReservationRepository
 
     companion object {
         @Provides
