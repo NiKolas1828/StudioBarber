@@ -13,6 +13,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.domain.models.Service
 import com.dsmovil.studiobarber.ui.components.LogoutButton
 import com.dsmovil.studiobarber.ui.components.client.BarberCard
 import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
@@ -315,9 +316,3 @@ fun ErrorMessage(message: String) {
         modifier = Modifier.fillMaxWidth()
     )
 }
-
-data class Service(
-    val id: Long,
-    val name: String,
-    val description: String
-)

@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.client.home
 
 import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.domain.models.Service
 
 
 data class ClientHomeUiState (

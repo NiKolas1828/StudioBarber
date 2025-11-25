@@ -5,7 +5,7 @@ import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
-import com.dsmovil.studiobarber.ui.screens.admin.barbers.UiMessage
+import com.dsmovil.studiobarber.ui.screens.admin.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
