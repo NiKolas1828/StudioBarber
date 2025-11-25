@@ -3,11 +3,11 @@ package com.dsmovil.studiobarber.ui.screens.admin.barbers
 import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Barber
-import com.dsmovil.studiobarber.domain.usecases.admin.DeleteBarberUseCase
-import com.dsmovil.studiobarber.domain.usecases.admin.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
-import com.dsmovil.studiobarber.domain.usecases.admin.AddBarberUseCase
-import com.dsmovil.studiobarber.domain.usecases.admin.UpdateBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
