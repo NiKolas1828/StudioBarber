@@ -191,18 +191,18 @@ private fun ServicesList(
                     )
 
                     Text(
-                        text = service.description,
-                        lineHeight = 18.sp,
-                        color = Color.Black,
-                        fontSize = 14.sp,
-                        maxLines = 2,
+                        text = "Descripción: ${service.description}",
+                        lineHeight = 16.sp,
+                        color = Color.Gray,
+                        fontSize = 12.sp,
+                        maxLines = 3,
                         overflow = TextOverflow.Ellipsis
                     )
 
                     Text(
-                        text = "$ ${service.price}",
-                        color = Color.Black,
-                        fontSize = 14.sp,
+                        text = "Precio: $${service.price}",
+                        color = Color.Gray,
+                        fontSize = 12.sp,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
