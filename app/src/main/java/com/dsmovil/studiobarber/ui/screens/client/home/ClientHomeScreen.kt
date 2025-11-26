@@ -3,7 +3,6 @@ package com.dsmovil.studiobarber.ui.screens.client.home
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -14,9 +13,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.models.Service
-import com.dsmovil.studiobarber.ui.components.LogoutButton
+import com.dsmovil.studiobarber.ui.components.CreateReservationScreenLayout
 import com.dsmovil.studiobarber.ui.components.client.BarberCard
-import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
 import com.dsmovil.studiobarber.ui.components.client.ServiceCard
 import com.dsmovil.studiobarber.ui.components.utils.getIconForServiceType
 
@@ -30,50 +28,19 @@ fun ClientHomeScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
-
-    ClientScreenLayout{
-        Box(modifier = Modifier.fillMaxSize()) {
-
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 140.dp)
-            ) {
-                Spacer(modifier = Modifier.height(8.dp))
-
-                HomeHeader(
-                    userName = userName,
-                    onMyReservationsClick = onNavigateToClientReservarionts
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                HomeOptionsSelector(
-                    selected = state.selectedOption,
-                    onSelectedChange =  viewModel::changeOption
-                )
-
-                ClientHomeContent(
-                    contentState = state,
-                    viewModel = viewModel
-                )
-            }
-
-            BottomActionBar(
-                enabled = state.isContinueButtonEnabled,
-                onClick = onContinueClick,
-                modifier = Modifier
-                    .align(Alignment.BottomCenter)
-                    .padding(bottom = 70.dp)
-            )
-
-            LogoutButton(
-                onClick = onLogout,
-                modifier = Modifier
-                    .align(Alignment.BottomStart)
-                    .padding(start = 16.dp, bottom = 16.dp)
-            )
-        }
+    CreateReservationScreenLayout(
+        userName = userName,
+        selectedOption = state.selectedOption,
+        onChangeOption = viewModel::changeOption,
+        isContinueEnabled = state.isContinueButtonEnabled,
+        onContinueClick = onContinueClick,
+        onNavigateToReservations = onNavigateToClientReservarionts,
+        onLogout = onLogout
+    ) {
+        ClientHomeContent(
+            contentState = state,
+            viewModel = viewModel
+        )
     }
 }
 
@@ -118,13 +85,9 @@ private fun ClientHomeContent(
                         services = serviceState.services,
                         viewModel = viewModel
                     )
-
                 }
-
             }
-
         }
-
     }
 }
 
@@ -165,127 +128,6 @@ private fun ServiceList(
                 icon = getIconForServiceType(service.type),
                 selected = selected == service.id,
                 onClick = { viewModel.selectService(service.id) }
-            )
-        }
-    }
-}
-
-@Composable
-private fun HomeHeader(
-    userName: String,
-    onMyReservationsClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                text = "Bienvenido",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 25.sp
-            )
-            Text(
-                text = userName,
-                color = Color(0xFF03A9F4),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Button(
-            onClick = onMyReservationsClick,
-            modifier = Modifier
-                .width(150.dp)
-                .height(45.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF03A9F4),
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp
-            )
-        ) {
-            Text("Mis reservas")
-        }
-    }
-}
-
-@Composable
-fun HomeOptionsSelector(
-    selected: String,
-    onSelectedChange: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        // Botón Servicio
-        Button(
-            onClick = { onSelectedChange("servicio") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selected == "servicio") Color(0xFF03A9F4) else Color.Transparent,
-                contentColor = if (selected == "servicio") Color.White else Color(0xFF03A9F4)
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.width(140.dp)
-        ) {
-            Text("Servicio")
-        }
-
-        // Botón Barbero
-        Button(
-            onClick = { onSelectedChange("barbero") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selected == "barbero") Color(0xFF03A9F4) else Color.Transparent,
-                contentColor = if (selected == "barbero") Color.White else Color(0xFF03A9F4)
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.width(140.dp)
-        ) {
-            Text("Barbero")
-        }
-    }
-}
-
-
-@Composable
-private fun BottomActionBar(
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = Color(0xFF1E1E1E),
-        tonalElevation = 8.dp
-    ) {
-        Button(
-            onClick = onClick,
-            enabled = enabled,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .height(56.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF44336),
-                contentColor = Color.White,
-                disabledContainerColor = Color(0xFF424242),
-                disabledContentColor = Color.White.copy(alpha = 0.5f)
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 6.dp
-            )
-        ) {
-            Text(
-                text = "Continuar",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
             )
         }
     }
