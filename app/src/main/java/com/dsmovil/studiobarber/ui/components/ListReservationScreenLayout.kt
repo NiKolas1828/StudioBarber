@@ -7,8 +7,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,17 +47,26 @@ fun ListReservationScreenLayout(
                 ){
                     Spacer(modifier = Modifier.height(8.dp))
 
-//                    ClientReservationsHeader(
-//                        userName = userName,
-//                        onMyReservationsClick = onNavigateToHome
-//                    )
-
                     ClientHeader(
                         userName = userName,
-                        onActionButtonClick = onNavigateToHome,
-                        headerBottonText = "Inicio",
-                        Color(0xFFF44336)
-                    )
+                    ){
+                        Button(
+                            onClick = onNavigateToHome,
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(45.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFFF44336),
+                                contentColor = Color.White
+                            ),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 4.dp
+                            )
+                        ) {
+                            Text("Inicio")
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 

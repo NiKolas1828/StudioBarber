@@ -57,10 +57,24 @@ fun CreateReservationScreenLayout(
 
                     ClientHeader(
                         userName = userName,
-                        onActionButtonClick = onNavigateToReservations,
-                        headerBottonText = "Mis reservas",
-                        colorBottonHeader = Color(0xFF03A9F4),
-                    )
+                    ){
+                        Button(
+                            onClick = onNavigateToReservations,
+                            modifier = Modifier
+                                .width(150.dp)
+                                .height(45.dp),
+                            shape = RoundedCornerShape(12.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF03A9F4),
+                                contentColor = Color.White
+                            ),
+                            elevation = ButtonDefaults.buttonElevation(
+                                defaultElevation = 4.dp
+                            )
+                        ) {
+                            Text("Mis Reservas")
+                        }
+                    }
 
                     Spacer(modifier = Modifier.height(16.dp))
 
