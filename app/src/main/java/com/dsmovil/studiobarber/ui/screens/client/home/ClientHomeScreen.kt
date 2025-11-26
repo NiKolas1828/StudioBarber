@@ -23,7 +23,7 @@ fun ClientHomeScreen(
     viewModel: ClientHomeViewModel,
     userName: String = "Usuario",
     onNavigateToClientReservarionts: () -> Unit = {},
-    onContinueClick: () -> Unit = {},
+    onContinueClick: (String) -> Unit = {},
     onLogout: () -> Unit ={}
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -59,7 +59,13 @@ fun ClientHomeScreen(
 
             BottomActionBar(
                 enabled = state.isContinueButtonEnabled,
-                onClick = onContinueClick,
+
+                onClick = {
+                    val selectedId = state.selectedBarberId?.toString()
+                        ?: state.selectedServiceId?.toString()
+                        ?: "0"
+                    onContinueClick(selectedId)
+                },
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
                     .padding(bottom = 70.dp)

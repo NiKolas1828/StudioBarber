@@ -3,7 +3,9 @@ package com.dsmovil.studiobarber.ui.screens.navigation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
@@ -11,6 +13,8 @@ import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeViewModel
+import com.dsmovil.studiobarber.ui.screens.client.reservation.ClientReservationDetailViewModel
+import com.dsmovil.studiobarber.ui.screens.client.reservation.ClientReservationScreen
 import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationViewModel
 import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationsScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
@@ -60,6 +64,9 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
         ClientHomeScreen(
             onNavigateToClientReservarionts = { navController.navigate(Screen.ClientReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) },
+            onContinueClick = { reservationId ->
+                navController.navigate(Screen.ClientReservation.route.replace("{reservationId}", reservationId))
+            },
             viewModel = viewModel
         )
     }
@@ -73,6 +80,28 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
             onLogout = { navigateToAuthAndClearStack(navController)}
         )
     }
+
+    composable(
+        route = Screen.ClientReservation.route,
+        arguments = listOf(
+            navArgument("reservationId") { type = NavType.StringType }
+        )
+    ) { backStackEntry ->
+
+        val reservationId = backStackEntry.arguments?.getString("reservationId")
+            ?: ""
+
+        val viewModel: ClientReservationDetailViewModel = hiltViewModel()
+
+        ClientReservationScreen(
+            reservationId = reservationId,
+            viewModel = viewModel,
+            onNavigateBack = { navController.popBackStack() },
+            onMyReservationsClick = {},
+            onLogout = { navigateToAuthAndClearStack(navController) }
+        )
+    }
+
 }
 
 fun NavGraphBuilder.adminGraph(navController: NavController) {
