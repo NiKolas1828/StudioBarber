@@ -19,13 +19,13 @@ import com.dsmovil.studiobarber.R
 @Composable
 fun AddButtonFab(
     onClick: () -> Unit,
-    iconColor: Color = colorResource(R.color.icon_color_blue)
+    contentColor: Color = colorResource(R.color.icon_color_blue)
 ) {
     Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 16.dp)) {
         FloatingActionButton(
             onClick = onClick,
             containerColor = Color.White,
-            contentColor = iconColor,
+            contentColor = contentColor,
             shape = RoundedCornerShape(16.dp),
             modifier = Modifier.size(64.dp)
         ) {

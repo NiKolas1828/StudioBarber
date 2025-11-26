@@ -9,15 +9,16 @@ data class Service (
     val price: Double,
     val isActive: Boolean = true
 ) {
-    val type: ServiceType
-        get() {
-            val textToAnalyze = "$name $description".lowercase(Locale.ROOT)
+    val type: ServiceType = determinateServiceType()
 
-            return when {
-                textToAnalyze.contains("corte") || textToAnalyze.contains("cabello") -> ServiceType.HAIRCUT
-                textToAnalyze.contains("barba") || textToAnalyze.contains("afeitado") -> ServiceType.BEARD
-                textToAnalyze.contains("cejas") || textToAnalyze.contains("cara") -> ServiceType.EYEBROWS
-                else -> ServiceType.OTHER
-            }
+    private fun determinateServiceType(): ServiceType {
+        val textToAnalyze = "$name $description".lowercase(Locale.ROOT)
+
+        return when {
+            textToAnalyze.contains("corte") || textToAnalyze.contains("cabello") -> ServiceType.HAIRCUT
+            textToAnalyze.contains("barba") || textToAnalyze.contains("afeitado") -> ServiceType.BEARD
+            textToAnalyze.contains("cejas") || textToAnalyze.contains("cara") -> ServiceType.EYEBROWS
+            else -> ServiceType.OTHER
         }
+    }
 }

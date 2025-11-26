@@ -64,7 +64,9 @@ class ManageServicesViewModel @Inject constructor(
 
         val price = priceStr.toDoubleOrNull()
         if (price == null) {
-            errors.add("• Precio inválido")
+            errors.add("• El precio debe ser un numero válido")
+        } else if (price <= 0) {
+            errors.add("• El precio debe ser mayor que 0")
         }
 
         return errors

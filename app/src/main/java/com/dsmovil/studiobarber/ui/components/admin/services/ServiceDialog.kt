@@ -25,14 +25,14 @@ fun ServiceDialog(
     // Estados del formulario
     var name by remember { mutableStateOf(serviceToEdit?.name ?: "") }
     var description by remember { mutableStateOf(serviceToEdit?.description ?: "") }
-    var price by remember { mutableStateOf(serviceToEdit?.price ?: "") }
+    var price by remember { mutableStateOf(serviceToEdit?.price?.toString() ?: "") }
 
     val isEditMode = serviceToEdit != null
     val dialogTitle = if (isEditMode) "Editar Servicio" else "Nuevo Servicio"
 
     AdminDialogLayout(
         title = dialogTitle,
-        onConfirm = { onConfirm(name, description, price.toString()) },
+        onConfirm = { onConfirm(name, description, price) },
         onDismiss = onDismiss,
         colorSaveButton = colorResource(id = R.color.icon_color_blue)
     ) {
@@ -49,16 +49,16 @@ fun ServiceDialog(
             value = description,
             onValueChange = { description = it },
             label = "Descripción",
-            keyboardType = KeyboardType.Email
+            keyboardType = KeyboardType.Text
         )
 
         Spacer(modifier = Modifier.height(8.dp))
 
         AdminTextField(
-            value = price.toString(),
+            value = price,
             onValueChange = { price = it },
             label = "Precio",
-            keyboardType = KeyboardType.Phone
+            keyboardType = KeyboardType.Decimal
         )
     }
 }
