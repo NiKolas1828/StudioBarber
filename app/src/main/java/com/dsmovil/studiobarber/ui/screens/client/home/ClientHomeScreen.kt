@@ -67,6 +67,7 @@ fun ClientHomeScreen(
                     .padding(bottom = 70.dp)
             )
 
+
             LogoutButton(
                 onClick = onLogout,
                 modifier = Modifier
