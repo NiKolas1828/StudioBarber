@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.client.reservations
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -67,12 +68,14 @@ private fun ReservationsList(
     viewModel: ClientReservationViewModel) {
     LazyColumn(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(bottom = 16.dp)
     ) {
         items(reservations) { reservation ->
             ReservationCard(
-                onDeleteClick = { viewModel.deleteReservation(reservation.id) },
-                reservation = reservation
+                reservation = reservation,
+                onEditClick = {},
+                onDeleteClick = { viewModel.deleteReservation(reservation.id) }
             )
         }
     }

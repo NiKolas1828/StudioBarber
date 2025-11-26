@@ -25,7 +25,8 @@ import androidx.compose.ui.text.withStyle
 fun ReservationCard(
     reservation: Reservation,
     modifier: Modifier = Modifier,
-    onDeleteClick: (() -> Unit)? = null,
+    onEditClick: () -> Unit,
+    onDeleteClick: () -> Unit,
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -45,19 +46,17 @@ fun ReservationCard(
             ReservationContent(reservation = reservation)
             Spacer(modifier = Modifier.width(38.dp))
 
-            if (onDeleteClick != null) {
-                ActionButtons(
-                    firstIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    onFirstClick = onDeleteClick,
-                    firstIconTint = colorResource(id = R.color.icon_color_red),
-                    firstContentDescription = "Eliminar",
+            ActionButtons(
+                firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                onFirstClick = onEditClick,
+                firstIconTint = colorResource(id = R.color.icon_color_red),
+                firstContentDescription = "Editar",
 
-                    secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                    onSecondClick = {},
-                    secondIconTint = Color.Transparent,
-                    secondContentDescription = ""
-                )
-            }
+                secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                onSecondClick = onDeleteClick,
+                secondIconTint = colorResource(id = R.color.icon_color_red),
+                secondContentDescription = "Eliminar"
+            )
         }
     }
 }

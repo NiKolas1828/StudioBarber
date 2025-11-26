@@ -1,6 +1,5 @@
 package com.dsmovil.studiobarber.ui.components
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,7 +17,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
+import com.dsmovil.studiobarber.R
 
 @Composable
 fun ListReservationScreenLayout(
@@ -30,62 +31,60 @@ fun ListReservationScreenLayout(
     content: @Composable () -> Unit,
 ){
     Scaffold(
-        containerColor = Color(0xFF1E1E1E),
+        containerColor = colorResource(R.color.background_color),
         snackbarHost = snackbarHost
     ) { padding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp)
         ){
-            Box(modifier = Modifier.fillMaxSize()) {
-                Column(modifier = Modifier
-                    .fillMaxSize()
-                    .padding(bottom = 100.dp)
-                    .align(Alignment.TopStart)
+            Column(modifier = Modifier
+                .weight(1f)
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+            ){
+                Spacer(modifier = Modifier.height(8.dp))
+
+                ClientHeader(
+                    userName = userName,
                 ){
-                    Spacer(modifier = Modifier.height(8.dp))
-
-                    ClientHeader(
-                        userName = userName,
-                    ){
-                        Button(
-                            onClick = onNavigateToHome,
-                            modifier = Modifier
-                                .width(150.dp)
-                                .height(45.dp),
-                            shape = RoundedCornerShape(12.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFF44336),
-                                contentColor = Color.White
-                            ),
-                            elevation = ButtonDefaults.buttonElevation(
-                                defaultElevation = 4.dp
-                            )
-                        ) {
-                            Text("Inicio")
-                        }
+                    Button(
+                        onClick = onNavigateToHome,
+                        modifier = Modifier
+                            .width(150.dp)
+                            .height(45.dp),
+                        shape = RoundedCornerShape(12.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = colorResource(id = R.color.icon_color_red),
+                            contentColor = Color.White
+                        ),
+                        elevation = ButtonDefaults.buttonElevation(
+                            defaultElevation = 4.dp
+                        )
+                    ) {
+                        Text("Inicio")
                     }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    content()
                 }
 
-                Footer(
-                    message = footerText,
-                    modifier = Modifier
-                        .align(Alignment.BottomStart)
-                        .fillMaxWidth(),
-                    actions = { LogoutButton(
-                        onClick = onLogout,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentWidth(Alignment.Start)
-                    )},
-                )
+                Spacer(modifier = Modifier.height(16.dp))
+
+                content()
             }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Footer(
+                message = footerText,
+                modifier = Modifier
+                    .fillMaxWidth(),
+                actions = { LogoutButton(
+                    onClick = onLogout,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.Start)
+                )},
+            )
         }
     }
 }
