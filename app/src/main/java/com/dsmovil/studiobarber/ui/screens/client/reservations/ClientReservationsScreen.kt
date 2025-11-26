@@ -27,9 +27,9 @@ fun ClientReservationsScreen(
 
     ListReservationScreenLayout(
         userName = userName,
-        onNavigateToHeader = onNavigateToClientHome,
+        onNavigateToHome = onNavigateToClientHome,
         onLogout = onLogout,
-        textFooter = "Gracias por preferirnos"
+        footerText = "Gracias por preferirnos"
     ){
         ClientReservationsContent(
             reservationState = state.reservationState,

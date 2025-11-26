@@ -31,7 +31,7 @@ fun CreateReservationScreenLayout(
     onChangeOption: (String) -> Unit,
     isContinueEnabled: Boolean,
     onContinueClick: () -> Unit,
-    onNavigateToHeader: () -> Unit = {},
+    onNavigateToReservations: () -> Unit = {},
     onLogout: () -> Unit = {},
     snackbarHost: @Composable () -> Unit = {},
     content: @Composable () -> Unit
@@ -55,9 +55,11 @@ fun CreateReservationScreenLayout(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    HomeHeader(
+                    ClientHeader(
                         userName = userName,
-                        onMyReservationsClick = onNavigateToHeader
+                        onActionButtonClick = onNavigateToReservations,
+                        headerBottonText = "Mis reservas",
+                        colorBottonHeader = Color(0xFF03A9F4),
                     )
 
                     Spacer(modifier = Modifier.height(16.dp))
@@ -84,49 +86,6 @@ fun CreateReservationScreenLayout(
                         .padding(start = 16.dp, bottom = 16.dp)
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun HomeHeader(
-    userName: String,
-    onMyReservationsClick: () -> Unit
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Column {
-            Text(
-                text = "Bienvenido",
-                color = Color.White.copy(alpha = 0.7f),
-                fontSize = 25.sp
-            )
-            Text(
-                text = userName,
-                color = Color(0xFF03A9F4),
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-
-        Button(
-            onClick = onMyReservationsClick,
-            modifier = Modifier
-                .width(150.dp)
-                .height(45.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF03A9F4),
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 4.dp
-            )
-        ) {
-            Text("Mis reservas")
         }
     }
 }
@@ -170,7 +129,7 @@ private fun BottomActionBar(
 }
 
 @Composable
-fun HomeOptionsSelector(
+private fun HomeOptionsSelector(
     selected: String,
     onSelectedChange: (String) -> Unit
 ) {

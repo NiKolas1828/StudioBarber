@@ -34,7 +34,7 @@ fun ClientHomeScreen(
         onChangeOption = viewModel::changeOption,
         isContinueEnabled = state.isContinueButtonEnabled,
         onContinueClick = onContinueClick,
-        onNavigateToHeader = onNavigateToClientReservarionts,
+        onNavigateToReservations = onNavigateToClientReservarionts,
         onLogout = onLogout
     ) {
         ClientHomeContent(
