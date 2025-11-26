@@ -13,6 +13,7 @@ fun getIconForServiceType(
     return when (type) {
         ServiceType.HAIRCUT -> ImageVector.vectorResource(id = R.drawable.ic_haircut)
         ServiceType.BEARD -> ImageVector.vectorResource(id = R.drawable.ic_beard)
+        ServiceType.EYEBROWS -> ImageVector.vectorResource(id = R.drawable.ic_eyebrows)
         ServiceType.OTHER -> ImageVector.vectorResource(id = R.drawable.ic_services)
     }
 }

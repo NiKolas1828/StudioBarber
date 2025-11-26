@@ -16,6 +16,7 @@ data class Service (
             return when {
                 textToAnalyze.contains("corte") || textToAnalyze.contains("cabello") -> ServiceType.HAIRCUT
                 textToAnalyze.contains("barba") || textToAnalyze.contains("afeitado") -> ServiceType.BEARD
+                textToAnalyze.contains("cejas") || textToAnalyze.contains("cara") -> ServiceType.EYEBROWS
                 else -> ServiceType.OTHER
             }
         }
