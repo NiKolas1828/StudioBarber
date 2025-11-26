@@ -12,7 +12,7 @@ data class ClientHomeUiState (
 
     val selectedBarberId: Long? = null,
     val selectedServiceId: Long? = null,
-    val selectedOption: String = "barbero" // "barbero" o "servicio"
+    val selectedOption: SelectOptions = SelectOptions.SERVICIO
 ) {
     val isContinueButtonEnabled: Boolean
         get() = selectedBarberId != null && selectedServiceId != null
@@ -36,5 +36,10 @@ data class ClientHomeUiState (
             val message: String
         ) : ServicesDataState()
     }
+}
+
+enum class SelectOptions {
+    BARBERO,
+    SERVICIO
 }
 

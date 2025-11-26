@@ -1,12 +1,9 @@
 package com.dsmovil.studiobarber.ui.components
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
@@ -14,21 +11,21 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.dsmovil.studiobarber.R
+import com.dsmovil.studiobarber.ui.screens.client.home.SelectOptions
 
 @Composable
 fun CreateReservationScreenLayout(
     userName: String,
-    selectedOption: String,
-    onChangeOption: (String) -> Unit,
+    selectedOption: SelectOptions,
+    onChangeOption: (SelectOptions) -> Unit,
     isContinueEnabled: Boolean,
     onContinueClick: () -> Unit,
     onNavigateToReservations: () -> Unit = {},
@@ -37,7 +34,7 @@ fun CreateReservationScreenLayout(
     content: @Composable () -> Unit
 ) {
     Scaffold(
-        containerColor = Color(0xFF1E1E1E),
+        containerColor = colorResource(id = R.color.background_color),
         snackbarHost = snackbarHost
     ) { padding ->
         Column(
@@ -65,7 +62,7 @@ fun CreateReservationScreenLayout(
                                 .height(45.dp),
                             shape = RoundedCornerShape(12.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFF03A9F4),
+                                containerColor = colorResource(id = R.color.icon_color_blue),
                                 contentColor = Color.White
                             ),
                             elevation = ButtonDefaults.buttonElevation(
@@ -78,10 +75,11 @@ fun CreateReservationScreenLayout(
 
                     Spacer(modifier = Modifier.height(16.dp))
 
-                    HomeOptionsSelector(
+                    ReservationOptionSelector(
                         selected = selectedOption,
                         onSelectedChange = onChangeOption
                     )
+
                     content()
                 }
 
@@ -90,93 +88,16 @@ fun CreateReservationScreenLayout(
                     onClick = onContinueClick,
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .padding(bottom = 70.dp)
+                        .padding(bottom = 70.dp),
+                    textButton = "Continuar"
                 )
 
                 LogoutButton(
                     onClick = onLogout,
                     modifier = Modifier
                         .align(Alignment.BottomStart)
-                        .padding(start = 16.dp, bottom = 16.dp)
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun BottomActionBar(
-    enabled: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    Surface(
-        modifier = modifier.fillMaxWidth(),
-        color = Color(0xFF1E1E1E),
-        tonalElevation = 8.dp
-    ) {
-        Button(
-            onClick = onClick,
-            enabled = enabled,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-                .height(56.dp),
-            shape = RoundedCornerShape(12.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFFF44336),
-                contentColor = Color.White,
-                disabledContainerColor = Color(0xFF424242),
-                disabledContentColor = Color.White.copy(alpha = 0.5f)
-            ),
-            elevation = ButtonDefaults.buttonElevation(
-                defaultElevation = 6.dp
-            )
-        ) {
-            Text(
-                text = "Continuar",
-                fontSize = 16.sp,
-                fontWeight = FontWeight.Bold
-            )
-        }
-    }
-}
-
-@Composable
-private fun HomeOptionsSelector(
-    selected: String,
-    onSelectedChange: (String) -> Unit
-) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = 15.dp),
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        // Botón Servicio
-        Button(
-            onClick = { onSelectedChange("servicio") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selected == "servicio") Color(0xFF03A9F4) else Color.Transparent,
-                contentColor = if (selected == "servicio") Color.White else Color(0xFF03A9F4)
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.width(140.dp)
-        ) {
-            Text("Servicio")
-        }
-
-        // Botón Barbero
-        Button(
-            onClick = { onSelectedChange("barbero") },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = if (selected == "barbero") Color(0xFF03A9F4) else Color.Transparent,
-                contentColor = if (selected == "barbero") Color.White else Color(0xFF03A9F4)
-            ),
-            shape = RoundedCornerShape(12.dp),
-            modifier = Modifier.width(140.dp)
-        ) {
-            Text("Barbero")
         }
     }
 }

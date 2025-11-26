@@ -18,7 +18,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
-import com.dsmovil.studiobarber.ui.components.DashboardCard
+import com.dsmovil.studiobarber.ui.components.admin.AdminDashboardCard
 import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 
 @Composable
@@ -82,7 +82,7 @@ private fun AdminToolsSection(
     onNavigateToReservations: () -> Unit
 ) {
     Column {
-        DashboardCard(
+        AdminDashboardCard(
             title = "Servicios",
             description = "Accede al listado de servicios en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_services),
@@ -92,7 +92,7 @@ private fun AdminToolsSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        DashboardCard(
+        AdminDashboardCard(
             title = "Barberos",
             description = "Accede al listado de barberos en donde podrás eliminar o editar alguno de ellos",
             icon = ImageVector.vectorResource(id = R.drawable.ic_barber_pole),
@@ -102,7 +102,7 @@ private fun AdminToolsSection(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        DashboardCard(
+        AdminDashboardCard(
             title = "Reservas",
             description = "Accede al listado de reservas en donde podrás ver información detallada de cada una",
             icon = ImageVector.vectorResource(id = R.drawable.ic_reservations),
