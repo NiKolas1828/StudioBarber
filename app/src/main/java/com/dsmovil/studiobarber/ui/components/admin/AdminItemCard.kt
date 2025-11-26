@@ -30,6 +30,7 @@ import com.dsmovil.studiobarber.ui.components.ActionButtons
 fun AdminItemCard(
     modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconColor: Color,
     iconBackgroundColor: Color,
     onEditClick: () -> Unit,
     onDeleteClick: () -> Unit,
@@ -50,7 +51,13 @@ fun AdminItemCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            CardInfo(icon, iconBackgroundColor, textContent)
+            CardInfo(
+                modifier = Modifier.weight(1f),
+                icon = icon,
+                iconColor = iconColor,
+                iconBackgroundColor = iconBackgroundColor,
+                textContent = textContent
+            )
 
             ActionButtons(
                 firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
@@ -68,11 +75,14 @@ fun AdminItemCard(
 
 @Composable
 private fun CardInfo(
+    modifier: Modifier = Modifier,
     icon: ImageVector,
+    iconColor: Color,
     iconBackgroundColor: Color,
     textContent: @Composable ColumnScope.() -> Unit
 ) {
     Row(
+        modifier = modifier,
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
@@ -85,14 +95,13 @@ private fun CardInfo(
         ) {
             Icon(
                 imageVector = icon,
-                contentDescription = null,
-                tint = colorResource(id = R.color.icon_color_blue),
+                contentDescription = "icono",
+                tint = iconColor,
                 modifier = Modifier.size(32.dp)
             )
         }
 
         Column(
-            verticalArrangement = Arrangement.Center,
             content = textContent
         )
     }

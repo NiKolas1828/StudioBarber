@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.domain.usecases.admin
+package com.dsmovil.studiobarber.domain.usecases.admin.barbers
 
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
 import javax.inject.Inject

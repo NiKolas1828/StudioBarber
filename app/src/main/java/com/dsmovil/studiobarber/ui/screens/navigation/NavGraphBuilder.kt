@@ -8,6 +8,8 @@ import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
+import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesScreen
+import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeViewModel
@@ -81,7 +83,7 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
 
         AdminDashboardScreen(
             viewModel = viewModel,
-            onNavigateToServices = { /* TODO */ },
+            onNavigateToServices = { navController.navigate(Screen.AdminServices.route) },
             onNavigateToBarbers = { navController.navigate(Screen.AdminBarbers.route) },
             onNavigateToReservations = { /* TODO */ },
             onLogout = { navigateToAuthAndClearStack(navController) }
@@ -92,6 +94,16 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
         val viewModel: ManageBarbersViewModel = hiltViewModel()
 
         ManageBarbersScreen(
+            viewModel = viewModel,
+            onNavigateBack = { navController.popBackStack() },
+            onLogout = { navigateToAuthAndClearStack(navController) }
+        )
+    }
+
+    composable(Screen.AdminServices.route) {
+        val viewModel: ManageServicesViewModel = hiltViewModel()
+
+        ManageServicesScreen(
             viewModel = viewModel,
             onNavigateBack = { navController.popBackStack() },
             onLogout = { navigateToAuthAndClearStack(navController) }

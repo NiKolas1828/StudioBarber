@@ -13,10 +13,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.domain.models.Service
 import com.dsmovil.studiobarber.ui.components.LogoutButton
 import com.dsmovil.studiobarber.ui.components.client.BarberCard
 import com.dsmovil.studiobarber.ui.components.client.ClientScreenLayout
 import com.dsmovil.studiobarber.ui.components.client.ServiceCard
+import com.dsmovil.studiobarber.ui.components.utils.getIconForServiceType
 
 @Composable
 fun ClientHomeScreen(
@@ -160,6 +162,7 @@ private fun ServiceList(
             ServiceCard (
                 name = service.name,
                 description = service.description,
+                icon = getIconForServiceType(service.type),
                 selected = selected == service.id,
                 onClick = { viewModel.selectService(service.id) }
             )
@@ -315,9 +318,3 @@ fun ErrorMessage(message: String) {
         modifier = Modifier.fillMaxWidth()
     )
 }
-
-data class Service(
-    val id: Long,
-    val name: String,
-    val description: String
-)

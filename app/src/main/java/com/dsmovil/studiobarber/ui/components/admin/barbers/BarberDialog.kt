@@ -1,13 +1,9 @@
-package com.dsmovil.studiobarber.ui.components.admin
+package com.dsmovil.studiobarber.ui.components.admin.barbers
 
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,11 +14,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.ui.components.admin.AdminDialogLayout
+import com.dsmovil.studiobarber.ui.components.admin.AdminTextField
 
 @Composable
 fun BarberDialog(
@@ -42,9 +38,10 @@ fun BarberDialog(
     AdminDialogLayout(
         title = dialogTitle,
         onConfirm = { onConfirm(name, email, phone, password) },
-        onDismiss = onDismiss
+        onDismiss = onDismiss,
+        colorSaveButton = colorResource(id = R.color.icon_color_red)
     ) {
-        BarberTextField(
+        AdminTextField(
             value = name,
             onValueChange = { name = it },
             label = "Nombre Completo",
@@ -53,7 +50,7 @@ fun BarberDialog(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        BarberTextField(
+        AdminTextField(
             value = email,
             onValueChange = { email = it },
             label = "Correo Electrónico",
@@ -62,7 +59,7 @@ fun BarberDialog(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        BarberTextField(
+        AdminTextField(
             value = phone,
             onValueChange = { phone = it },
             label = "Teléfono",
@@ -71,7 +68,7 @@ fun BarberDialog(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        BarberTextField(
+        AdminTextField(
             value = password,
             onValueChange = { password = it },
             label = "Contraseña",
@@ -88,30 +85,4 @@ fun BarberDialog(
             )
         }
     }
-}
-
-@Composable
-private fun BarberTextField(
-    value: String,
-    onValueChange: (String) -> Unit,
-    label: String,
-    keyboardType: KeyboardType,
-    isPassword: Boolean = false
-) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        label = { Text(label) },
-        singleLine = true,
-        modifier = Modifier.fillMaxWidth(),
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-        visualTransformation = if (isPassword) PasswordVisualTransformation() else VisualTransformation.None,
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedTextColor = colorResource(id = R.color.background_color),
-            unfocusedTextColor = colorResource(id = R.color.background_color),
-            focusedBorderColor = colorResource(id = R.color.icon_color_red),
-            focusedLabelColor = colorResource(id = R.color.icon_color_red),
-            cursorColor = colorResource(id = R.color.background_color)
-        )
-    )
 }

@@ -2,7 +2,8 @@ package com.dsmovil.studiobarber.ui.screens.client.home
 
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
-import com.dsmovil.studiobarber.domain.usecases.admin.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 @HiltViewModel
 class ClientHomeViewModel @Inject constructor(
     private val getBarberUseCase: GetBarbersUseCase,
+    private val getServicesUseCase: GetServicesUseCase,
     logoutUseCase: LogoutUseCase
 ) : BaseAdminViewModel(logoutUseCase){
 
@@ -58,15 +60,24 @@ class ClientHomeViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(servicesState = ClientHomeUiState.ServicesDataState.Loading) }
 
-            val fake = listOf(
-                Service(1, "Corte de cabello", "Corte profesional"),
-                Service(2, "Barba", "Arreglo de barba"),
-                Service(3, "Cejas", "Perfilado de cejas")
-            )
+            val result = getServicesUseCase()
 
-            _uiState.update {
-                it.copy(servicesState = ClientHomeUiState.ServicesDataState.Success(fake))
-            }
+            result.fold(
+                onSuccess = {servicesList ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            servicesState = ClientHomeUiState.ServicesDataState.Success(services = servicesList)
+                        )
+                    }
+                },
+                onFailure = {exception ->
+                    _uiState.update { currentState ->
+                        currentState.copy(
+                            servicesState = ClientHomeUiState.ServicesDataState.Error(message = exception.message ?: "Error desconocido al cargar servicios")
+                        )
+                    }
+                }
+            )
         }
     }
 

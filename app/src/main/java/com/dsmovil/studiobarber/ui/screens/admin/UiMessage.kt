@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.screens.admin.barbers
+package com.dsmovil.studiobarber.ui.screens.admin
 
 data class UiMessage(
     val message: String,
