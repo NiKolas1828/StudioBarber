@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.components
+package com.dsmovil.studiobarber.ui.components.admin
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -23,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
 @Composable
-fun DashboardCard(
+fun AdminDashboardCard(
     modifier: Modifier = Modifier,
     title: String,
     description: String,

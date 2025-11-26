@@ -81,15 +81,25 @@ class ClientHomeViewModel @Inject constructor(
         }
     }
 
-    fun changeOption(option: String){
+    fun changeOption(option: SelectOptions){
         _uiState.value = _uiState.value.copy(selectedOption = option)
     }
 
     fun selectBarber(id: Long) {
+        if (_uiState.value.selectedBarberId == id) {
+            _uiState.value = _uiState.value.copy(selectedBarberId = null)
+            return
+        }
+
         _uiState.value = _uiState.value.copy(selectedBarberId = id)
     }
 
     fun selectService(id: Long) {
+        if (_uiState.value.selectedServiceId == id) {
+            _uiState.value = _uiState.value.copy(selectedServiceId = null)
+            return
+        }
+
         _uiState.value = _uiState.value.copy(selectedServiceId = id)
     }
 

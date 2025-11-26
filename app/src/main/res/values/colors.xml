@@ -15,4 +15,5 @@
     <color name="icon_color_red">#F44336</color>
     <color name="message_error">#D32F2F</color>
     <color name="message_success">#4CAF50</color>
+    <color name="disabled_button">#424242</color>
 </resources>
