@@ -1,20 +1,18 @@
-package com.dsmovil.studiobarber.ui.screens.client.reservation
+package com.dsmovil.studiobarber.ui.screens.client.calendar
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
 
-class ClientReservationDetailViewModel : ViewModel() {
+class ClientCalendarViewModel : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ClientReservationUiState())
-    val uiState: StateFlow<ClientReservationUiState> = _uiState
+    private val _uiState = MutableStateFlow(ClientCalendarUiState())
+    val uiState: StateFlow<ClientCalendarUiState> = _uiState
 
     init {
         loadCalendarDays()
