@@ -23,7 +23,6 @@ import com.dsmovil.studiobarber.R
 
 @Composable
 fun ListReservationScreenLayout(
-    userName: String,
     onNavigateToHome: () -> Unit = {},
     onLogout: () -> Unit,
     snackbarHost: @Composable () -> Unit = {},
@@ -46,9 +45,7 @@ fun ListReservationScreenLayout(
             ){
                 Spacer(modifier = Modifier.height(8.dp))
 
-                ClientHeader(
-                    userName = userName,
-                ){
+                ReservationHeader{
                     Button(
                         onClick = onNavigateToHome,
                         modifier = Modifier

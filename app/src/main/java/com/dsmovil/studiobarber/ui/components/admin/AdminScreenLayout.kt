@@ -17,11 +17,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.ui.components.LogoutButton
-import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
+import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
 
 @Composable
 fun AdminScreenLayout(
-    viewModel: BaseAdminViewModel,
+    viewModel: BaseViewModel,
     onLogoutSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     floatingActionButton: @Composable () -> Unit = {},

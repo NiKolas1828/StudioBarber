@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.screens.client.reservations
+package com.dsmovil.studiobarber.ui.screens.admin.reservations
 
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
@@ -12,19 +12,17 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ClientReservationViewModel @Inject constructor(
+class AdminReservationsViewModel @Inject constructor(
     private val getReservationsUseCase: GetReservationsUseCase,
     private val deleteReservationsUseCase: DeleteReservationsUseCase,
     logoutUseCase: LogoutUseCase
-) : BaseViewModel(logoutUseCase){
-
-    private val _uiState = MutableStateFlow(ClientReservationUiState())
-    val uiState: StateFlow<ClientReservationUiState> = _uiState.asStateFlow()
+) : BaseViewModel(logoutUseCase) {
+    private val _uiState = MutableStateFlow<AdminReservationsUiState>(AdminReservationsUiState.Loading)
+    val uiState: StateFlow<AdminReservationsUiState> = _uiState.asStateFlow()
 
     private val _messageChannel = Channel<UiMessage>()
     val messageChannel = _messageChannel.receiveAsFlow()
@@ -41,26 +39,16 @@ class ClientReservationViewModel @Inject constructor(
 
     private fun loadReservations(){
         viewModelScope.launch {
-            _uiState.update { it.copy(reservationState = ClientReservationUiState.ReservationDataState.Loading) }
+            _uiState.value = AdminReservationsUiState.Loading
 
             val result = getReservationsUseCase()
 
             result.fold(
                 onSuccess = { reservationsList ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            reservationState = ClientReservationUiState.ReservationDataState.Success(reservations = reservationsList)
-                        )
-                    }
+                   _uiState.value = AdminReservationsUiState.Success(reservations = reservationsList)
                 },
                 onFailure = { exception ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            reservationState = ClientReservationUiState.ReservationDataState.Error(
-                                message = exception.message ?: "Error desconocido al cargar las reservas"
-                            )
-                        )
-                    }
+                    _uiState.value = AdminReservationsUiState.Error(message = exception.message ?: "Error desconocido al cargar reservas")
                 }
             )
         }

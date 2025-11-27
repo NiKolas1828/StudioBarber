@@ -7,7 +7,7 @@ import androidx.navigation.compose.NavHost
 @Composable
 fun StudioBarberNavGraph(
     navController: NavHostController,
-    startDestination: String = Screen.ClientHome.route
+    startDestination: String = Screen.AdminHome.route
 ) {
     NavHost(
         navController = navController,

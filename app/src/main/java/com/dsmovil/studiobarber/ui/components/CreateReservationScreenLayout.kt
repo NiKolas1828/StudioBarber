@@ -24,7 +24,6 @@ import com.dsmovil.studiobarber.ui.screens.client.home.SelectOptions
 
 @Composable
 fun CreateReservationScreenLayout(
-    userName: String,
     selectedOption: SelectOptions,
     onChangeOption: (SelectOptions) -> Unit,
     isContinueEnabled: Boolean,
@@ -53,9 +52,7 @@ fun CreateReservationScreenLayout(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    ClientHeader(
-                        userName = userName,
-                    ){
+                    ReservationHeader{
                         Button(
                             onClick = onNavigateToReservations,
                             modifier = Modifier

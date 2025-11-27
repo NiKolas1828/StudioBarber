@@ -22,3 +22,10 @@ data class Service (
         }
     }
 }
+
+enum class ServiceType {
+    HAIRCUT,
+    BEARD,
+    EYEBROWS,
+    OTHER
+}

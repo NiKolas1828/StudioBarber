@@ -14,8 +14,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
-import com.dsmovil.studiobarber.ui.components.ClientHeader
 import com.dsmovil.studiobarber.ui.components.LogoutButton
+import com.dsmovil.studiobarber.ui.components.ReservationHeader
 import com.dsmovil.studiobarber.ui.components.client.selector.DaysSelector
 import com.dsmovil.studiobarber.ui.components.client.selector.HoursSelector
 import com.dsmovil.studiobarber.ui.components.client.ReserveButton
@@ -26,7 +26,6 @@ fun ClientCalendarScreen(
     onMyReservationsClick: () -> Unit,
     onNavigateBack: () -> Unit,
     onLogout: () -> Unit,
-    userName:String =  "Usuario"
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -45,9 +44,7 @@ fun ClientCalendarScreen(
             ){
                 Spacer(modifier = Modifier.height(8.dp))
 
-                ClientHeader(
-                    userName = userName,
-                ){
+                ReservationHeader{
                     Button(
                         onClick = onMyReservationsClick,
                         modifier = Modifier
