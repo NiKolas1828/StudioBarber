@@ -17,8 +17,8 @@ import com.dsmovil.studiobarber.R
 fun ActionButtons(
     firstIcon: ImageVector,
     secondIcon: ImageVector,
-    onFirstClick: () -> Unit,
-    onSecondClick: () -> Unit,
+    onFirstClick: (() -> Unit)?,
+    onSecondClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
     firstIconTint: Color = colorResource(id = R.color.icon_color_red),
     secondIconTint: Color = colorResource(id = R.color.icon_color_red),
@@ -29,22 +29,26 @@ fun ActionButtons(
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy((-5).dp)
     ) {
-        IconButton(modifier = Modifier.size(36.dp), onClick = onFirstClick) {
-            Icon(
-                modifier = Modifier.size(18.dp),
-                imageVector = firstIcon,
-                contentDescription = firstContentDescription,
-                tint = firstIconTint
-            )
+        if (onFirstClick != null) {
+            IconButton(modifier = Modifier.size(36.dp), onClick = onFirstClick) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector = firstIcon,
+                    contentDescription = firstContentDescription,
+                    tint = firstIconTint
+                )
+            }
         }
 
-        IconButton(modifier = Modifier.size(36.dp), onClick = onSecondClick) {
-            Icon(
-                modifier = Modifier.size(18.dp),
-                imageVector = secondIcon,
-                contentDescription = secondContentDescription,
-                tint = secondIconTint
-            )
+        if (onSecondClick != null) {
+            IconButton(modifier = Modifier.size(36.dp), onClick = onSecondClick) {
+                Icon(
+                    modifier = Modifier.size(18.dp),
+                    imageVector = secondIcon,
+                    contentDescription = secondContentDescription,
+                    tint = secondIconTint
+                )
+            }
         }
     }
 }

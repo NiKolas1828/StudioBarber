@@ -6,7 +6,7 @@ import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
-import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
+import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +19,7 @@ class ClientHomeViewModel @Inject constructor(
     private val getBarberUseCase: GetBarbersUseCase,
     private val getServicesUseCase: GetServicesUseCase,
     logoutUseCase: LogoutUseCase
-) : BaseAdminViewModel(logoutUseCase){
+) : BaseViewModel(logoutUseCase){
 
     private val _uiState = MutableStateFlow(ClientHomeUiState())
     val uiState: StateFlow<ClientHomeUiState> = _uiState.asStateFlow()

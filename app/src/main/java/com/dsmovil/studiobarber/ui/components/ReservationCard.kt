@@ -25,7 +25,7 @@ import androidx.compose.ui.text.withStyle
 fun ReservationCard(
     reservation: Reservation,
     modifier: Modifier = Modifier,
-    onEditClick: () -> Unit,
+    onEditClick: (() -> Unit)? = null,
     onDeleteClick: () -> Unit,
 ) {
     Card(

@@ -19,7 +19,6 @@ import com.dsmovil.studiobarber.ui.components.ListReservationScreenLayout
 @Composable
 fun ClientReservationsScreen(
     viewModel: ClientReservationViewModel,
-    userName: String = "Usuario",
     onNavigateToClientHome: () -> Unit = {},
     onLogout: () -> Unit
 ) {
@@ -27,7 +26,6 @@ fun ClientReservationsScreen(
     val state by viewModel.uiState.collectAsState()
 
     ListReservationScreenLayout(
-        userName = userName,
         onNavigateToHome = onNavigateToClientHome,
         onLogout = onLogout,
         footerText = "Gracias por preferirnos"

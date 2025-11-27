@@ -7,8 +7,8 @@ import com.dsmovil.studiobarber.domain.usecases.admin.services.AddServiceUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.DeleteServiceUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.UpdateServiceUseCase
-import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
-import com.dsmovil.studiobarber.ui.screens.admin.UiMessage
+import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
+import com.dsmovil.studiobarber.ui.screens.utils.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -25,7 +25,7 @@ class ManageServicesViewModel @Inject constructor(
     private val updateServiceUseCase: UpdateServiceUseCase,
     private val deleteServiceUseCase: DeleteServiceUseCase,
     logoutUseCase: LogoutUseCase
-) : BaseAdminViewModel(logoutUseCase) {
+) : BaseViewModel(logoutUseCase) {
     // Estados de la UI
     private val _uiState = MutableStateFlow<ManageServicesUiState>(ManageServicesUiState.Loading)
     val uiState: StateFlow<ManageServicesUiState> = _uiState.asStateFlow()

@@ -23,7 +23,7 @@ import com.dsmovil.studiobarber.ui.components.admin.AdminScreenLayout
 
 @Composable
 fun AdminDashboardScreen(
-    viewModel: AdminDashboardViewModel,
+    viewModel: DashboardViewModel,
     onNavigateToServices: () -> Unit,
     onNavigateToBarbers: () -> Unit,
     onNavigateToReservations: () -> Unit,

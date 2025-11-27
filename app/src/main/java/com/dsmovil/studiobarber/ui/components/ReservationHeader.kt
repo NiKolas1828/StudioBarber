@@ -15,14 +15,14 @@ import androidx.compose.ui.res.colorResource
 import com.dsmovil.studiobarber.R
 
 @Composable
-fun ClientHeader (
-    userName: String,
+fun ReservationHeader(
+    username: String = "Usuario",
     buttonHeader: @Composable () -> Unit
 ) {
     Row(
-    modifier = Modifier.fillMaxWidth(),
-    horizontalArrangement = Arrangement.SpaceBetween,
-    verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Column {
             Text(
@@ -30,8 +30,9 @@ fun ClientHeader (
                 color = Color.White.copy(alpha = 0.7f),
                 fontSize = 25.sp
             )
+
             Text(
-                text = userName,
+                text = username,
                 color = colorResource(id = R.color.icon_color_blue),
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold

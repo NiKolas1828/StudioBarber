@@ -7,7 +7,9 @@ import androidx.navigation.compose.composable
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
-import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
+import com.dsmovil.studiobarber.ui.screens.admin.home.DashboardViewModel
+import com.dsmovil.studiobarber.ui.screens.admin.reservations.AdminReservationsScreen
+import com.dsmovil.studiobarber.ui.screens.admin.reservations.AdminReservationsViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesScreen
 import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
@@ -92,13 +94,13 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
 
 fun NavGraphBuilder.adminGraph(navController: NavController) {
     composable(Screen.AdminHome.route) {
-        val viewModel: AdminDashboardViewModel = hiltViewModel()
+        val viewModel: DashboardViewModel = hiltViewModel()
 
         AdminDashboardScreen(
             viewModel = viewModel,
             onNavigateToServices = { navController.navigate(Screen.AdminServices.route) },
             onNavigateToBarbers = { navController.navigate(Screen.AdminBarbers.route) },
-            onNavigateToReservations = { /* TODO */ },
+            onNavigateToReservations = { navController.navigate(Screen.AdminReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) }
         )
     }
@@ -119,6 +121,16 @@ fun NavGraphBuilder.adminGraph(navController: NavController) {
         ManageServicesScreen(
             viewModel = viewModel,
             onNavigateBack = { navController.popBackStack() },
+            onLogout = { navigateToAuthAndClearStack(navController) }
+        )
+    }
+
+    composable(Screen.AdminReservations.route) {
+        val viewModel: AdminReservationsViewModel = hiltViewModel()
+
+        AdminReservationsScreen(
+            viewModel = viewModel,
+            onNavigateToDashboard = { navController.navigate(Screen.AdminHome.route) },
             onLogout = { navigateToAuthAndClearStack(navController) }
         )
     }

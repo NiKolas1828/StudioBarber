@@ -8,8 +8,8 @@ import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
-import com.dsmovil.studiobarber.ui.screens.admin.BaseAdminViewModel
-import com.dsmovil.studiobarber.ui.screens.admin.UiMessage
+import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
+import com.dsmovil.studiobarber.ui.screens.utils.UiMessage
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -26,7 +26,7 @@ class ManageBarbersViewModel @Inject constructor(
     private val updateBarberUseCase: UpdateBarberUseCase,
     private val addBarberUseCase: AddBarberUseCase,
     logoutUseCase: LogoutUseCase
-) : BaseAdminViewModel(logoutUseCase) {
+) : BaseViewModel(logoutUseCase) {
     // Estados de la UI
     private val _uiState = MutableStateFlow<ManageBarbersUiState>(ManageBarbersUiState.Loading)
     val uiState: StateFlow<ManageBarbersUiState> = _uiState.asStateFlow()

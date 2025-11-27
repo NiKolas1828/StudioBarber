@@ -32,7 +32,6 @@ import com.dsmovil.studiobarber.ui.components.utils.getIconForServiceType
 @Composable
 fun ClientHomeScreen(
     viewModel: ClientHomeViewModel,
-    userName: String = "Usuario",
     onNavigateToClientReservarionts: () -> Unit = {},
     onContinueClick: () -> Unit = {},
     onLogout: () -> Unit ={}
@@ -40,7 +39,6 @@ fun ClientHomeScreen(
     val state by viewModel.uiState.collectAsState()
 
     CreateReservationScreenLayout(
-        userName = userName,
         selectedOption = state.selectedOption,
         onChangeOption = viewModel::changeOption,
         isContinueEnabled = state.isContinueButtonEnabled,
