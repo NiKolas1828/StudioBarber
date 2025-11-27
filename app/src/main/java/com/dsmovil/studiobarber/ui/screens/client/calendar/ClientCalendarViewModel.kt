@@ -105,9 +105,29 @@ class ClientCalendarViewModel : ViewModel() {
 
     fun reserve() {
         val date = _uiState.value.selectedDate
-        val hour = _uiState.value.selectedHour
-        if (date != null && hour != null) {
-            Log.d("ClientReservationVM","Reservando el $date a las $hour")
+        val hour12 = _uiState.value.selectedHour
+        val isAm = _uiState.value.isAm
+
+        if (date != null && hour12 != null) {
+
+            val formattedDate = date.toString()
+            val formattedTime24 = convertTo24HourFormat(hour12, isAm)
+
+            Log.d("ClientReservationVM","Reservando el $formattedDate a las $formattedTime24")
         }
+    }
+
+    private fun convertTo24HourFormat(hour12: String, isAm: Boolean): String {
+        val parts = hour12.split(":")
+        var hour = parts[0].toInt()
+        val minute = parts[1]
+
+        if (isAm) {
+            if (hour == 12) hour = 0
+        } else {
+            if (hour != 12) hour += 12
+        }
+
+        return String.format(Locale.getDefault(), "%02d:%s", hour, minute)
     }
 }
