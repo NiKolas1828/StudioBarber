@@ -19,7 +19,7 @@ import androidx.compose.ui.res.colorResource
 @Composable
 fun LoginScreen(
     viewModel: LoginViewModel,
-    onLoginSuccess: () -> Unit
+    onLoginSuccess: @Composable () -> Unit
 ) {
     val state = viewModel.uiState
 

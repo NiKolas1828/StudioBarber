@@ -5,9 +5,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -15,6 +17,9 @@ import javax.inject.Inject
 class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
     var uiState by mutableStateOf(LoginUiState())
         private set
+
+    private val _navigationEvent = MutableSharedFlow<Role>()
+    val navigationEvent = _navigationEvent.asSharedFlow()
 
     fun onEmailChange(value: String) {
         uiState = uiState.copy(email = value)
@@ -30,12 +35,13 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
 
             val result = loginUseCase(uiState.email, uiState.password)
 
-            uiState = if (result.isSuccess) {
-                uiState.copy(loading = false, success = true)
-            } else {
-                uiState.copy(
+            result.onSuccess { user ->
+                uiState = uiState.copy(loading = false, success = true)
+                _navigationEvent.emit(user.role)
+            }.onFailure { exception ->
+                uiState = uiState.copy(
                     loading = false,
-                    error = result.exceptionOrNull()?.message
+                    error = exception.message
                 )
             }
         }

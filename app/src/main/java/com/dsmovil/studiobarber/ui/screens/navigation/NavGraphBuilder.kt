@@ -1,11 +1,13 @@
 package com.dsmovil.studiobarber.ui.screens.navigation
 
+import androidx.compose.runtime.LaunchedEffect
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
@@ -25,6 +27,7 @@ import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
+import kotlinx.coroutines.flow.collectLatest
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
     composable(Screen.AuthChooser.route) {
@@ -40,12 +43,26 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         LoginScreen(
             viewModel = viewModel,
             onLoginSuccess = {
-                navController.navigate(Screen.ClientHome.route) {
-                    popUpTo(Screen.AuthChooser.route) { inclusive = true }
+                LaunchedEffect(key1 = Unit) {
+                    viewModel.navigationEvent.collectLatest { role ->
+                        val route = when (role) {
+                            Role.CLIENTE -> Screen.ClientHome.route
+                            Role.ADMINISTRADOR -> Screen.AdminHome.route
+                            Role.BARBERO -> {
+                                // TODO: Define y navega a la pantalla principal del barbero
+                                Screen.AdminHome.route
+                            }
+                        }
+
+                        navController.navigate(route) {
+                            popUpTo(Screen.AuthChooser.route) { inclusive = true }
+                        }
+                    }
                 }
             }
         )
     }
+
 
     composable(Screen.Register.route) {
         val viewModel: RegisterViewModel = hiltViewModel()
