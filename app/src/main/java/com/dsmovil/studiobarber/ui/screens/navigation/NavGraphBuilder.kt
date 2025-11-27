@@ -3,9 +3,7 @@ package com.dsmovil.studiobarber.ui.screens.navigation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
 import androidx.navigation.compose.composable
-import androidx.navigation.navArgument
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
@@ -13,10 +11,10 @@ import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesScreen
 import com.dsmovil.studiobarber.ui.screens.admin.services.ManageServicesViewModel
 import com.dsmovil.studiobarber.ui.screens.auth.AuthChooserScreen
+import com.dsmovil.studiobarber.ui.screens.client.calendar.ClientCalendarScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeScreen
 import com.dsmovil.studiobarber.ui.screens.client.home.ClientHomeViewModel
-import com.dsmovil.studiobarber.ui.screens.client.reservation.ClientReservationDetailViewModel
-import com.dsmovil.studiobarber.ui.screens.client.reservation.ClientReservationScreen
+import com.dsmovil.studiobarber.ui.screens.client.calendar.ClientCalendarViewModel
 import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationViewModel
 import com.dsmovil.studiobarber.ui.screens.client.reservations.ClientReservationsScreen
 import com.dsmovil.studiobarber.ui.screens.login.LoginScreen
@@ -66,7 +64,7 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
         ClientHomeScreen(
             onNavigateToClientReservarionts = { navController.navigate(Screen.ClientReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) },
-            onContinueClick = {navController.navigate(Screen.ClientReservation.route)},
+            onContinueClick = {navController.navigate(Screen.ClientCalendar.route)},
             viewModel = viewModel
         )
     }
@@ -80,17 +78,13 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
             onLogout = { navigateToAuthAndClearStack(navController)}
         )
     }
-    composable(
-        route = Screen.ClientReservation.route,)
-    { backStackEntry ->
+    composable(Screen.ClientCalendar.route) {
+        val viewModel: ClientCalendarViewModel = hiltViewModel()
 
-
-        val viewModel: ClientReservationDetailViewModel = hiltViewModel()
-
-        ClientReservationScreen(
+        ClientCalendarScreen(
             viewModel = viewModel,
-            onNavigateBack = { navController.popBackStack() },
-            onMyReservationsClick = {},
+            onNavigateBack = { navController.navigate(Screen.ClientHome.route) },
+            onMyReservationsClick = { navController.navigate(Screen.ClientReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) }
         )
     }

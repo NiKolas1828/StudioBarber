@@ -1,4 +1,4 @@
-package com.dsmovil.studiobarber.ui.screens.client.reservation
+package com.dsmovil.studiobarber.ui.screens.client.calendar
 
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import java.time.LocalDate
@@ -10,7 +10,7 @@ data class DayItem(
     val fullMonthName: String
 )
 
-data class ClientReservationUiState(
+data class ClientCalendarUiState(
     val userName: String = "Usuario",
     val days: List<DayItem> = emptyList(),
     val hours: List<HourItem> = emptyList(),

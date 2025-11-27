@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.dsmovil.studiobarber.ui.screens.client.reservation.DayItem
+import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import java.time.LocalDate
 
 @Composable
