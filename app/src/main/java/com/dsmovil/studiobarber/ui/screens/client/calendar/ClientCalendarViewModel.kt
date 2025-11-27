@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.screens.client.calendar
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -24,7 +25,6 @@ class ClientCalendarViewModel : ViewModel() {
         val daysList = mutableListOf<DayItem>()
         val locale = Locale("es", "ES")
 
-        // Generamos los próximos 365 días (1 año de calendario continuo)
         for (i in 0 until 365) {
             val date = today.plusDays(i.toLong())
 
@@ -45,7 +45,6 @@ class ClientCalendarViewModel : ViewModel() {
             )
         }
 
-        // Inicializamos el estado con el mes actual
         val currentMonth = today.month.getDisplayName(TextStyle.FULL, locale)
             .replaceFirstChar { if (it.isLowerCase()) it.titlecase(locale) else it.toString() }
 
@@ -57,8 +56,6 @@ class ClientCalendarViewModel : ViewModel() {
         }
     }
 
-    // Esta función se llamará cuando el scroll de días cambie
-    // para actualizar el título del mes arriba automáticamente
     fun onVisibleDayChanged(dayItem: DayItem) {
         if (_uiState.value.selectedMonth != dayItem.fullMonthName) {
             _uiState.update { it.copy(selectedMonth = dayItem.fullMonthName) }
@@ -74,24 +71,43 @@ class ClientCalendarViewModel : ViewModel() {
     }
 
     fun toggleAmPm() {
-        _uiState.update { it.copy(isAm = !it.isAm) }
+        val newIsAmState = !_uiState.value.isAm
+        _uiState.update {
+            it.copy(
+                isAm = newIsAmState,
+                hours = getHoursForState(newIsAmState),
+                selectedHour = null
+            )
+        }
     }
 
     private fun loadHours() {
-        // Tu lógica de horas existente...
-        val fakeHours = listOf(
-            HourItem("8:00", true), HourItem("8:30", false),
-            HourItem("9:00", true), HourItem("9:30", false),
-            HourItem("10:00", true), HourItem("11:00", true)
-        )
-        _uiState.update { it.copy(hours = fakeHours) }
+        _uiState.update { it.copy(hours = getHoursForState(true)) } // Iniciamos con AM
+    }
+    private fun getHoursForState(isAm: Boolean): List<HourItem> {
+        return if (isAm) {
+            // Horas de la MAÑANA (AM)
+            listOf(
+                HourItem("8:00", true), HourItem("8:30", false),
+                HourItem("9:00", true), HourItem("9:30", false),
+                HourItem("10:00", true), HourItem("10:30", false),
+                HourItem("11:00", true), HourItem("11:30", false)
+            )
+        } else {
+            listOf(
+                HourItem("2:00", true), HourItem("2:30", false),
+                HourItem("3:00", true), HourItem("3:30", false),
+                HourItem("4:00", true), HourItem("4:30", false),
+                HourItem("5:00", true), HourItem("5:30", false)
+            )
+        }
     }
 
     fun reserve() {
         val date = _uiState.value.selectedDate
         val hour = _uiState.value.selectedHour
         if (date != null && hour != null) {
-            println("Reservando el $date a las $hour")
+            Log.d("ClientReservationVM","Reservando el $date a las $hour")
         }
     }
 }

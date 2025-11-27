@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.components.client.selector
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -31,6 +32,8 @@ fun HoursSelector(
             ) {
                 row.forEach { hour ->
 
+                    val isSelected = selectedHour == hour.value
+
                     val bg = when {
                         hour.isAvailable.not() -> Color(0xFFE53935)
                         selectedHour == hour.value -> Color(0xFF03A9F4)
@@ -42,6 +45,7 @@ fun HoursSelector(
                             .weight(1f)
                             .height(45.dp)
                             .background(bg, RoundedCornerShape(8.dp))
+                            .then(if (isSelected) Modifier.border(2.dp, Color.White, RoundedCornerShape(8.dp)) else Modifier)
                             .clickable(enabled = hour.isAvailable) {
                                 onSelectHour(hour.value)
                             },
