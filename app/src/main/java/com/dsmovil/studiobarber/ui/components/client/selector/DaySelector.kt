@@ -22,11 +22,10 @@ fun DaysSelector(
     selectedDate: LocalDate?,
     days: List<DayItem>,
     onSelectDay: (LocalDate) -> Unit,
-    onVisibleDayChanged: (DayItem) -> Unit // Callback para actualizar mes
+    onVisibleDayChanged: (DayItem) -> Unit
 ) {
     val listState = rememberLazyListState()
 
-    // Detectamos qué item es el primero visible para actualizar el mes
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .collect { index ->
@@ -39,7 +38,7 @@ fun DaysSelector(
     LazyRow(
         state = listState,
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(12.dp), // Espacio entre items
+        horizontalArrangement = Arrangement.spacedBy(12.dp),
         contentPadding = PaddingValues(horizontal = 4.dp)
     ) {
         items(days) { day ->

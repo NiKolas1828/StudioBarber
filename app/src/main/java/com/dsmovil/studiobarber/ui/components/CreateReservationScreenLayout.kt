@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.components
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -67,7 +68,8 @@ fun CreateReservationScreenLayout(
                             ),
                             elevation = ButtonDefaults.buttonElevation(
                                 defaultElevation = 4.dp
-                            )
+                            ),
+                            contentPadding = PaddingValues(0.dp)
                         ) {
                             Text("Mis Reservas")
                         }

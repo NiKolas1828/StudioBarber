@@ -3,7 +3,9 @@ package com.dsmovil.studiobarber.ui.screens.navigation
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
@@ -64,7 +66,9 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
         ClientHomeScreen(
             onNavigateToClientReservarionts = { navController.navigate(Screen.ClientReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) },
-            onContinueClick = {navController.navigate(Screen.ClientCalendar.route)},
+            onContinueClick = { serviceId, barberId ->
+                navController.navigate(Screen.ClientCalendar.createRoute(serviceId, barberId))
+            },
             viewModel = viewModel
         )
     }
@@ -78,7 +82,13 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
             onLogout = { navigateToAuthAndClearStack(navController)}
         )
     }
-    composable(Screen.ClientCalendar.route) {
+    composable(
+        route = Screen.ClientCalendar.route,
+        arguments = listOf(
+            navArgument("serviceId") { type = NavType.LongType },
+            navArgument("barberId") { type = NavType.LongType }
+        )
+    ) {
         val viewModel: ClientCalendarViewModel = hiltViewModel()
 
         ClientCalendarScreen(
