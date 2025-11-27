@@ -6,5 +6,6 @@ data class Barber(
     val email: String,
     val password: String,
     val phone: String,
-    val isActive: Boolean = true
+    val isActive: Boolean = true,
+    val rol: Role = Role.BARBERO
 )
