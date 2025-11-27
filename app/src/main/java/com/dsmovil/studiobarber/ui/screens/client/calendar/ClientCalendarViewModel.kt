@@ -2,18 +2,31 @@ package com.dsmovil.studiobarber.ui.screens.client.calendar
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dsmovil.studiobarber.domain.models.Barber
+import com.dsmovil.studiobarber.domain.models.Reservation
+import com.dsmovil.studiobarber.domain.models.Service
+import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
+import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.CreateReservationUseCase
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class ClientCalendarViewModel @Inject constructor(
+    private val createReservationUseCase: CreateReservationUseCase,
+    private val getServicesUseCase: GetServicesUseCase,
+    private val getBarbersUseCase: GetBarbersUseCase,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ClientCalendarUiState())
@@ -114,10 +127,52 @@ class ClientCalendarViewModel @Inject constructor(
         val hour12 = _uiState.value.selectedHour
         val isAm = _uiState.value.isAm
 
-        if (date != null && hour12 != null) {
+        var selectedService: Service? = null
+        var selectedBarber: Barber? = null
 
+        if (date != null && hour12 != null) {
             val formattedDate = date.toString()
             val formattedTime24 = convertTo24HourFormat(hour12, isAm)
+
+            viewModelScope.launch {
+
+                val resultServices = getServicesUseCase()
+                resultServices.fold(
+                    onSuccess = { services ->
+                        selectedService = services.find { it.id == serviceId }
+                    },
+                    onFailure = { exception ->
+                        // Manejar el error
+                    }
+                )
+
+                val resultBarbers = getBarbersUseCase()
+                resultBarbers.fold(
+                    onSuccess = { barbers ->
+                        selectedBarber = barbers.find { it.id == barberId }
+                    },
+                    onFailure = { exception ->
+                        // Manejar el error
+                    }
+                )
+
+                val result = createReservationUseCase(
+                    reservation = Reservation(
+                        id = System.currentTimeMillis(),
+                        serviceId = serviceId,
+                        nameService = selectedService?.name ?: "",
+                        userId = 1,
+                        nameUser = "Usuario Demo",
+                        barberId = barberId,
+                        nameBarber = selectedBarber?.name ?: "",
+                        date = date,
+                        timeStart = LocalTime.parse(formattedTime24),
+                        status = false,
+                        isActive = true,
+                        amount = true
+                    )
+                )
+            }
         }
     }
 

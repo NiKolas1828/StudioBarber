@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.data.repositories
 
+import com.dsmovil.studiobarber.data.local.MemoryDatabase // Asumimos esta clase ya existe
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
 import kotlinx.coroutines.delay
@@ -7,37 +8,33 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BarberRepositoryImpl @Inject constructor() : BarberRepository {
-    private val mockBarbers = mutableListOf(
-        Barber(1, "Juan", "juan@gmail.com", "12345", "3125178190"),
-        Barber(2, "Nicolas", "nicolas@gmail.com", "12345", "3208147189"),
-        Barber(3, "Alexis", "alexis@gmail.com", "12345", "3004178190"),
-        Barber(4, "Ander", "ander@gmail.com", "12345", "3114517518")
-    )
+class BarberRepositoryImpl @Inject constructor(
+    private val db: MemoryDatabase
+) : BarberRepository {
+
 
     override suspend fun getBarbers(): Result<List<Barber>> {
-        delay(500) // Simular un retraso de red
-
-        return Result.success(mockBarbers.toList())
+        delay(500)
+        return Result.success(db.barbers.toList())
     }
 
     override suspend fun deleteBarber(id: Long): Result<Unit> {
         delay(300)
-        val removed = mockBarbers.removeIf { it.id == id }
+        val removed = db.barbers.removeIf { it.id == id }
 
-        return if (removed) Result.success(Unit) else Result.failure(Exception("No encontrado"))
+        return if (removed) Result.success(Unit) else Result.failure(Exception("Barbero no encontrado"))
     }
 
     override suspend fun addBarber(barber: Barber): Result<Unit> {
         delay(300)
-        mockBarbers.add(barber)
+        db.barbers.add(barber)
 
         return Result.success(Unit)
     }
 
     override suspend fun getBarberById(id: Long): Result<Barber> {
         delay(300)
-        val barber = mockBarbers.find { it.id == id }
+        val barber = db.barbers.find { it.id == id }
 
         return if (barber != null) {
             Result.success(barber)
@@ -48,10 +45,10 @@ class BarberRepositoryImpl @Inject constructor() : BarberRepository {
 
     override suspend fun updateBarber(barber: Barber): Result<Unit> {
         delay(300)
-        val index = mockBarbers.indexOfFirst { it.id == barber.id }
+        val index = db.barbers.indexOfFirst { it.id == barber.id }
 
         return if (index != -1) {
-            mockBarbers[index] = barber
+            db.barbers[index] = barber
             Result.success(Unit)
         } else {
             Result.failure(Exception("No se pudo actualizar"))

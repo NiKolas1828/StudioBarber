@@ -19,6 +19,7 @@ import com.dsmovil.studiobarber.domain.usecases.admin.services.AddServiceUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.DeleteServiceUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.UpdateServiceUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.CreateReservationUseCase
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -110,6 +111,12 @@ abstract class AppModule {
         @Singleton
         fun provideDeleteServiceUseCase(repository: ServiceRepository): DeleteServiceUseCase {
             return DeleteServiceUseCase(repository)
+        }
+
+        @Provides
+        @Singleton
+        fun provideCreateReservationUseCase(repository: ReservationRepository): CreateReservationUseCase {
+            return CreateReservationUseCase(repository)
         }
     }
 }
