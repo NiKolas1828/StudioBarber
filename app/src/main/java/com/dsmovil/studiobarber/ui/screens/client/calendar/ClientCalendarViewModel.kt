@@ -1,19 +1,26 @@
 package com.dsmovil.studiobarber.ui.screens.client.calendar
 
-import android.util.Log
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
+import javax.inject.Inject
 
-class ClientCalendarViewModel : ViewModel() {
-
+@HiltViewModel
+class ClientCalendarViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle
+) : ViewModel() {
     private val _uiState = MutableStateFlow(ClientCalendarUiState())
     val uiState: StateFlow<ClientCalendarUiState> = _uiState
+
+    private val serviceId: Long = savedStateHandle["serviceId"]!!
+    private val barberId: Long = savedStateHandle["barberId"]!!
 
     init {
         loadCalendarDays()
@@ -82,11 +89,10 @@ class ClientCalendarViewModel : ViewModel() {
     }
 
     private fun loadHours() {
-        _uiState.update { it.copy(hours = getHoursForState(true)) } // Iniciamos con AM
+        _uiState.update { it.copy(hours = getHoursForState(true)) }
     }
     private fun getHoursForState(isAm: Boolean): List<HourItem> {
         return if (isAm) {
-            // Horas de la MAÑANA (AM)
             listOf(
                 HourItem("8:00", true), HourItem("8:30", false),
                 HourItem("9:00", true), HourItem("9:30", false),
@@ -112,8 +118,6 @@ class ClientCalendarViewModel : ViewModel() {
 
             val formattedDate = date.toString()
             val formattedTime24 = convertTo24HourFormat(hour12, isAm)
-
-            Log.d("ClientReservationVM","Reservando el $formattedDate a las $formattedTime24")
         }
     }
 
