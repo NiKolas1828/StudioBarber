@@ -33,7 +33,7 @@ import com.dsmovil.studiobarber.ui.components.utils.getIconForServiceType
 fun ClientHomeScreen(
     viewModel: ClientHomeViewModel,
     onNavigateToClientReservarionts: () -> Unit = {},
-    onContinueClick: () -> Unit = {},
+    onContinueClick: (serviceId:Long,barberId:Long) -> Unit,
     onLogout: () -> Unit ={}
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -42,7 +42,7 @@ fun ClientHomeScreen(
         selectedOption = state.selectedOption,
         onChangeOption = viewModel::changeOption,
         isContinueEnabled = state.isContinueButtonEnabled,
-        onContinueClick = onContinueClick,
+        onContinueClick = {onContinueClick(state.selectedServiceId!!,state.selectedBarberId!!)},
         onNavigateToReservations = onNavigateToClientReservarionts,
         onLogout = onLogout
     ) {

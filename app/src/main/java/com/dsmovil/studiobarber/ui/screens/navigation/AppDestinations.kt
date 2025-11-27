@@ -10,7 +10,9 @@ sealed class Screen(val route: String) {
     data object ClientHome : Screen("client_home")
     data object ClientReservations : Screen("client_reservations")
 
-    data object ClientCalendar : Screen("client_calendar")
+    data object ClientCalendar : Screen("client_calendar/{serviceId}/{barberId}"){
+        fun createRoute(serviceId: Long, barberId: Long) = "client_calendar/$serviceId/$barberId"
+    }
 
     // Admin
     data object AdminHome : Screen("admin_home")
