@@ -29,6 +29,12 @@ fun ClientCalendarScreen(
 ) {
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(state.reservationCreated) {
+        if (state.reservationCreated) {
+            onMyReservationsClick()
+        }
+    }
+
     Scaffold(
         containerColor = colorResource(R.color.background_color),
     ) { padding ->
@@ -143,6 +149,8 @@ fun ClientCalendarScreen(
         }
     }
 }
+
+private fun Nothing?.navigate(string: String, function: Any) {}
 
 @Composable
 fun HourFormatSelector(

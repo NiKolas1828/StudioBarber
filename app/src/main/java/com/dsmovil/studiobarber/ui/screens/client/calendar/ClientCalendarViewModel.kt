@@ -162,7 +162,7 @@ class ClientCalendarViewModel @Inject constructor(
                         serviceId = serviceId,
                         nameService = selectedService?.name ?: "",
                         userId = 1,
-                        nameUser = "Usuario Demo",
+                        nameUser = "Nicolas",
                         barberId = barberId,
                         nameBarber = selectedBarber?.name ?: "",
                         date = date,
@@ -172,6 +172,8 @@ class ClientCalendarViewModel @Inject constructor(
                         amount = true
                     )
                 )
+
+                _uiState.update { it.copy(reservationCreated = true) }
             }
         }
     }

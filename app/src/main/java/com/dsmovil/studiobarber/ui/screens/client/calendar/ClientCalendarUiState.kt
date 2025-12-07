@@ -18,5 +18,6 @@ data class ClientCalendarUiState(
     val selectedMonth: String = "",
     val selectedDate: LocalDate? = null,
     val selectedHour: String? = null,
-    val isAm: Boolean = true
+    val isAm: Boolean = true,
+    val reservationCreated: Boolean = false,
 )

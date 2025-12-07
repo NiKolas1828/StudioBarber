@@ -14,6 +14,8 @@ sealed class Screen(val route: String) {
         fun createRoute(serviceId: Long, barberId: Long) = "client_calendar/$serviceId/$barberId"
     }
 
+    data object BarberSchedule : Screen("barber_schedule")
+
     // Admin
     data object AdminHome : Screen("admin_home")
     data object AdminBarbers : Screen("admin_barbers")

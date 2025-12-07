@@ -28,6 +28,8 @@ import com.dsmovil.studiobarber.ui.screens.login.LoginViewModel
 import com.dsmovil.studiobarber.ui.screens.register.RegisterScreen
 import com.dsmovil.studiobarber.ui.screens.register.RegisterViewModel
 import kotlinx.coroutines.flow.collectLatest
+import com.dsmovil.studiobarber.ui.screens.barber.home.BarberScheduleScreen
+import com.dsmovil.studiobarber.ui.screens.barber.home.BarberScheduleViewModel
 
 fun NavGraphBuilder.authGraph(navController: NavController) {
     composable(Screen.AuthChooser.route) {
@@ -40,26 +42,23 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
     composable(Screen.Login.route) {
         val viewModel: LoginViewModel = hiltViewModel()
 
-        LoginScreen(
-            viewModel = viewModel,
-            onLoginSuccess = {
-                LaunchedEffect(key1 = Unit) {
-                    viewModel.navigationEvent.collectLatest { role ->
-                        val route = when (role) {
-                            Role.CLIENTE -> Screen.ClientHome.route
-                            Role.ADMINISTRADOR -> Screen.AdminHome.route
-                            Role.BARBERO -> {
-                                // TODO: Define y navega a la pantalla principal del barbero
-                                Screen.AdminHome.route
-                            }
-                        }
+        LaunchedEffect(key1 = Unit) {
+            viewModel.navigationEvent.collectLatest { role ->
+                val route = when (role) {
+                    Role.CLIENTE -> Screen.ClientHome.route
+                    Role.ADMINISTRADOR -> Screen.AdminHome.route
+                    Role.BARBERO -> { Screen.BarberSchedule.route }
+                }
 
-                        navController.navigate(route) {
-                            popUpTo(Screen.AuthChooser.route) { inclusive = true }
-                        }
-                    }
+                navController.navigate(route) {
+                    popUpTo(Screen.AuthChooser.route) { inclusive = true }
                 }
             }
+        }
+
+        LoginScreen(
+            viewModel = viewModel,
+            onLoginSuccess = {}
         )
     }
 
@@ -117,6 +116,17 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
             onLogout = { navigateToAuthAndClearStack(navController) }
         )
     }
+}
+
+fun NavGraphBuilder.barberGraph(navController: NavController) {
+    composable(Screen.BarberSchedule.route) {
+        val viewModel: BarberScheduleViewModel = hiltViewModel()
+
+        BarberScheduleScreen(
+            viewModel = viewModel,
+            onLogout = { navigateToAuthAndClearStack(navController) }
+            )
+        }
 }
 
 fun NavGraphBuilder.adminGraph(navController: NavController) {

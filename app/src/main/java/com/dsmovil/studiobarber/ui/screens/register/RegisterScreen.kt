@@ -14,6 +14,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import com.dsmovil.studiobarber.R // Make sure to place the logo in your drawable resources
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
 @Composable
@@ -142,6 +143,7 @@ fun RegisterScreen(
                 value = state.password,
                 onValueChange = { viewModel.onPasswordChange(it) },
                 label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
@@ -164,6 +166,7 @@ fun RegisterScreen(
                 value = state.confirmPassword,
                 onValueChange = { viewModel.onConfirmPasswordChange(it) },
                 label = { Text("confirmPassword") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(

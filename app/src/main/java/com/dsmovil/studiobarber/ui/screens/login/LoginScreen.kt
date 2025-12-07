@@ -12,8 +12,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
-import com.dsmovil.studiobarber.R // Make sure to place the logo in your drawable resources
+import com.dsmovil.studiobarber.R
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 
 
 @Composable
@@ -30,7 +31,7 @@ fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(colorResource(id = R.color.background_color)), // Set your desired background color
+            .background(colorResource(id = R.color.background_color)),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -41,12 +42,11 @@ fun LoginScreen(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo at the top
             Image(
-                painter = painterResource(id = R.drawable.studio_barber_logo), // Make sure to add the logo in drawable resources
+                painter = painterResource(id = R.drawable.studio_barber_logo),
                 contentDescription = "Studio Barber Logo",
                 modifier = Modifier
-                    .height(300.dp) // Adjust height as necessary
+                    .height(300.dp)
                     .padding(bottom = 32.dp)
             )
 
@@ -78,6 +78,7 @@ fun LoginScreen(
                 value = state.password,
                 onValueChange = { viewModel.onPasswordChange(it) },
                 label = { Text("Password") },
+                visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth(),
                 singleLine = true,
                 colors = OutlinedTextFieldDefaults.colors(
