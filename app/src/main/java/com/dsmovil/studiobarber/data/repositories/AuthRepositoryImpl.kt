@@ -24,8 +24,6 @@ class AuthRepositoryImpl @Inject constructor(
             if (response.isSuccessful && response.body() != null) {
                 val loginResponse = response.body()!!
 
-                // TODO: Aquí deberías guardar el 'loginResponse.token' en un DataStore o SessionManager
-
                 val user = User(
                     id = loginResponse.id,
                     name = loginResponse.name,
