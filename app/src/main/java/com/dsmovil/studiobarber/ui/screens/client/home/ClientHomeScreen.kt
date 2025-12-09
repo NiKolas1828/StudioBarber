@@ -39,6 +39,7 @@ fun ClientHomeScreen(
     val state by viewModel.uiState.collectAsState()
 
     CreateReservationScreenLayout(
+        username = state.userName,
         selectedOption = state.selectedOption,
         onChangeOption = viewModel::changeOption,
         isContinueEnabled = state.isContinueButtonEnabled,
