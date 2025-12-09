@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.di
 
 import com.dsmovil.studiobarber.BuildConfig
+import com.dsmovil.studiobarber.data.remote.auth.AuthApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -45,5 +46,11 @@ object NetworkModule {
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAuthApiService(retrofit: Retrofit): AuthApiService {
+        return retrofit.create(AuthApiService::class.java)
     }
 }
