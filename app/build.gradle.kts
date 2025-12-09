@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -5,6 +7,18 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
 }
+
+// Leer el archivo local.properties
+val localProperties = Properties()
+val localPropertiesFile = rootProject.file("local.properties")
+if (localPropertiesFile.exists()) {
+    localPropertiesFile.inputStream().use {
+        localProperties.load(it)
+    }
+}
+
+// Obtener la url del backend
+val devBackendUrl = localProperties.getProperty("BACKEND_URL") ?: "http://10.0.2.2:8080/"
 
 android {
     namespace = "com.dsmovil.studiobarber"
@@ -22,12 +36,12 @@ android {
             useSupportLibrary = true
         }
 
-        buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/\"")
+        buildConfigField("String", "BASE_URL", "\"$devBackendUrl\"")
     }
 
     buildTypes {
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:8080/\"")
+            buildConfigField("String", "BASE_URL", "\"$devBackendUrl\"")
         }
 
         release {
@@ -37,7 +51,7 @@ android {
                 "proguard-rules.pro"
             )
 
-            buildConfigField("String", "BASE_URL", "\"https://api.studiobarber.com/\"")
+            buildConfigField("String", "BASE_URL", "\"https://api.studiobarber.com/api\"")
         }
     }
     compileOptions {
