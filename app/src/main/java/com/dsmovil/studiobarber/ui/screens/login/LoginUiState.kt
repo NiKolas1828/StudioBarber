@@ -1,9 +1,13 @@
 package com.dsmovil.studiobarber.ui.screens.login
 
-data class LoginUiState (
-    val email: String = "",
-    val password: String = "",
-    val loading: Boolean = false,
-    val error: String? = null,
-    val success: Boolean = false
-    )
+import com.dsmovil.studiobarber.domain.models.User
+
+sealed class LoginUiState {
+    data object Loading: LoginUiState()
+    data class Success(
+        val user: User
+    ) : LoginUiState()
+    data class Error(
+        val message: String
+    ) : LoginUiState()
+}
