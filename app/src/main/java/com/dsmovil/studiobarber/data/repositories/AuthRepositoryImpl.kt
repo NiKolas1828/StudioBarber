@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.data.repositories
 
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.data.remote.auth.AuthApiService
 import com.dsmovil.studiobarber.data.remote.models.login.LoginRequest
 import com.dsmovil.studiobarber.domain.models.Role
@@ -10,7 +11,8 @@ import javax.inject.Singleton
 
 @Singleton
 class AuthRepositoryImpl @Inject constructor(
-    private val apiService: AuthApiService
+    private val apiService: AuthApiService,
+    private val sessionManager: SessionManager
 ) : AuthRepository {
 
     override suspend fun login(username: String, password: String): Result<User> {
@@ -30,6 +32,8 @@ class AuthRepositoryImpl @Inject constructor(
                     email = loginResponse.email,
                     role = Role.fromString(loginResponse.role[0])
                 )
+
+                sessionManager.saveUser(user = user, token = loginResponse.accessToken)
 
                 Result.success(user)
             } else {

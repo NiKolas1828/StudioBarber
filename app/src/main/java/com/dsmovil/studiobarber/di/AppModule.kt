@@ -60,12 +60,6 @@ abstract class AppModule {
 
         @Provides
         @Singleton
-        fun provideLogoutUseCase(repository: AuthRepository): LogoutUseCase {
-            return LogoutUseCase(repository)
-        }
-
-        @Provides
-        @Singleton
         fun provideGetBarbersUseCase(repository: BarberRepository): GetBarbersUseCase {
             return GetBarbersUseCase(repository)
         }
