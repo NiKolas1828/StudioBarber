@@ -28,7 +28,10 @@ class AuthRepositoryImpl @Inject constructor(
                     id = loginResponse.id,
                     name = loginResponse.name,
                     email = loginResponse.email,
-                    role = Role.fromString(loginResponse.role[0])
+                    role = if (loginResponse.role.isNotEmpty())
+                        Role.fromString(loginResponse.role[0])
+                    else
+                        Role.CLIENTE
                 )
 
                 sessionManager.saveUser(user = user, token = loginResponse.accessToken)
@@ -37,7 +40,7 @@ class AuthRepositoryImpl @Inject constructor(
             } else {
                 val errorMsg = when (response.code()) {
                     400 -> "Las credenciales son incorrectas"
-                    else -> "Ocurrio un error inesperado (${response.code()})"
+                    else -> "Ocurrió un error inesperado (${response.code()})"
                 }
 
                 Result.failure(Exception("Error: $errorMsg"))

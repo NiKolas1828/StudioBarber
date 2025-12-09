@@ -11,7 +11,7 @@ enum class Role {
                 "ROLE_CLIENTE" -> CLIENTE
                 "ROLE_EMPLEADO" -> BARBERO
                 "ROLE_ADMINISTRADOR" -> ADMINISTRADOR
-                else -> CLIENTE
+                else -> throw IllegalArgumentException("Unknown role: $roleName")
             }
         }
     }

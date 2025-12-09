@@ -52,7 +52,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
                     _uiState.value = LoginUiState.Success(user = user)
                 },
                 onFailure = { exception ->
-                    _uiState.value = LoginUiState.Error(message = exception.message ?: "Ocurrio un error inesperado")
+                    _uiState.value = LoginUiState.Error(message = exception.message ?: "Ocurrió un error inesperado")
                 }
             )
         }
