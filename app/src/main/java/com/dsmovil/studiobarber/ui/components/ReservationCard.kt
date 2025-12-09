@@ -46,9 +46,10 @@ fun ReservationCard(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ReservationContent(reservation = reservation, userRole = userRole)
-            Spacer(modifier = Modifier.width(38.dp))
 
             if (onEditClick != null || onDeleteClick != null) {
+                Spacer(modifier = Modifier.width(38.dp))
+
                 ActionButtons(
                     firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
                     onFirstClick = onEditClick,
