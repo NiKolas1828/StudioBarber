@@ -14,6 +14,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
+import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.ui.components.Footer
 import com.dsmovil.studiobarber.ui.components.LogoutButton
 import com.dsmovil.studiobarber.ui.components.ReservationCard
@@ -35,7 +36,6 @@ fun BarberScheduleScreen(
                 message = "Gracias por preferirnos",
                 modifier = Modifier.fillMaxWidth()
             ) {
-                // ⬅️ Logout dentro del Footer
                 LogoutButton(
                     onClick = onLogout,
                     modifier = Modifier
@@ -49,14 +49,12 @@ fun BarberScheduleScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .padding(horizontal = 16.dp) // solo afecta al contenido, no al Footer
+                .padding(horizontal = 16.dp)
         ) {
 
             Spacer(modifier = Modifier.height(20.dp))
-
-            // Título
             Text(
-                text = "Tus reservas",
+                text = "Citas reservadas",
                 color = Color.White,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
@@ -108,7 +106,9 @@ fun BarberScheduleScreen(
                         if (result.reservations.isEmpty()) {
                             Text(
                                 text = "No hay reservas para este día",
-                                color = Color.Gray
+                                color = Color.White,
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold
                             )
                         } else {
                             LazyColumn(
@@ -119,9 +119,9 @@ fun BarberScheduleScreen(
                                 items(result.reservations) { reservation ->
                                     ReservationCard(
                                         reservation = reservation,
-                                        onEditClick = { },
-                                        onDeleteClick = {
-                                        }
+                                        onEditClick = null,
+                                        onDeleteClick = null,
+                                        userRole = Role.BARBERO
                                     )
                                 }
                             }

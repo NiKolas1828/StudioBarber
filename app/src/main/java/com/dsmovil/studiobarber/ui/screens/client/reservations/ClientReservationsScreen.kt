@@ -11,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.dsmovil.studiobarber.domain.models.Reservation
+import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.ui.components.ReservationCard
 import com.dsmovil.studiobarber.ui.screens.client.home.ErrorMessage
 import com.dsmovil.studiobarber.ui.screens.client.home.LoadingShimmer
@@ -73,7 +74,8 @@ private fun ReservationsList(
             ReservationCard(
                 reservation = reservation,
                 onEditClick = {},
-                onDeleteClick = { viewModel.deleteReservation(reservation.id) }
+                onDeleteClick = { viewModel.deleteReservation(reservation.id) },
+                userRole = Role.CLIENTE
             )
         }
     }
