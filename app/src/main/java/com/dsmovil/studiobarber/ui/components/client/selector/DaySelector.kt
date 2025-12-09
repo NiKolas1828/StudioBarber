@@ -12,11 +12,13 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import java.time.LocalDate
+import com.dsmovil.studiobarber.R
 
 @Composable
 fun DaysSelector(
@@ -60,7 +62,7 @@ fun DaysSelector(
                         .size(45.dp)
                         .background(
                             color = if (selectedDate == day.date)
-                                Color(0xFF03A9F4)
+                                colorResource(id = R.color.icon_color_blue)
                             else Color.Transparent,
                             shape = CircleShape
                         ),

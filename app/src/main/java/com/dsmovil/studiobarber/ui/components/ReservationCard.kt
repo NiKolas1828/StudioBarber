@@ -20,13 +20,15 @@ import com.dsmovil.studiobarber.domain.models.Reservation
 import androidx.compose.material3.Text
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import com.dsmovil.studiobarber.domain.models.Role
 
 @Composable
 fun ReservationCard(
     reservation: Reservation,
     modifier: Modifier = Modifier,
     onEditClick: (() -> Unit)? = null,
-    onDeleteClick: () -> Unit,
+    onDeleteClick: (() -> Unit)? = null,
+    userRole: Role
 ) {
     Card(
         modifier = modifier.fillMaxWidth(),
@@ -43,26 +45,28 @@ fun ReservationCard(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ReservationContent(reservation = reservation)
+            ReservationContent(reservation = reservation, userRole = userRole)
             Spacer(modifier = Modifier.width(38.dp))
 
-            ActionButtons(
-                firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
-                onFirstClick = onEditClick,
-                firstIconTint = colorResource(id = R.color.icon_color_red),
-                firstContentDescription = "Editar",
+            if (onEditClick != null || onDeleteClick != null) {
+                ActionButtons(
+                    firstIcon = ImageVector.vectorResource(id = R.drawable.ic_edit),
+                    onFirstClick = onEditClick,
+                    firstIconTint = colorResource(id = R.color.icon_color_red),
+                    firstContentDescription = "Editar",
 
-                secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
-                onSecondClick = onDeleteClick,
-                secondIconTint = colorResource(id = R.color.icon_color_red),
-                secondContentDescription = "Eliminar"
-            )
+                    secondIcon = ImageVector.vectorResource(id = R.drawable.ic_trash),
+                    onSecondClick = onDeleteClick,
+                    secondIconTint = colorResource(id = R.color.icon_color_red),
+                    secondContentDescription = "Eliminar"
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ReservationContent(reservation: Reservation) {
+private fun ReservationContent(reservation: Reservation, userRole: Role) {
     Column(
         verticalArrangement = Arrangement.Center
     ) {
@@ -70,12 +74,24 @@ private fun ReservationContent(reservation: Reservation) {
         val valueStyle = SpanStyle(color = Color.DarkGray)
         val fontSize = 15.sp
 
-        val items = listOf(
-            "Fecha" to reservation.date,
-            "Hora" to reservation.timeStart,
-            "Servicio" to reservation.nameService,
-            "Barbero" to reservation.nameBarber
-        )
+        val items = buildList {
+            add("Fecha" to reservation.date)
+            add("Hora" to reservation.timeStart)
+            add("Servicio" to reservation.nameService)
+
+            when (userRole) {
+                Role.ADMINISTRADOR -> {
+                    add("Cliente" to reservation.nameUser)
+                    add("Barbero" to reservation.nameBarber)
+                }
+                Role.BARBERO -> {
+                    add("Cliente" to reservation.nameUser)
+                }
+                Role.CLIENTE -> {
+                    add("Barbero" to reservation.nameBarber)
+                }
+            }
+        }
 
         // Iteramos sobre la lista para renderizar cada línea
         items.forEach { (label, value) ->
