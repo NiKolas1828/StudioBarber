@@ -19,4 +19,8 @@ sealed class Screen(val route: String) {
     data object AdminBarbers : Screen("admin_barbers")
     data object AdminServices : Screen("admin_services")
     data object AdminReservations : Screen("admin_reservations")
+
+    //barber
+    data object BarberSchedule : Screen("barber_schedule")
+
 }
