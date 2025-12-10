@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.data.repositories
 
 import com.dsmovil.studiobarber.data.remote.barber.BarberApiService
+import com.dsmovil.studiobarber.data.remote.models.barber.CreateBarberRequest
 import com.dsmovil.studiobarber.data.remote.models.barber.toDomain
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
@@ -64,10 +65,29 @@ class BarberRepositoryImpl @Inject constructor(
     }
 
     override suspend fun addBarber(barber: Barber): Result<Unit> {
-        delay(300)
-        mockBarbers.add(barber)
+        return try {
+            val request = CreateBarberRequest(
+                name = barber.name,
+                email = barber.email,
+                password = barber.password,
+                phoneNumber = barber.phone,
+            )
 
-        return Result.success(Unit)
+            val response = apiService.createBarber(request)
+
+            if (response.isSuccessful && response.body() != null) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = when (response.code()) {
+                    422 -> "El correo del barbero ya está registrado"
+                    else -> createCommonErrorMessage(response.code())
+                }
+
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun getBarberById(id: Long): Result<Barber> {
