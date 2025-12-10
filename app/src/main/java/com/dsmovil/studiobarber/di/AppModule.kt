@@ -11,7 +11,6 @@ import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.data.repositories.ReservationRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.ReservationRepository
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
-import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
@@ -56,12 +55,6 @@ abstract class AppModule {
         @Singleton
         fun provideRegisterUseCase(repository: AuthRepository): RegisterUseCase {
             return RegisterUseCase(repository)
-        }
-
-        @Provides
-        @Singleton
-        fun provideLogoutUseCase(repository: AuthRepository): LogoutUseCase {
-            return LogoutUseCase(repository)
         }
 
         @Provides

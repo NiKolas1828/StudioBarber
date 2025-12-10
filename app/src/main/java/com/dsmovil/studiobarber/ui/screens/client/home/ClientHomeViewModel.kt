@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.client.home
 
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
@@ -18,6 +19,7 @@ import kotlinx.coroutines.launch
 class ClientHomeViewModel @Inject constructor(
     private val getBarberUseCase: GetBarbersUseCase,
     private val getServicesUseCase: GetServicesUseCase,
+    private val sessionManager: SessionManager,
     logoutUseCase: LogoutUseCase
 ) : BaseViewModel(logoutUseCase){
 
@@ -25,8 +27,17 @@ class ClientHomeViewModel @Inject constructor(
     val uiState: StateFlow<ClientHomeUiState> = _uiState.asStateFlow()
 
     init {
+        loadUserInfo()
         loadBarbers()
         loadServices()
+    }
+
+    private fun loadUserInfo() {
+        val currentUser = sessionManager.getCurrentUserName()
+
+        if (currentUser != null) {
+            _uiState.update { it.copy(userName = currentUser) }
+        }
     }
 
     private fun loadBarbers() {

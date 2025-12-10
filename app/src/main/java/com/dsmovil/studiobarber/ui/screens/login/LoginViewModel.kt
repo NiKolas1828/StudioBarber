@@ -1,43 +1,60 @@
 package com.dsmovil.studiobarber.ui.screens.login
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase) : ViewModel() {
-    var uiState by mutableStateOf(LoginUiState())
-        private set
+    private val _uiState = MutableStateFlow<LoginUiState?>(null)
+    val uiState: StateFlow<LoginUiState?> = _uiState.asStateFlow()
 
-    fun onEmailChange(value: String) {
-        uiState = uiState.copy(email = value)
+    private fun validateInput(email: String, password: String): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (email.isBlank()) {
+            errors.add("• Falta el correo")
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            errors.add("• Correo inválido")
+        }
+
+        if (password.length < 8) {
+            errors.add("• La contraseña debe ser al menos de 8 caracteres")
+        }
+
+        return errors
     }
 
-    fun onPasswordChange(value: String) {
-        uiState = uiState.copy(password = value)
-    }
+    fun login(email: String, password: String) {
+        val validationErrors = validateInput(email, password)
 
-    fun login() {
+        if (validationErrors.isNotEmpty()) {
+            val finalMessage = validationErrors.joinToString("\n")
+            _uiState.value = LoginUiState.Error(message = finalMessage)
+            return
+        }
+
         viewModelScope.launch {
-            uiState = uiState.copy(loading = true, error = null)
+            _uiState.value = LoginUiState.Loading
 
-            val result = loginUseCase(uiState.email, uiState.password)
+            val result = loginUseCase(email, password)
 
-            uiState = if (result.isSuccess) {
-                uiState.copy(loading = false, success = true)
-            } else {
-                uiState.copy(
-                    loading = false,
-                    error = result.exceptionOrNull()?.message
-                )
-            }
+            result.fold(
+                onSuccess = { user ->
+                    _uiState.value = LoginUiState.Success(user = user)
+                },
+                onFailure = { exception ->
+                    _uiState.value = LoginUiState.Error(message = exception.message ?: "Ocurrió un error inesperado")
+                }
+            )
         }
     }
 }

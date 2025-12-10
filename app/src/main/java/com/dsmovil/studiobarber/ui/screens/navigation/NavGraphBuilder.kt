@@ -6,6 +6,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersScreen
 import com.dsmovil.studiobarber.ui.screens.admin.barbers.ManageBarbersViewModel
 import com.dsmovil.studiobarber.ui.screens.admin.home.AdminDashboardScreen
@@ -41,8 +42,14 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 
         LoginScreen(
             viewModel = viewModel,
-            onLoginSuccess = {
-                navController.navigate(Screen.ClientHome.route) {
+            onLoginSuccess = { role ->
+                val destination = when (role) {
+                    Role.CLIENTE -> Screen.ClientHome.route
+                    Role.ADMINISTRADOR -> Screen.AdminHome.route
+                    Role.BARBERO -> Screen.ClientHome.route
+                }
+
+                navController.navigate(destination) {
                     popUpTo(Screen.AuthChooser.route) { inclusive = true }
                 }
             }
