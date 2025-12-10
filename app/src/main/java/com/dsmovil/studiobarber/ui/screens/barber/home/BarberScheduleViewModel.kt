@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.barber.home
 
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
@@ -19,6 +20,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BarberScheduleViewModel @Inject constructor(
     private val getReservationsUseCase: GetReservationsUseCase,
+    private val sessionManager: SessionManager,
     logoutUseCase: LogoutUseCase
 ) : BaseViewModel(logoutUseCase) {
 
@@ -73,12 +75,14 @@ class BarberScheduleViewModel @Inject constructor(
 
     private fun applyFilters() {
         val selectedDate = _uiState.value.selectedDate
+        val currentBarberId = sessionManager.getCurrentUserId()
+
 
         val filteredList = allReservationsCache.filter { reservation ->
             val isSameDate = reservation.date.isEqual(selectedDate)
-            val isBarberJuan = reservation.nameBarber.contains("Juan", ignoreCase = true)
+            val isOwnReservation = currentBarberId != null && reservation.barberId == currentBarberId
 
-            isSameDate && isBarberJuan
+            isSameDate && isOwnReservation
         }
 
         _uiState.update {

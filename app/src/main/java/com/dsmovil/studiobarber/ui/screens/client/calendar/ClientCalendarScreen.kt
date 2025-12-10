@@ -152,7 +152,6 @@ fun ClientCalendarScreen(
                                 onSuccess = {
                                     scope.launch {
                                         snackbarHostState.showSnackbar("¡Reserva creada con éxito!")
-                                        //delay(1000)
                                         onMyReservationsClick()
                                     }
                                 },
@@ -175,7 +174,7 @@ fun ClientCalendarScreen(
                         onClick = onLogout,
                     )
 
-                    Spacer(Modifier.height(16.dp)) // Espacio final
+                    Spacer(Modifier.height(16.dp))
                 }
             }
         }
@@ -185,7 +184,7 @@ fun ClientCalendarScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .background(Color.Black.copy(alpha = 0.5f))
-                    .clickable(enabled = false) {}, // Bloquea los clicks
+                    .clickable(enabled = false) {},
                 contentAlignment = Alignment.Center
             ) {
                 CircularProgressIndicator(color = Color.White)

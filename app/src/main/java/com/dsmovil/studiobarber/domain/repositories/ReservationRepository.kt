@@ -11,4 +11,6 @@ interface ReservationRepository {
     suspend fun deleteReservation(id: Long): Result<Unit>
 
     suspend fun addReservation(reservation: ReservationRequest): Result<ReservationResponse>
+
+    suspend fun getAllReservations(): Result<List<Reservation>>
 }
