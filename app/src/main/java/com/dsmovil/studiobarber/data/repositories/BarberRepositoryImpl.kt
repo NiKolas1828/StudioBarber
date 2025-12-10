@@ -70,7 +70,7 @@ class BarberRepositoryImpl @Inject constructor(
                 Result.success(Unit)
             } else {
                 val errorMsg = when (response.code()) {
-                    422 -> "El correo del barbero ya esta registrado"
+                    422 -> "El correo del barbero ya está registrado"
                     else -> createCommonErrorMessage(response.code())
                 }
 
