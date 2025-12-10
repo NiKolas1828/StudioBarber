@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
-import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.GetAllReservationsUseCase
 import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
 import com.dsmovil.studiobarber.ui.screens.utils.UiMessage
@@ -23,7 +23,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AdminReservationsViewModel @Inject constructor(
-    private val getReservationsUseCase: GetReservationsUseCase,
+    private val getReservationsUseCase: GetAllReservationsUseCase,
     private val deleteReservationsUseCase: DeleteReservationsUseCase,
     logoutUseCase: LogoutUseCase
 ) : BaseViewModel(logoutUseCase) {
@@ -86,7 +86,7 @@ class AdminReservationsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(reservationState = AdminReservationsUiState.ReservationDataState.Loading) }
 
-            val result = getReservationsUseCase(19)
+            val result = getReservationsUseCase()
 
             result.fold(
                 onSuccess = { reservationsList ->
