@@ -19,6 +19,14 @@ class BarberRepositoryImpl @Inject constructor(
         Barber(4, "Ander", "ander@gmail.com", "12345", "3114517518")
     )
 
+    private fun createCommonErrorMessage(code: Int): String {
+        return when (code) {
+            401 -> "El usuario no está autenticado"
+            403 -> "El usuario no tiene permisos para acceder a este recurso"
+            else -> "Ocurrió un error inesperado (${code})"
+        }
+    }
+
     override suspend fun getBarbers(): Result<List<Barber>> {
         return try {
             val response = apiService.getBarbers()
@@ -30,11 +38,7 @@ class BarberRepositoryImpl @Inject constructor(
 
                 Result.success(barbers)
             } else {
-                val errorMsg = when (response.code()) {
-                    401 -> "El usuario no está autenticado"
-                    403 -> "El usuario no tiene permisos para acceder a este recurso"
-                    else -> "Ocurrió un error inesperado (${response.code()})"
-                }
+                val errorMsg = createCommonErrorMessage(response.code())
 
                 Result.failure(Exception("Error: $errorMsg"))
             }
@@ -44,10 +48,19 @@ class BarberRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteBarber(id: Long): Result<Unit> {
-        delay(300)
-        val removed = mockBarbers.removeIf { it.id == id }
+        return try {
+            val response = apiService.cancelBarber(id)
 
-        return if (removed) Result.success(Unit) else Result.failure(Exception("No encontrado"))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = createCommonErrorMessage(response.code())
+
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun addBarber(barber: Barber): Result<Unit> {
