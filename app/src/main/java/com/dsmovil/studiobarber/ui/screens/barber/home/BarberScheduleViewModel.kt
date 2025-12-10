@@ -51,7 +51,7 @@ class BarberScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(reservationState = BarberScheduleUiState.ReservationDataState.Loading) }
 
-            val result = getReservationsUseCase()
+            val result = getReservationsUseCase(19)
 
             result.fold(
                 onSuccess = { reservationsList ->

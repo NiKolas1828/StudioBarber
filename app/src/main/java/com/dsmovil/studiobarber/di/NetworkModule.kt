@@ -4,6 +4,7 @@ import com.dsmovil.studiobarber.BuildConfig
 import com.dsmovil.studiobarber.data.remote.AuthInterceptor
 import com.dsmovil.studiobarber.data.remote.auth.AuthApiService
 import com.dsmovil.studiobarber.data.remote.barber.BarberApiService
+import com.dsmovil.studiobarber.data.remote.reservation.ReservationApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,4 +63,11 @@ object NetworkModule {
     fun provideBarberApiService(retrofit: Retrofit): BarberApiService {
         return retrofit.create(BarberApiService::class.java)
     }
+
+    @Provides
+    @Singleton
+    fun provideReservationApiService(retrofit: Retrofit): ReservationApiService {
+        return retrofit.create(ReservationApiService::class.java)
+    }
+
 }
