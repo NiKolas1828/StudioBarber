@@ -15,7 +15,7 @@ data class ReservationResponse(
     @SerializedName("date") val date: String,
     @SerializedName("timeStart") val timeStart: String,
     @SerializedName("status") val status: String,
-    @SerializedName("amount") val amount: Double,
+    @SerializedName("amount") val amount: Double
 
 )
 

@@ -38,7 +38,7 @@ class ReservationRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteReservation(id: Long): Result<Unit> {
-        return  try {
+        return try {
             val response = apiService.cancel(id)
 
             if (response.isSuccessful) {
