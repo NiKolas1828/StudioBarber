@@ -16,5 +16,6 @@ fun StudioBarberNavGraph(
         authGraph(navController)
         clientGraph(navController)
         adminGraph(navController)
+        barberGraph(navController)
     }
 }

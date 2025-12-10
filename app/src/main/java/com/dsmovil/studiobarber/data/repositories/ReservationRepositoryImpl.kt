@@ -19,7 +19,7 @@ class ReservationRepositoryImpl @Inject constructor() : ReservationRepository{
         ),
         Reservation(
             2, 11, "Afeitado premium", 4, "Luis Martinez",
-            5, "Andres Torres", LocalDate.of(2025, 11, 21),
+            5, "Juan Torres", LocalDate.of(2025, 11, 29),
             timeStart = LocalTime.of(9, 0), true, true, false
         ),
         Reservation(
@@ -31,6 +31,36 @@ class ReservationRepositoryImpl @Inject constructor() : ReservationRepository{
             4, 13, "Arreglo de barba", 8, "Pedro Sanchez",
             9, "Jorge Ramirez", LocalDate.of(2025, 11, 23),
             timeStart = LocalTime.of(16, 45), true, false, true
+        ),
+        Reservation(
+            5, 14, "Corte clasico", 10, "Santiago Rios",
+            5, "Juan Torres", LocalDate.of(2025, 12, 1),
+            timeStart = LocalTime.of(10, 0), true, true, true
+        ),
+        Reservation(
+            6, 15, "Afeitado premium", 11, "Brayan Morales",
+            5, "Juan Torres", LocalDate.of(2025, 12, 2),
+            timeStart = LocalTime.of(15, 30), true, true, true
+        ),
+        Reservation(
+            7, 16, "Tinte de cabello", 12, "Valentina Torres",
+            5, "Juan Torres", LocalDate.of(2025, 12, 3),
+            timeStart = LocalTime.of(14, 0), false, true, true
+        ),
+        Reservation(
+            8, 17, "Arreglo de barba", 13, "Camilo Ortiz",
+            5, "Juan Torres", LocalDate.of(2025, 12, 11),
+            timeStart = LocalTime.of(17, 0), true, true, true
+        ),
+        Reservation(
+            9, 18, "Corte clasico", 14, "Andres Garcia",
+            5, "Juan Torres", LocalDate.of(2025, 12, 2),
+            timeStart = LocalTime.of(9, 30), true, true, true
+        ),
+        Reservation(
+            9, 18, "Corte clasico", 14, "Andres Garcia",
+            5, "Carlos Fernandez", LocalDate.of(2025, 12, 15),
+            timeStart = LocalTime.of(9, 30), true, true, true
         )
 
     )
