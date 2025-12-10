@@ -69,8 +69,8 @@ class ClientCalendarViewModel @Inject constructor(
         }
     }
 
-    fun selectDate(date: LocalDate) {
-        _uiState.update { it.copy(selectedDate = date) }
+    fun selectDate(dayItem: DayItem) {
+        _uiState.update { it.copy(selectedDate = dayItem.date) }
     }
 
     fun selectHour(hour: String) {

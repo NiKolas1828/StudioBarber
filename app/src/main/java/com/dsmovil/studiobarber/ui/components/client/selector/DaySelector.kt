@@ -24,7 +24,7 @@ import com.dsmovil.studiobarber.R
 fun DaysSelector(
     selectedDate: LocalDate?,
     days: List<DayItem>,
-    onSelectDay: (LocalDate) -> Unit,
+    onSelectDay: (DayItem) -> Unit,
     onVisibleDayChanged: (DayItem) -> Unit
 ) {
     val listState = rememberLazyListState()
@@ -47,7 +47,7 @@ fun DaysSelector(
         items(days) { day ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.clickable { onSelectDay(day.date) }
+                modifier = Modifier.clickable { onSelectDay(day) }
             ) {
                 Text(
                     text = day.dayName,

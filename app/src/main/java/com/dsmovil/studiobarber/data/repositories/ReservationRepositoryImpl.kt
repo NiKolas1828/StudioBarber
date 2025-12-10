@@ -56,6 +56,11 @@ class ReservationRepositoryImpl @Inject constructor() : ReservationRepository{
             9, 18, "Corte clasico", 14, "Andres Garcia",
             5, "Juan Torres", LocalDate.of(2025, 12, 2),
             timeStart = LocalTime.of(9, 30), true, true, true
+        ),
+        Reservation(
+            9, 18, "Corte clasico", 14, "Andres Garcia",
+            5, "Carlos Fernandez", LocalDate.of(2025, 12, 15),
+            timeStart = LocalTime.of(9, 30), true, true, true
         )
 
     )

@@ -32,14 +32,18 @@ class BarberScheduleViewModel @Inject constructor(
         loadReservations()
     }
 
-    fun selectDate(date: LocalDate) {
-        _uiState.update { it.copy(selectedDate = date) }
+    fun selectDate(dayItem: DayItem) {
+        _uiState.update {
+            it.copy(selectedDate = dayItem.date)
+        }
         applyFilters()
     }
 
     fun onVisibleDayChanged(dayItem: DayItem) {
         if (_uiState.value.selectedMonth != dayItem.fullMonthName) {
-            _uiState.update { it.copy(selectedMonth = dayItem.fullMonthName) }
+            _uiState.update {
+                it.copy(selectedMonth = dayItem.fullMonthName)
+            }
         }
     }
 

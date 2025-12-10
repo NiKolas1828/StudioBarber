@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.dsmovil.studiobarber.R
 import com.dsmovil.studiobarber.domain.models.Role
+import com.dsmovil.studiobarber.ui.components.CalendarSelector
 import com.dsmovil.studiobarber.ui.components.Footer
 import com.dsmovil.studiobarber.ui.components.LogoutButton
 import com.dsmovil.studiobarber.ui.components.ReservationCard
-import com.dsmovil.studiobarber.ui.components.client.selector.DaysSelector
 
 @Composable
 fun BarberScheduleScreen(
@@ -30,7 +30,6 @@ fun BarberScheduleScreen(
     Scaffold(
         containerColor = colorResource(R.color.background_color),
 
-        // ⬇️ Footer en la barra inferior (lo hace full width sin bordes)
         bottomBar = {
             Footer(
                 message = "Gracias por preferirnos",
@@ -64,26 +63,13 @@ fun BarberScheduleScreen(
 
             Spacer(Modifier.height(20.dp))
 
-            // Nombre del mes dinámico
-            Text(
-                text = state.selectedMonth,
-                color = Color.White,
-                fontSize = 22.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
-
-            Spacer(Modifier.height(10.dp))
-
-            // Selector de Días
-            DaysSelector(
+            CalendarSelector(
+                selectedMonth = state.selectedMonth,
                 selectedDate = state.selectedDate,
                 days = state.days,
                 onSelectDay = { viewModel.selectDate(it) },
                 onVisibleDayChanged = { viewModel.onVisibleDayChanged(it) }
             )
-
-            Spacer(Modifier.height(20.dp))
 
             // Contenedor de las reservas
             Box(
