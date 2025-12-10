@@ -1,5 +1,7 @@
 package com.dsmovil.studiobarber.data.repositories
 
+import com.dsmovil.studiobarber.data.remote.barber.BarberApiService
+import com.dsmovil.studiobarber.data.remote.models.barber.toDomain
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.repositories.BarberRepository
 import kotlinx.coroutines.delay
@@ -7,7 +9,9 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class BarberRepositoryImpl @Inject constructor() : BarberRepository {
+class BarberRepositoryImpl @Inject constructor(
+    private val apiService: BarberApiService
+) : BarberRepository {
     private val mockBarbers = mutableListOf(
         Barber(1, "Juan", "juan@gmail.com", "12345", "3125178190"),
         Barber(2, "Nicolas", "nicolas@gmail.com", "12345", "3208147189"),
@@ -16,9 +20,27 @@ class BarberRepositoryImpl @Inject constructor() : BarberRepository {
     )
 
     override suspend fun getBarbers(): Result<List<Barber>> {
-        delay(500) // Simular un retraso de red
+        return try {
+            val response = apiService.getBarbers()
 
-        return Result.success(mockBarbers.toList())
+            if (response.isSuccessful && response.body() != null) {
+                val barbersResponse = response.body()!!
+
+                val barbers = barbersResponse.map { it.toDomain() }
+
+                Result.success(barbers)
+            } else {
+                val errorMsg = when (response.code()) {
+                    401 -> "El usuario no está autenticado"
+                    403 -> "El usuario no tiene permisos para acceder a este recurso"
+                    else -> "Ocurrió un error inesperado (${response.code()})"
+                }
+
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun deleteBarber(id: Long): Result<Unit> {

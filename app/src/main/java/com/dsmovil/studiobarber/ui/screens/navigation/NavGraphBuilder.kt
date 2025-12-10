@@ -46,7 +46,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
                 val destination = when (role) {
                     Role.CLIENTE -> Screen.ClientHome.route
                     Role.ADMINISTRADOR -> Screen.AdminHome.route
-                    Role.BARBERO -> Screen.ClientHome.route
+                    Role.BARBERO -> Screen.BarberSchedule.route
                 }
 
                 navController.navigate(destination) {
