@@ -115,7 +115,7 @@ class ManageBarbersViewModel @Inject constructor(
                 showMessage(if (currentBarber == null) "Barbero creado" else "Barbero actualizado")
             } else {
                 val errorMsg = result.exceptionOrNull()?.message ?: "Error desconocido"
-                showMessage("Error: $errorMsg", isError = true)
+                showMessage(errorMsg, isError = true)
             }
 
             _selectedBarber.value = null
