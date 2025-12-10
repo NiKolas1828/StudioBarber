@@ -28,12 +28,12 @@ class BarberRepositoryImpl @Inject constructor(
 
                 val barbers = barbersResponse.map { it.toDomain() }
 
-                return Result.success(barbers)
+                Result.success(barbers)
             } else {
                 val errorMsg = when (response.code()) {
-                    401 -> "El usuario no esta autenticado"
+                    401 -> "El usuario no está autenticado"
                     403 -> "El usuario no tiene permisos para acceder a este recurso"
-                    else -> "Ocurrió un error inesperado"
+                    else -> "Ocurrió un error inesperado (${response.code()})"
                 }
 
                 Result.failure(Exception("Error: $errorMsg"))
