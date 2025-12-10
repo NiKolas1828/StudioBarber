@@ -6,6 +6,5 @@ interface BarberRepository {
     suspend fun getBarbers(): Result<List<Barber>>
     suspend fun deleteBarber(id: Long): Result<Unit>
     suspend fun addBarber(barber: Barber): Result<Unit>
-    suspend fun getBarberById(id: Long): Result<Barber>
     suspend fun updateBarber(barber: Barber): Result<Unit>
 }

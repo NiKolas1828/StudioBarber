@@ -2,6 +2,7 @@ package com.dsmovil.studiobarber.data.remote.barber
 
 import com.dsmovil.studiobarber.data.remote.models.barber.BarberResponse
 import com.dsmovil.studiobarber.data.remote.models.barber.CreateBarberRequest
+import com.dsmovil.studiobarber.data.remote.models.barber.UpdateBarberRequest
 import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.GET
@@ -18,4 +19,7 @@ interface BarberApiService {
   
     @POST("api/users/create")
     suspend fun createBarber(@Body request: CreateBarberRequest): Response<BarberResponse>
+
+    @PUT("api/users/update")
+    suspend fun updateBarber(@Body request: UpdateBarberRequest): Response<Unit>
 }
