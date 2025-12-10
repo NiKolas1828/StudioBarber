@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.client.reservations
 
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
@@ -20,6 +21,7 @@ import javax.inject.Inject
 class ClientReservationViewModel @Inject constructor(
     private val getReservationsUseCase: GetReservationsUseCase,
     private val deleteReservationsUseCase: DeleteReservationsUseCase,
+    private val sessionManager: SessionManager,
     logoutUseCase: LogoutUseCase
 ) : BaseViewModel(logoutUseCase){
 
@@ -39,30 +41,41 @@ class ClientReservationViewModel @Inject constructor(
         }
     }
 
-    private fun loadReservations(){
+    private fun loadReservations() {
         viewModelScope.launch {
             _uiState.update { it.copy(reservationState = ClientReservationUiState.ReservationDataState.Loading) }
 
-            val result = getReservationsUseCase(19)
+            val currentUserId = sessionManager.getCurrentUserId()
 
-            result.fold(
-                onSuccess = { reservationsList ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            reservationState = ClientReservationUiState.ReservationDataState.Success(reservations = reservationsList)
-                        )
-                    }
-                },
-                onFailure = { exception ->
-                    _uiState.update { currentState ->
-                        currentState.copy(
-                            reservationState = ClientReservationUiState.ReservationDataState.Error(
-                                message = exception.message ?: "Error desconocido al cargar las reservas"
+            if (currentUserId != null) {
+
+                val result = getReservationsUseCase(currentUserId)
+
+                result.fold(
+                    onSuccess = { reservationsList ->
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                reservationState = ClientReservationUiState.ReservationDataState.Success(reservations = reservationsList)
                             )
-                        )
+                        }
+                    },
+                    onFailure = { exception ->
+                        _uiState.update { currentState ->
+                            currentState.copy(
+                                reservationState = ClientReservationUiState.ReservationDataState.Error(
+                                    message = exception.message ?: "Error desconocido al cargar las reservas"
+                                )
+                            )
+                        }
                     }
+                )
+            } else {
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        reservationState = ClientReservationUiState.ReservationDataState.Error("No se encontró un usuario activo")
+                    )
                 }
-            )
+            }
         }
     }
 

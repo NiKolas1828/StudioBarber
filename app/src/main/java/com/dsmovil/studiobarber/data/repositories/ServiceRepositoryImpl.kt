@@ -11,7 +11,7 @@ class ServiceRepositoryImpl @Inject constructor() : ServiceRepository {
     private val mockServices = mutableListOf(
         Service(1, "Corte de Cabello", "Corte clásico o moderno con tijera/máquina", 15.00),
         Service(2, "Afeitado de Barba", "Afeitado con toalla caliente y navaja", 10.00),
-        Service(3, "Perfilado de Cejas", "Limpieza y perfilado con navaja", 5.00)
+        Service(5, "Perfilado de Cejas", "Limpieza y perfilado con navaja", 5.00)
     )
 
     override suspend fun getServices(): Result<List<Service>> {
