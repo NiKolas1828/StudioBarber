@@ -42,6 +42,7 @@ class ReservationRepositoryImpl @Inject constructor(
             val response = apiService.cancel(id)
 
             if (response.isSuccessful) {
+                response.body()?.close()
                 Result.success(Unit)
             } else {
                 val errorMsg = when (response.code()) {
@@ -54,7 +55,6 @@ class ReservationRepositoryImpl @Inject constructor(
             }
         } catch (e: Exception) {
             Result.failure(e)
-
         }
     }
 }

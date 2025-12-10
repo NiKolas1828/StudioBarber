@@ -68,13 +68,21 @@ class ClientReservationViewModel @Inject constructor(
 
     fun deleteReservation(reservationId: Long) {
         viewModelScope.launch {
+            _uiState.update { currentState ->
+                currentState.copy(reservationState = ClientReservationUiState.ReservationDataState.Loading)
+            }
+
             val result = deleteReservationsUseCase(reservationId)
 
-            if(result.isSuccess) {
+            if (result.isSuccess) {
                 loadReservations()
-                showMessage("Reserva eliminada")
+
             } else {
-                showMessage("Error: No se pudo eliminar la reserva")
+                _uiState.update { currentState ->
+                    currentState.copy(
+                        reservationState = ClientReservationUiState.ReservationDataState.Error("No se pudo cancelar la reserva.")
+                    )
+                }
             }
         }
     }
