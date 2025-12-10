@@ -86,7 +86,7 @@ class AdminReservationsViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(reservationState = AdminReservationsUiState.ReservationDataState.Loading) }
 
-            val result = getReservationsUseCase()
+            val result = getReservationsUseCase(19)
 
             result.fold(
                 onSuccess = { reservationsList ->

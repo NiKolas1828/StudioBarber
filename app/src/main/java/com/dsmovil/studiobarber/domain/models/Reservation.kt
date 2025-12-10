@@ -13,7 +13,7 @@ data class Reservation(
     val nameBarber: String,
     val date: LocalDate,
     val timeStart: LocalTime,
-    val status: Boolean,
+    val status: String,
     val isActive: Boolean = true,
-    val amount: Boolean
+    val amount: Double
 )
