@@ -49,10 +49,19 @@ class BarberRepositoryImpl @Inject constructor(
     }
 
     override suspend fun deleteBarber(id: Long): Result<Unit> {
-        delay(300)
-        val removed = mockBarbers.removeIf { it.id == id }
+        return try {
+            val response = apiService.cancelBarber(id)
 
-        return if (removed) Result.success(Unit) else Result.failure(Exception("No encontrado"))
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = createCommonErrorMessage(response.code())
+
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override suspend fun addBarber(barber: Barber): Result<Unit> {
