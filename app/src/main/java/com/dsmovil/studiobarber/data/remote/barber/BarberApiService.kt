@@ -10,6 +10,6 @@ interface BarberApiService {
     @GET("api/users/role/EMPLEADO")
     suspend fun getBarbers(): Response<List<BarberResponse>>
 
-    @PUT("api/users/desactivate/{id}")
+    @PUT("api/users/deactivate/{id}")
     suspend fun cancelBarber(@Path("id") id: Long): Response<Unit>
 }
