@@ -20,4 +20,6 @@ interface ReservationApiService {
     @PUT("api/reservations/cancel/{id}")
     suspend fun cancel(@Path("id") id: Long): Response<String>
 
+    @GET("api/reservations/search-admin")
+    suspend fun getAllReservations(): Response<List<ReservationResponse>>
 }
