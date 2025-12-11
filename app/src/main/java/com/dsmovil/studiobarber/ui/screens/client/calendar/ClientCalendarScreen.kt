@@ -151,7 +151,12 @@ fun ClientCalendarScreen(
                             viewModel.confirmAction(
                                 onSuccess = {
                                     scope.launch {
-                                        snackbarHostState.showSnackbar("¡Reserva creada con éxito!")
+                                        val mensaje = if (state.isEditMode)
+                                            "¡Reserva actualizada con éxito!"
+                                        else
+                                            "¡Reserva creada con éxito!"
+
+                                        snackbarHostState.showSnackbar(mensaje)
                                         onMyReservationsClick()
                                     }
                                 },
