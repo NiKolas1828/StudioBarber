@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -21,10 +20,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import com.dsmovil.studiobarber.R
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.dsmovil.studiobarber.domain.models.Role
-
+import com.dsmovil.studiobarber.ui.components.auth.AuthTextField
 
 @Composable
 fun LoginScreen(
@@ -65,49 +62,19 @@ fun LoginScreen(
                     .padding(bottom = 32.dp)
             )
 
-            // Email text field
-            OutlinedTextField(
+            AuthTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
+                label = "Email"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-            // Password text field
-            OutlinedTextField(
+            AuthTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text(text = "Password") },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
-                visualTransformation = PasswordVisualTransformation(),
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
+                label = "Contraseña",
+                isPasswordField = true
             )
 
             Spacer(modifier = Modifier.height(16.dp))

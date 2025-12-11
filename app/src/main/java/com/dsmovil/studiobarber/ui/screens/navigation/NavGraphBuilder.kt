@@ -62,7 +62,7 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
         RegisterScreen(
             viewModel = viewModel,
             onRegisterSuccess = {
-                navController.navigate(Screen.ClientHome.route) {
+                navController.navigate(Screen.Login.route) {
                     popUpTo(Screen.AuthChooser.route) { inclusive = true }
                 }
             }
