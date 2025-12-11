@@ -20,5 +20,5 @@ data class ClientCalendarUiState(
     val selectedHour: String? = null,
     val isLoading: Boolean = false,
     val isAm: Boolean = true,
-    val isEditMode: Boolean = false
+    val isEditMode: Boolean = false,
 )
