@@ -2,11 +2,16 @@ package com.dsmovil.studiobarber.ui.screens.client.calendar
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.data.local.SessionManager
+import com.dsmovil.studiobarber.data.remote.models.reservations.ReservationRequest
+import com.dsmovil.studiobarber.domain.usecases.home.AddReservationUseCase
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.format.TextStyle
 import java.util.Locale
@@ -14,6 +19,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ClientCalendarViewModel @Inject constructor(
+    private val addReservationUseCase: AddReservationUseCase,
+    private val sessionManager: SessionManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _uiState = MutableStateFlow(ClientCalendarUiState())
@@ -109,15 +116,45 @@ class ClientCalendarViewModel @Inject constructor(
         }
     }
 
-    fun reserve() {
+    fun reserve(onSuccess: () -> Unit, onError: (String) -> Unit) {
+
         val date = _uiState.value.selectedDate
         val hour12 = _uiState.value.selectedHour
         val isAm = _uiState.value.isAm
 
-        if (date != null && hour12 != null) {
+        if (date == null || hour12 == null) {
+            onError("Por favor selecciona una fecha y una hora.")
+            return
+        }
 
-            val formattedDate = date.toString()
-            val formattedTime24 = convertTo24HourFormat(hour12, isAm)
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            val currentUserId = sessionManager.getCurrentUserId()
+
+            if (currentUserId != null) {
+                val reservationRequest = ReservationRequest(
+                    serviceId = serviceId,
+                    userId = currentUserId,
+                    barberId = barberId,
+                    date = date.toString(),
+                    timeStart = convertTo24HourFormat(hour12, isAm)
+                )
+
+                val result = addReservationUseCase(reservationRequest)
+
+                _uiState.update { it.copy(isLoading = false) }
+
+                if (result.isSuccess) {
+                    onSuccess()
+                } else {
+                    val msg = result.exceptionOrNull()?.message ?: "Error desconocido al reservar"
+                    onError(msg)
+                }
+            } else {
+                _uiState.update { it.copy(isLoading = false) }
+                onError("No se encontró la sesión del usuario. Por favor inicia sesión nuevamente.")
+            }
         }
     }
 
