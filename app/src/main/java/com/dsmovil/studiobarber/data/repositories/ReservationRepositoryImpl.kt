@@ -13,8 +13,6 @@ import javax.inject.Singleton
 class ReservationRepositoryImpl @Inject constructor(
     private val apiService: ReservationApiService
 ): ReservationRepository {
-
-
     override suspend fun getReservations(id: Long): Result<List<Reservation>> {
         return try {
             val response = apiService.getById(id)
