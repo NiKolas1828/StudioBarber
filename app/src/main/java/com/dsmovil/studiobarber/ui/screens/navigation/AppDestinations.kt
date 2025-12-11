@@ -7,11 +7,29 @@ sealed class Screen(val route: String) {
     data object Register : Screen("register")
 
     // Client
-    data object ClientHome : Screen("client_home")
     data object ClientReservations : Screen("client_reservations")
 
-    data object ClientCalendar : Screen("client_calendar/{serviceId}/{barberId}"){
-        fun createRoute(serviceId: Long, barberId: Long) = "client_calendar/$serviceId/$barberId"
+    data object ClientHome : Screen("client_home?reservationId={reservationId}&serviceId={serviceId}&barberId={barberId}") {
+        fun createRoute(
+            reservationId: Long? = null,
+            serviceId: Long? = null,
+            barberId: Long? = null
+        ): String {
+            return "client_home?reservationId=${reservationId ?: ""}&serviceId=${serviceId ?: -1}&barberId=${barberId ?: -1}"
+        }
+    }
+
+    data object ClientCalendar : Screen("client_calendar/{serviceId}/{barberId}?reservationId={reservationId}&prevDate={prevDate}&prevTime={prevTime}") {
+        fun createRoute(
+            serviceId: Long,
+            barberId: Long,
+            reservationId: Long?,
+            prevDate: String? = null,
+            prevTime: String? = null
+        ): String {
+            val rId = reservationId ?: -1L
+            return "client_calendar/$serviceId/$barberId?reservationId=$rId&prevDate=${prevDate ?: ""}&prevTime=${prevTime ?: ""}"
+        }
     }
 
     // Admin

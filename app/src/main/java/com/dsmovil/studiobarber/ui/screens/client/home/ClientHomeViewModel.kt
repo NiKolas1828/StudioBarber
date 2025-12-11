@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.screens.client.home
 
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
@@ -14,19 +15,33 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
-
 @HiltViewModel
 class ClientHomeViewModel @Inject constructor(
     private val getBarberUseCase: GetBarbersUseCase,
     private val getServicesUseCase: GetServicesUseCase,
     private val sessionManager: SessionManager,
-    logoutUseCase: LogoutUseCase
-) : BaseViewModel(logoutUseCase){
+    logoutUseCase: LogoutUseCase,
+    savedStateHandle: SavedStateHandle
+) : BaseViewModel(logoutUseCase) {
 
     private val _uiState = MutableStateFlow(ClientHomeUiState())
     val uiState: StateFlow<ClientHomeUiState> = _uiState.asStateFlow()
 
+
     init {
+        val preReservationId: Long = savedStateHandle["reservationId"] ?: -1L
+        val preServiceId: Long = savedStateHandle["serviceId"] ?: -1L
+        val preBarberId: Long = savedStateHandle["barberId"] ?: -1L
+        android.util.Log.d("DEBUG_HOME_VM", "Init - ID recibido: $preReservationId")
+
+        _uiState.update { currentState ->
+            currentState.copy(
+                selectedServiceId = if (preServiceId != -1L) preServiceId else null,
+                selectedBarberId = if (preBarberId != -1L) preBarberId else null,
+                reservationId = if (preReservationId != -1L) preReservationId else null
+            )
+        }
+
         loadUserInfo()
         loadBarbers()
         loadServices()
@@ -42,7 +57,7 @@ class ClientHomeViewModel @Inject constructor(
 
     private fun loadBarbers() {
         viewModelScope.launch {
-            _uiState.update { it.copy (barbersState = ClientHomeUiState.BarbersDataState.Loading) }
+            _uiState.update { it.copy(barbersState = ClientHomeUiState.BarbersDataState.Loading) }
 
             val result = getBarberUseCase()
 
@@ -58,7 +73,8 @@ class ClientHomeViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             barbersState = ClientHomeUiState.BarbersDataState.Error(
-                                message = exception.message ?: "Error desconocido al cargar barberos"
+                                message = exception.message
+                                    ?: "Error desconocido al cargar barberos"
                             )
                         )
                     }
@@ -74,17 +90,20 @@ class ClientHomeViewModel @Inject constructor(
             val result = getServicesUseCase()
 
             result.fold(
-                onSuccess = {servicesList ->
+                onSuccess = { servicesList ->
                     _uiState.update { currentState ->
                         currentState.copy(
                             servicesState = ClientHomeUiState.ServicesDataState.Success(services = servicesList)
                         )
                     }
                 },
-                onFailure = {exception ->
+                onFailure = { exception ->
                     _uiState.update { currentState ->
                         currentState.copy(
-                            servicesState = ClientHomeUiState.ServicesDataState.Error(message = exception.message ?: "Error desconocido al cargar servicios")
+                            servicesState = ClientHomeUiState.ServicesDataState.Error(
+                                message = exception.message
+                                    ?: "Error desconocido al cargar servicios"
+                            )
                         )
                     }
                 }
@@ -92,26 +111,27 @@ class ClientHomeViewModel @Inject constructor(
         }
     }
 
-    fun changeOption(option: SelectOptions){
-        _uiState.value = _uiState.value.copy(selectedOption = option)
+    fun changeOption(option: SelectOptions) {
+        _uiState.update { it.copy(selectedOption = option) }
     }
 
     fun selectBarber(id: Long) {
-        if (_uiState.value.selectedBarberId == id) {
-            _uiState.value = _uiState.value.copy(selectedBarberId = null)
-            return
+        _uiState.update { currentState ->
+            if (currentState.selectedBarberId == id) {
+                currentState.copy(selectedBarberId = null)
+            } else {
+                currentState.copy(selectedBarberId = id)
+            }
         }
-
-        _uiState.value = _uiState.value.copy(selectedBarberId = id)
     }
 
     fun selectService(id: Long) {
-        if (_uiState.value.selectedServiceId == id) {
-            _uiState.value = _uiState.value.copy(selectedServiceId = null)
-            return
+        _uiState.update { currentState ->
+            if (currentState.selectedServiceId == id) {
+                currentState.copy(selectedServiceId = null)
+            } else {
+                currentState.copy(selectedServiceId = id)
+            }
         }
-
-        _uiState.value = _uiState.value.copy(selectedServiceId = id)
     }
-
 }

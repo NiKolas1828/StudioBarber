@@ -23,4 +23,7 @@ interface ReservationApiService {
 
     @GET("api/reservations/search-admin")
     suspend fun getAllReservations(): Response<List<ReservationResponse>>
+
+    @PUT("api/reservations/edit/{id}")
+    suspend fun editReservation(@Path("id") id: Long,@Body request: ReservationRequest): Response<ReservationResponse>
 }

@@ -28,6 +28,7 @@ import com.dsmovil.studiobarber.ui.components.ListReservationScreenLayout
 fun ClientReservationsScreen(
     viewModel: ClientReservationViewModel,
     onNavigateToClientHome: () -> Unit = {},
+    onNavigateToEditReservation: (Long, Long, Long) -> Unit,
     onLogout: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
@@ -40,7 +41,8 @@ fun ClientReservationsScreen(
     ){
         ClientReservationsContent(
             reservationState = state.reservationState,
-            viewModel = viewModel
+            viewModel = viewModel,
+            onNavigateToEditReservation = onNavigateToEditReservation
         )
     }
 }
@@ -48,7 +50,8 @@ fun ClientReservationsScreen(
 @Composable
 private fun ClientReservationsContent(
     reservationState: ClientReservationUiState.ReservationDataState,
-    viewModel: ClientReservationViewModel
+    viewModel: ClientReservationViewModel,
+    onNavigateToEditReservation: (Long, Long, Long) -> Unit
 ) {
     when (reservationState) {
         is ClientReservationUiState.ReservationDataState.Loading -> {
@@ -62,7 +65,8 @@ private fun ClientReservationsContent(
         is ClientReservationUiState.ReservationDataState.Success -> {
             ReservationsList(
                 reservations = reservationState.reservations,
-                viewModel = viewModel
+                viewModel = viewModel,
+                onNavigateToEditReservation = onNavigateToEditReservation
             )
         }
     }
@@ -71,7 +75,8 @@ private fun ClientReservationsContent(
 @Composable
 private fun ReservationsList(
     reservations: List<Reservation>,
-    viewModel: ClientReservationViewModel
+    viewModel: ClientReservationViewModel,
+    onNavigateToEditReservation: (Long, Long, Long) -> Unit
 ) {
     var reservationToDelete by remember { mutableStateOf<Reservation?>(null) }
 
@@ -83,7 +88,12 @@ private fun ReservationsList(
         items(reservations) { reservation ->
             ReservationCard(
                 reservation = reservation,
-                onEditClick = {},
+                onEditClick = {
+                    val serviceId = reservation.serviceId
+                    val barberId = reservation.barberId
+
+                    onNavigateToEditReservation(reservation.id, serviceId, barberId)
+                },
                 onDeleteClick = { reservationToDelete = reservation },
                 userRole = Role.CLIENTE
             )
@@ -92,15 +102,9 @@ private fun ReservationsList(
 
     if (reservationToDelete != null) {
         AlertDialog(
-            onDismissRequest = {
-                reservationToDelete = null
-            },
-            title = {
-                Text(text = "Cancelar Reserva")
-            },
-            text = {
-                Text("¿Estás seguro de que deseas cancelar esta reserva? Esta acción no se puede deshacer.")
-            },
+            onDismissRequest = { reservationToDelete = null },
+            title = { Text(text = "Cancelar Reserva") },
+            text = { Text("¿Estás seguro de que deseas cancelar esta reserva? Esta acción no se puede deshacer.") },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -114,15 +118,10 @@ private fun ReservationsList(
                 }
             },
             dismissButton = {
-                TextButton(
-                    onClick = {
-                        reservationToDelete = null
-                    }
-                ) {
+                TextButton( onClick = { reservationToDelete = null } ) {
                     Text("No, volver")
                 }
             }
         )
     }
 }
-
