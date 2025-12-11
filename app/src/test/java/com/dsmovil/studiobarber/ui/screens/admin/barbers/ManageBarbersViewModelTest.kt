@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -149,7 +148,7 @@ class ManageBarbersViewModelTest {
 
     @Test
     fun `update existing barber success`() = runTest {
-        val existingBarber = Barber(1, "Old Name", "old@example.com", "1234567890", "oldpass", true)
+        val existingBarber = Barber(1, "Old Name", "old@example.com", "oldpass", "1234567890", true)
         coEvery { getBarbersUseCase() } returns Result.success(listOf(existingBarber))
         coEvery { updateBarberUseCase(any()) } returns Result.success(mockk())
 
@@ -165,10 +164,11 @@ class ManageBarbersViewModelTest {
         // Password empty means keep existing
         viewModel.onConfirmDialog("New Name", "new@example.com", "0987654321", "")
 
-        coVerify { 
+        coVerify(exactly = 1) {
             updateBarberUseCase(match { 
                 it.id == existingBarber.id && 
-                it.name == "New Name" && 
+                it.name == "New Name" &&
+                it.phone == "0987654321" &&
                 it.password == "oldpass" 
             }) 
         }

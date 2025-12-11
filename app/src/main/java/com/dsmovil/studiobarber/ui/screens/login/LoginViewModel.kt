@@ -1,9 +1,9 @@
 package com.dsmovil.studiobarber.ui.screens.login
 
-import android.util.Patterns
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
+import com.dsmovil.studiobarber.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -22,7 +22,7 @@ class LoginViewModel @Inject constructor(private val loginUseCase: LoginUseCase)
 
         if (email.isBlank()) {
             errors.add("• Falta el correo")
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!isValidEmail(email)) {
             errors.add("• Correo inválido")
         }
 
