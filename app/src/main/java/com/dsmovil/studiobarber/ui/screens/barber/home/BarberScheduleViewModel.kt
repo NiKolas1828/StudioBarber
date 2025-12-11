@@ -4,7 +4,7 @@ import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
-import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.GetAllReservationsUseCase
 import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -19,9 +19,11 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BarberScheduleViewModel @Inject constructor(
-    private val getReservationsUseCase: GetReservationsUseCase,
+    private val getReservationsUseCase: GetAllReservationsUseCase,
     private val sessionManager: SessionManager,
+
     logoutUseCase: LogoutUseCase
+
 ) : BaseViewModel(logoutUseCase) {
 
     private val _uiState = MutableStateFlow(BarberScheduleUiState())
@@ -53,7 +55,7 @@ class BarberScheduleViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update { it.copy(reservationState = BarberScheduleUiState.ReservationDataState.Loading) }
 
-            val result = getReservationsUseCase(19)
+            val result = getReservationsUseCase()
 
             result.fold(
                 onSuccess = { reservationsList ->

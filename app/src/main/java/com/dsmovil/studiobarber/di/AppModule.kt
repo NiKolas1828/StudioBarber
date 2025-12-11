@@ -9,7 +9,9 @@ import com.dsmovil.studiobarber.domain.repositories.ServiceRepository
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.GetBarbersUseCase
 import com.dsmovil.studiobarber.data.repositories.ReservationRepositoryImpl
+import com.dsmovil.studiobarber.data.repositories.TimeBlockRepositoryImpl
 import com.dsmovil.studiobarber.domain.repositories.ReservationRepository
+import com.dsmovil.studiobarber.domain.repositories.TimeBlockRepository
 import com.dsmovil.studiobarber.domain.usecases.LoginUseCase
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
@@ -119,5 +121,15 @@ abstract class AppModule {
             return DeleteReservationsUseCase(repository)
         }
 
+        @Module
+        @InstallIn(SingletonComponent::class)
+        abstract class RepositoryModule {
+
+            @Binds
+            @Singleton
+            abstract fun bindTimeBlockRepository(
+                impl: TimeBlockRepositoryImpl
+            ): TimeBlockRepository
+        }
     }
 }
