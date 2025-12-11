@@ -1,225 +1,154 @@
 package com.dsmovil.studiobarber.ui.screens.register
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
-import com.dsmovil.studiobarber.R // Make sure to place the logo in your drawable resources
+import com.dsmovil.studiobarber.R
 import androidx.compose.ui.res.colorResource
-
+import androidx.compose.ui.text.input.KeyboardType
+import com.dsmovil.studiobarber.ui.components.auth.AuthTextField
 
 @Composable
 fun RegisterScreen(
     viewModel: RegisterViewModel,
     onRegisterSuccess: () -> Unit
 ) {
-    val state = viewModel.uiState
+    val uiState by viewModel.uiState.collectAsState()
 
-    if (state.success) {
-        onRegisterSuccess()
+    // Estados locales para cada campo de texto
+    var name by remember { mutableStateOf("") }
+    var phone by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
+    var password by remember { mutableStateOf("") }
+    var confirmPassword by remember { mutableStateOf("") }
+
+    LaunchedEffect(uiState) {
+        if (uiState is RegisterUiState.Success) {
+            onRegisterSuccess()
+        }
     }
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(colorResource(id = R.color.background_color)), // Set your desired background color
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
+
+    Scaffold(
+        containerColor = colorResource(id = R.color.background_color)
+    ) { paddingValues ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(horizontal = 24.dp),
+                .padding(paddingValues)
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState()),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Logo at the top
+            // Logo
             Image(
-                painter = painterResource(id = R.drawable.studio_barber_logo), // Make sure to add the logo in drawable resources
+                painter = painterResource(id = R.drawable.studio_barber_logo),
                 contentDescription = "Studio Barber Logo",
                 modifier = Modifier
-                    .height(300.dp) // Adjust height as necessary
-                    .padding(bottom = 32.dp)
+                    .height(250.dp)
+                    .padding(bottom = 24.dp)
             )
-            // Firstname text field
-            OutlinedTextField(
-                value = state.firstname,
-                onValueChange = { viewModel.onFirstNameChange(it) },
-                label = { Text("Firstname") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
 
-
-            // Firstname text field
-            OutlinedTextField(
-                value = state.lastname,
-                onValueChange = { viewModel.onLastNameChange(it) },
-                label = { Text("LastName") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            // Phone text field
-            OutlinedTextField(
-                value = state.phone,
-                onValueChange = { viewModel.onPhoneChange(it) },
-                label = { Text("Phone") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
+            AuthTextField(
+                value = name,
+                onValueChange = { name = it },
+                label = "Nombre Completo"
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Email text field
-            OutlinedTextField(
-                value = state.email,
-                onValueChange = { viewModel.onEmailChange(it) },
-                label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
+            AuthTextField(
+                value = email,
+                onValueChange = { email = it },
+                label = "Email",
+                keyboardType = KeyboardType.Email
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-
-            // Password text field
-            OutlinedTextField(
-                value = state.password,
-                onValueChange = { viewModel.onPasswordChange(it) },
-                label = { Text("Password") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
-            )
-            Spacer(modifier = Modifier.height(16.dp))
-
-
-            // confirmPassword text field
-            OutlinedTextField(
-                value = state.confirmPassword,
-                onValueChange = { viewModel.onConfirmPasswordChange(it) },
-                label = { Text("confirmPassword") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedTextColor = Color.White,
-                    unfocusedTextColor = Color.LightGray,
-                    cursorColor = Color.White,
-                    focusedBorderColor = colorResource(id = R.color.teal_200),
-                    unfocusedBorderColor = Color.Gray,
-                    focusedLabelColor = Color.White,
-                    unfocusedLabelColor = Color.LightGray,
-                    focusedPlaceholderColor = Color.LightGray,
-                    unfocusedPlaceholderColor = Color.Gray
-                )
+            AuthTextField(
+                value = phone,
+                onValueChange = { phone = it },
+                label = "Teléfono",
+                keyboardType = KeyboardType.Phone
             )
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Register Button
+            AuthTextField(
+                value = password,
+                onValueChange = { password = it },
+                label = "Contraseña",
+                isPasswordField = true
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            AuthTextField(
+                value = confirmPassword,
+                onValueChange = { confirmPassword = it },
+                label = "Confirmar Contraseña",
+                isPasswordField = true
+            )
+
+            Spacer(modifier = Modifier.height(24.dp))
+
             Button(
-                onClick = { viewModel.register() },
+                onClick = {
+                    viewModel.register(
+                        name = name,
+                        phone = phone,
+                        email = email,
+                        password = password,
+                        confirmPassword = confirmPassword
+                    )
+                },
                 modifier = Modifier.fillMaxWidth(),
-                enabled = !state.loading,
+                enabled = uiState != RegisterUiState.Loading,
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = colorResource(id = R.color.button_color), // Use colorResource to get the color
-                    contentColor = Color.White // The color for the text inside the button
+                    containerColor = colorResource(id = R.color.button_color),
+                    contentColor = Color.White
                 )
             ) {
-                if (state.loading) {
-                    CircularProgressIndicator(modifier = Modifier.size(18.dp))
+                if (uiState == RegisterUiState.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(24.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
                 } else {
-                    Text("Registrarse")
+                    Text("Registrarse", fontWeight = FontWeight.Bold)
                 }
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Forgot password text
-            TextButton(
-                onClick = { /* Handle password reset */ },
-                modifier = Modifier.fillMaxWidth(),
-                content = {
-                    Text(
-                        text = "Ya tienes cuenta",
-                        color = colorResource(id = R.color.teal_200),
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            )
-
-            // Error message
-            if (state.error != null) {
+            if (uiState is RegisterUiState.Error) {
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(text = state.error, color = Color.Red)
+                Text(
+                    text = (uiState as RegisterUiState.Error).message,
+                    modifier = Modifier.fillMaxWidth(),
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
             }
         }
-
     }
 }

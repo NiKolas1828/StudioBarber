@@ -1,58 +1,92 @@
 package com.dsmovil.studiobarber.ui.screens.register
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.domain.models.Register
 import com.dsmovil.studiobarber.domain.usecases.RegisterUseCase
+import com.dsmovil.studiobarber.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class RegisterViewModel @Inject constructor(private val registerUseCase: RegisterUseCase) : ViewModel() {
-    var uiState by mutableStateOf(RegisterUiState())
-        private set
+    private val _uiState = MutableStateFlow<RegisterUiState?>(null)
+    val uiState: StateFlow<RegisterUiState?> = _uiState.asStateFlow()
 
-    fun onFirstNameChange(value: String) {
-        uiState = uiState.copy(firstname = value)
+    private fun validateInput(
+        name: String,
+        phone: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ): List<String> {
+        val errors = mutableListOf<String>()
+
+        if (name.isBlank()) {
+            errors.add("• El nombre no puede estar vacío")
+        }
+
+        if (phone.isBlank()) {
+            errors.add("• El teléfono no puede estar vacío")
+        } else if (phone.length != 10) {
+            errors.add("• Teléfono inválido")
+        }
+
+        if (email.isBlank()) {
+            errors.add("• El correo no puede estar vacío")
+        } else if (!isValidEmail(email)) {
+            errors.add("• El formato del correo es inválido")
+        }
+
+        if (password.length < 8) {
+            errors.add("• La contraseña debe tener al menos 8 caracteres")
+        }
+
+        if (password != confirmPassword) {
+            errors.add("• Las contraseñas no coinciden")
+        }
+
+        return errors
     }
 
-    fun onLastNameChange(value: String) {
-        uiState = uiState.copy(lastname = value)
-    }
+    fun register(
+        name: String,
+        phone: String,
+        email: String,
+        password: String,
+        confirmPassword: String
+    ) {
+        val validationErrors = validateInput(name, phone, email, password, confirmPassword)
 
-    fun onPhoneChange(value: String) {
-        uiState = uiState.copy(phone = value)
-    }
+        if (validationErrors.isNotEmpty()) {
+            val finalMessage = validationErrors.joinToString("\n")
+            _uiState.value = RegisterUiState.Error(message = finalMessage)
+            return
+        }
 
-    fun onConfirmPasswordChange(value: String) {
-        uiState = uiState.copy(confirmPassword = value)
-    }
-
-    fun onEmailChange(value: String) {
-        uiState = uiState.copy(email = value)
-    }
-
-    fun onPasswordChange(value: String) {
-        uiState = uiState.copy(password = value)
-    }
-    fun register() {
-        // Lógica de registro aquí
         viewModelScope.launch {
-            uiState = uiState.copy(loading = true, error = null)
+            _uiState.value = RegisterUiState.Loading
 
-            val result = registerUseCase(uiState.firstname,uiState.lastname, uiState.phone ,uiState.email, uiState.password, uiState.confirmPassword)
+            val registerData = Register(
+                name = name,
+                phone = phone,
+                email = email,
+                password = password,
+                confirmPassword = confirmPassword
+            )
 
-            uiState = if (result.isSuccess) {
-                uiState.copy(loading = false, success = true)
+            val result = registerUseCase(registerData)
+
+            if (result.isSuccess) {
+                _uiState.value = RegisterUiState.Success
             } else {
-                uiState.copy(
-                    loading = false,
-                    error = result.exceptionOrNull()?.message
-                )
+                val errorMessage = result.exceptionOrNull()?.message ?: "Error desconocido"
+                _uiState.value = RegisterUiState.Error(message = errorMessage)
             }
         }
     }

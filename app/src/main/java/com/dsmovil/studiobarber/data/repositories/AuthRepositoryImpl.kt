@@ -3,6 +3,8 @@ package com.dsmovil.studiobarber.data.repositories
 import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.data.remote.auth.AuthApiService
 import com.dsmovil.studiobarber.data.remote.models.login.LoginRequest
+import com.dsmovil.studiobarber.data.remote.models.register.RegisterRequest
+import com.dsmovil.studiobarber.domain.models.Register
 import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.domain.models.User
 import com.dsmovil.studiobarber.domain.repositories.AuthRepository
@@ -51,19 +53,30 @@ class AuthRepositoryImpl @Inject constructor(
     }
 
     override suspend fun register(
-        firstname: String,
-        lastname: String,
-        phone: String,
-        email: String,
-        password: String,
-        confirmPassword: String
-    ): Result<User> {
-        println("registering user with email: $email")
-        return if (password == confirmPassword) {
-            println("Registration successful for user: $email")
-            Result.success(User(id = 2, name = firstname, email = email, role = Role.CLIENTE))
-        } else {
-            Result.failure(Exception("Passwords do not match"))
+        register: Register
+    ): Result<Unit> {
+        return try {
+            val request = RegisterRequest(
+                name = register.name,
+                email = register.email,
+                password = register.password,
+                phone = register.phone
+            )
+
+            val response = apiService.register(request)
+
+            if (response.isSuccessful) {
+                Result.success(Unit)
+            } else {
+                val errorMsg = when (response.code()) {
+                    422 -> "Ya existe un usuario con este correo electrónico."
+                    else -> "Ocurrió un error inesperado (${response.code()})"
+                }
+
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 }
