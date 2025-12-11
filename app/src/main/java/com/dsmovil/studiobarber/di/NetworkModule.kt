@@ -6,6 +6,7 @@ import com.dsmovil.studiobarber.data.remote.auth.AuthApiService
 import com.dsmovil.studiobarber.data.remote.barber.BarberApiService
 import com.dsmovil.studiobarber.data.remote.reservation.ReservationApiService
 import com.dsmovil.studiobarber.data.remote.timeblock.TimeBlockApiService
+import com.dsmovil.studiobarber.data.remote.service.ServiceApiService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -75,5 +76,10 @@ object NetworkModule {
     @Singleton
     fun provideTimeBlockApiService(retrofit: Retrofit): TimeBlockApiService {
         return retrofit.create(TimeBlockApiService::class.java)
+    }
+    @Provides
+    @Singleton
+    fun provideServiceApiService(retrofit: Retrofit): ServiceApiService {
+        return retrofit.create(ServiceApiService::class.java)
     }
 }
