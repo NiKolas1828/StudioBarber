@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
@@ -38,8 +37,8 @@ class ManageBarbersViewModelTest {
     @Test
     fun `loadBarbers success updates uiState to Success`() = runTest {
         val barbers = listOf(
-            Barber(1, "Barber 1", "barber1@example.com", "1234567890", "pass", true),
-            Barber(2, "Barber 2", "barber2@example.com", "0987654321", "pass", false)
+            Barber(id = 1, name = "Barber 1", email = "barber1@example.com", phone = "1234567890", password = "pass", isActive = true),
+            Barber(id = 2, name = "Barber 2", email = "barber2@example.com", phone = "0987654321", password = "pass", isActive = false)
         )
         coEvery { getBarbersUseCase() } returns Result.success(barbers)
 
@@ -89,7 +88,7 @@ class ManageBarbersViewModelTest {
         assertTrue(viewModel.showDialog.value)
         assertNull(viewModel.selectedBarber.value)
 
-        val barber = Barber(1, "Barber 1", "barber1@example.com", "1234567890", "pass", true)
+        val barber = Barber(id = 1, name = "Barber", email = "barber@example.com", password = "pass", phone = "1234567890", isActive = true)
         viewModel.openEditDialog(barber)
         assertTrue(viewModel.showDialog.value)
         assertEquals(barber, viewModel.selectedBarber.value)
@@ -149,7 +148,7 @@ class ManageBarbersViewModelTest {
 
     @Test
     fun `update existing barber success`() = runTest {
-        val existingBarber = Barber(1, "Old Name", "old@example.com", "1234567890", "oldpass", true)
+        val existingBarber = Barber(id = 1, name = "Old Name", email = "old@example.com", password = "oldpass", phone = "1234567890", isActive = true)
         coEvery { getBarbersUseCase() } returns Result.success(listOf(existingBarber))
         coEvery { updateBarberUseCase(any()) } returns Result.success(mockk())
 
@@ -165,10 +164,11 @@ class ManageBarbersViewModelTest {
         // Password empty means keep existing
         viewModel.onConfirmDialog("New Name", "new@example.com", "0987654321", "")
 
-        coVerify { 
+        coVerify(exactly = 1) {
             updateBarberUseCase(match { 
                 it.id == existingBarber.id && 
-                it.name == "New Name" && 
+                it.name == "New Name" &&
+                it.phone == "0987654321" &&
                 it.password == "oldpass" 
             }) 
         }

@@ -1,6 +1,5 @@
 package com.dsmovil.studiobarber.ui.screens.admin.barbers
 
-import android.util.Patterns
 import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.domain.models.Barber
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.DeleteBarberUseCase
@@ -10,6 +9,7 @@ import com.dsmovil.studiobarber.domain.usecases.admin.barbers.AddBarberUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.barbers.UpdateBarberUseCase
 import com.dsmovil.studiobarber.ui.screens.utils.BaseViewModel
 import com.dsmovil.studiobarber.ui.screens.utils.UiMessage
+import com.dsmovil.studiobarber.utils.isValidEmail
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +61,7 @@ class ManageBarbersViewModel @Inject constructor(
 
         if (email.isBlank()) {
             errors.add("• Falta el correo")
-        } else if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+        } else if (!isValidEmail(email)) {
             errors.add("• Correo inválido")
         }
 
