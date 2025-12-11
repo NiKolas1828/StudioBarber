@@ -101,7 +101,7 @@ class ManageServicesViewModel @Inject constructor(
                 showMessage(if (currentService == null) "Servicio creado" else "Servicio actualizado")
             } else {
                 val errorMsg = result.exceptionOrNull()?.message ?: "Error desconocido"
-                showMessage("Error: $errorMsg", isError = true)
+                showMessage(errorMsg, isError = true)
             }
 
             _selectedService.value = null
