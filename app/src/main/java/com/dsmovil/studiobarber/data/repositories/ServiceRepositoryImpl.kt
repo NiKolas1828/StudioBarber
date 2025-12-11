@@ -1,6 +1,5 @@
 package com.dsmovil.studiobarber.data.repositories
 
-import android.util.Log
 import com.dsmovil.studiobarber.data.remote.models.service.ServiceRequest
 import com.dsmovil.studiobarber.data.remote.models.service.toDomain
 import com.dsmovil.studiobarber.data.remote.service.ServiceApiService
@@ -48,8 +47,6 @@ class ServiceRepositoryImpl @Inject constructor(
                 description = service.description,
                 price = service.price,
             )
-
-            Log.d("ServiceRepositoryImpl", "Request: $request")
 
             val response = apiService.createService(request)
 
