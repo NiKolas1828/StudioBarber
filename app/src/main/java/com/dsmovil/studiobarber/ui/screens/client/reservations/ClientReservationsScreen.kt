@@ -31,10 +31,10 @@ fun ClientReservationsScreen(
     onNavigateToEditReservation: (Long, Long, Long) -> Unit,
     onLogout: () -> Unit
 ) {
-
     val state by viewModel.uiState.collectAsState()
 
     ListReservationScreenLayout(
+        username = state.userName,
         onNavigateToHome = onNavigateToClientHome,
         onLogout = onLogout,
         footerText = "Gracias por preferirnos"

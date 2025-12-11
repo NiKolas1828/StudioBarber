@@ -9,6 +9,8 @@ import com.dsmovil.studiobarber.domain.usecases.home.AddReservationUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.EditReservationUseCase
 import com.dsmovil.studiobarber.domain.usecases.timeblock.VerifyAvailabilityUseCase
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
+import com.dsmovil.studiobarber.utils.convertTo24HourFormat
+import com.dsmovil.studiobarber.utils.formatTimeForDisplay
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -18,7 +20,6 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
@@ -42,16 +43,24 @@ class ClientCalendarViewModel @Inject constructor(
     private val isEditMode = reservationId != -1L
 
     init {
+        loadUserInfo()
         _uiState.update { it.copy(isEditMode = isEditMode) }
-
         loadCalendarDays()
         fetchAvailabilityForCurrentState()
+    }
+
+    private fun loadUserInfo() {
+        val currentUsername = sessionManager.getCurrentUsername()
+
+        if (currentUsername != null) {
+            _uiState.update { it.copy(userName = currentUsername) }
+        }
     }
 
     private fun loadCalendarDays() {
         val today = LocalDate.now()
         val daysList = mutableListOf<DayItem>()
-        val locale = Locale("es", "ES")
+        val locale = Locale.Builder().setLanguage("es").setRegion("ES").build()
 
         for (i in 0 until 365) {
             val date = today.plusDays(i.toLong())
@@ -138,7 +147,7 @@ class ClientCalendarViewModel @Inject constructor(
                     )
 
                     val isAvailable = result.getOrDefault(false)
-                    val displayTime = formatTimeForDisplay(startTime)
+                    val displayTime = formatTimeForDisplay(startTime, false)
 
                     HourItem(displayTime, isAvailable)
                 }
@@ -153,11 +162,6 @@ class ClientCalendarViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun formatTimeForDisplay(time: LocalTime): String {
-        val formatter = DateTimeFormatter.ofPattern("h:mm", Locale.getDefault())
-        return time.format(formatter)
     }
 
     fun confirmAction(onSuccess: () -> Unit, onError: (String) -> Unit) {
@@ -248,19 +252,5 @@ class ClientCalendarViewModel @Inject constructor(
                 onError("Error de sesión o identificación de reserva no válida.")
             }
         }
-    }
-
-    private fun convertTo24HourFormat(hour12: String, isAm: Boolean): String {
-        val parts = hour12.split(":")
-        var hour = parts[0].toInt()
-        val minute = parts[1]
-
-        if (isAm) {
-            if (hour == 12) hour = 0
-        } else {
-            if (hour != 12) hour += 12
-        }
-
-        return String.format(Locale.getDefault(), "%02d:%s", hour, minute)
     }
 }

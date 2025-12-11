@@ -21,7 +21,7 @@ class ClientHomeViewModel @Inject constructor(
     private val getServicesUseCase: GetServicesUseCase,
     private val sessionManager: SessionManager,
     logoutUseCase: LogoutUseCase,
-    private val savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle
 ) : BaseViewModel(logoutUseCase) {
 
     private val _uiState = MutableStateFlow(ClientHomeUiState())
@@ -48,9 +48,10 @@ class ClientHomeViewModel @Inject constructor(
     }
 
     private fun loadUserInfo() {
-        val currentUser = sessionManager.getCurrentUserName()
-        if (currentUser != null) {
-            _uiState.update { it.copy(userName = currentUser) }
+        val currentUsername = sessionManager.getCurrentUsername()
+
+        if (currentUsername != null) {
+            _uiState.update { it.copy(userName = currentUsername) }
         }
     }
 
@@ -72,7 +73,8 @@ class ClientHomeViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             barbersState = ClientHomeUiState.BarbersDataState.Error(
-                                message = exception.message ?: "Error desconocido al cargar barberos"
+                                message = exception.message
+                                    ?: "Error desconocido al cargar barberos"
                             )
                         )
                     }
@@ -99,7 +101,8 @@ class ClientHomeViewModel @Inject constructor(
                     _uiState.update { currentState ->
                         currentState.copy(
                             servicesState = ClientHomeUiState.ServicesDataState.Error(
-                                message = exception.message ?: "Error desconocido al cargar servicios"
+                                message = exception.message
+                                    ?: "Error desconocido al cargar servicios"
                             )
                         )
                     }

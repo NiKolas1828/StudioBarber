@@ -8,6 +8,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,6 +31,8 @@ fun AdminDashboardScreen(
     onNavigateToReservations: () -> Unit,
     onLogout: () -> Unit
 ) {
+    val uiState by viewModel.uiState.collectAsState()
+
     AdminScreenLayout(
         viewModel = viewModel,
         onLogoutSuccess = onLogout
@@ -36,7 +40,7 @@ fun AdminDashboardScreen(
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
-            AdminHeader()
+            AdminHeader(username = uiState)
 
             Spacer(modifier = Modifier.height(32.dp))
 
@@ -52,14 +56,15 @@ fun AdminDashboardScreen(
 }
 
 @Composable
-private fun AdminHeader() {
+private fun AdminHeader(username: String = "Usuario") {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Spacer(modifier = Modifier.height(24.dp))
+
         Text(
-            text = "Bienvenido",
+            text = "Bienvenido $username",
             color = Color.White,
             fontSize = 20.sp
         )

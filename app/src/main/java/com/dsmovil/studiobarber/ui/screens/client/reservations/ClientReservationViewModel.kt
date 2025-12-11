@@ -32,7 +32,16 @@ class ClientReservationViewModel @Inject constructor(
     val messageChannel = _messageChannel.receiveAsFlow()
 
     init {
+        loadUserInfo()
         loadReservations()
+    }
+
+    private fun loadUserInfo() {
+        val currentUsername = sessionManager.getCurrentUsername()
+
+        if (currentUsername != null) {
+            _uiState.update { it.copy(userName = currentUsername) }
+        }
     }
 
     private fun showMessage(message: String, isError: Boolean = false) {

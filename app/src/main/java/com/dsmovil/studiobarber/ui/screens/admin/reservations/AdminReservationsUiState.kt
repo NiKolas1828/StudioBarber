@@ -5,6 +5,7 @@ import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import java.time.LocalDate
 
 data class AdminReservationsUiState(
+    val username: String = "Usuario",
     val reservationState: ReservationDataState = ReservationDataState.Loading,
     val selectedDate: LocalDate = LocalDate.now(),
     val selectedMonth: String = "",

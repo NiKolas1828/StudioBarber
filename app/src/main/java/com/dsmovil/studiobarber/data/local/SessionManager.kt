@@ -31,5 +31,5 @@ class SessionManager @Inject constructor() {
 
     fun getCurrentUserId(): Long? = _currentUser.value?.id
 
-    fun getCurrentUserName(): String? = _currentUser.value?.name
+    fun getCurrentUsername(): String? = _currentUser.value?.name
 }

@@ -1,6 +1,7 @@
 package com.dsmovil.studiobarber.ui.screens.admin.reservations
 
 import androidx.lifecycle.viewModelScope
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
@@ -25,6 +26,7 @@ import javax.inject.Inject
 class AdminReservationsViewModel @Inject constructor(
     private val getReservationsUseCase: GetAllReservationsUseCase,
     private val deleteReservationsUseCase: DeleteReservationsUseCase,
+    private val sessionManager: SessionManager,
     logoutUseCase: LogoutUseCase
 ) : BaseViewModel(logoutUseCase) {
 
@@ -37,8 +39,17 @@ class AdminReservationsViewModel @Inject constructor(
     private var allReservationsCache: List<Reservation> = emptyList()
 
     init {
+        loadUserInfo()
         loadCalendarDays()
         loadReservations()
+    }
+
+    private fun loadUserInfo() {
+        val currentUsername = sessionManager.getCurrentUsername()
+
+        if (currentUsername != null) {
+            _uiState.update { it.copy(username = currentUsername) }
+        }
     }
 
     // --- Lógica de Calendario ---
@@ -61,7 +72,7 @@ class AdminReservationsViewModel @Inject constructor(
     private fun loadCalendarDays() {
         val today = LocalDate.now()
         val daysList = mutableListOf<DayItem>()
-        val locale = Locale("es", "ES")
+        val locale = Locale.Builder().setLanguage("es").setRegion("ES").build()
 
         for (i in 0 until 365) {
             val date = today.plusDays(i.toLong())

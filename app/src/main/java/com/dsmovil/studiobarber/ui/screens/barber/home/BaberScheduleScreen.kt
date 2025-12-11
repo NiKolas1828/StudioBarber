@@ -50,8 +50,8 @@ fun BarberScheduleScreen(
                 .padding(padding)
                 .padding(horizontal = 16.dp)
         ) {
-
             Spacer(modifier = Modifier.height(20.dp))
+
             Text(
                 text = "Citas reservadas",
                 color = Color.White,
@@ -75,7 +75,8 @@ fun BarberScheduleScreen(
             Box(
                 modifier = Modifier
                     .weight(1f)
-                    .fillMaxWidth(),
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
                 contentAlignment = Alignment.Center
             ) {
                 when (val result = state.reservationState) {

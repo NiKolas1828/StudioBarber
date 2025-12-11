@@ -21,6 +21,7 @@ import androidx.compose.material3.Text
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
 import com.dsmovil.studiobarber.domain.models.Role
+import com.dsmovil.studiobarber.utils.formatTimeForDisplay
 
 @Composable
 fun ReservationCard(
@@ -77,7 +78,7 @@ private fun ReservationContent(reservation: Reservation, userRole: Role) {
 
         val items = buildList {
             add("Fecha" to reservation.date)
-            add("Hora" to reservation.timeStart)
+            add("Hora" to formatTimeForDisplay(reservation.timeStart))
             add("Servicio" to reservation.nameService)
 
             when (userRole) {
