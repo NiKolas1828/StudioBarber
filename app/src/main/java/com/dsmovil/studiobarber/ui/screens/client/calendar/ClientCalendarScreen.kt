@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,8 +22,7 @@ import com.dsmovil.studiobarber.ui.components.ReservationHeader
 import com.dsmovil.studiobarber.ui.components.client.selector.DaysSelector
 import com.dsmovil.studiobarber.ui.components.client.selector.HoursSelector
 import com.dsmovil.studiobarber.ui.components.client.ReserveButton
-import kotlinx.coroutines.delay // Importante para la espera antes de navegar
-import kotlinx.coroutines.launch // Importante para lanzar el snackbar
+import kotlinx.coroutines.launch
 
 @Composable
 fun ClientCalendarScreen(
@@ -58,7 +56,7 @@ fun ClientCalendarScreen(
                 ) {
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    ReservationHeader {
+                    ReservationHeader(username = state.userName) {
                         Button(
                             onClick = onMyReservationsClick,
                             modifier = Modifier

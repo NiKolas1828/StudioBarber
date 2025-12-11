@@ -33,10 +33,10 @@ class ClientHomeViewModel @Inject constructor(
     }
 
     private fun loadUserInfo() {
-        val currentUser = sessionManager.getCurrentUserName()
+        val currentUsername = sessionManager.getCurrentUsername()
 
-        if (currentUser != null) {
-            _uiState.update { it.copy(userName = currentUser) }
+        if (currentUsername != null) {
+            _uiState.update { it.copy(userName = currentUsername) }
         }
     }
 

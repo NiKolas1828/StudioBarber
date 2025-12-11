@@ -195,7 +195,7 @@ fun Title(text: String) {
 
 @Composable
 fun LoadingShimmer() {
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         CircularProgressIndicator()
     }
 }

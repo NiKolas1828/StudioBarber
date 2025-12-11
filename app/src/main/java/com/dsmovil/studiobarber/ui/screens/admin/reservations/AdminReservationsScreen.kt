@@ -46,6 +46,7 @@ fun AdminReservationsScreen(
     ReservationSnackbar(viewModel = viewModel, snackbarHostState = snackbarHostState)
 
     ListReservationScreenLayout(
+        username = uiState.username,
         onNavigateToHome = onNavigateToDashboard,
         onLogout = onLogout,
         footerText = "Gestión de Reservas",
