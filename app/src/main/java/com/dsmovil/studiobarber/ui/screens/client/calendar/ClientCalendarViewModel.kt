@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.data.remote.models.reservations.ReservationRequest
 import com.dsmovil.studiobarber.domain.usecases.home.AddReservationUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.EditReservationUseCase
 import com.dsmovil.studiobarber.domain.usecases.timeblock.VerifyAvailabilityUseCase
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,16 +27,23 @@ import javax.inject.Inject
 class ClientCalendarViewModel @Inject constructor(
     private val addReservationUseCase: AddReservationUseCase,
     private val verifyAvailabilityUseCase: VerifyAvailabilityUseCase,
+    private val editReservationUseCase: EditReservationUseCase,
     private val sessionManager: SessionManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
+
     private val _uiState = MutableStateFlow(ClientCalendarUiState())
     val uiState: StateFlow<ClientCalendarUiState> = _uiState
 
     private val serviceId: Long = savedStateHandle["serviceId"]!!
     private val barberId: Long = savedStateHandle["barberId"]!!
 
+    private val reservationId: Long = savedStateHandle.get<Long>("reservationId") ?: -1L
+    private val isEditMode = reservationId != -1L
+
     init {
+        _uiState.update { it.copy(isEditMode = isEditMode) }
+
         loadCalendarDays()
         fetchAvailabilityForCurrentState()
     }
@@ -71,7 +79,7 @@ class ClientCalendarViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 days = daysList,
-                selectedMonth = currentMonth ,
+                selectedMonth = currentMonth,
                 selectedHour = null,
                 selectedDate = today
             )
@@ -116,6 +124,7 @@ class ClientCalendarViewModel @Inject constructor(
             } else {
                 listOf("14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30")
             }
+
             val hourItemsDeferred = baseHours.map { timeString ->
                 async {
                     val startTime = LocalTime.parse(timeString)
@@ -129,7 +138,6 @@ class ClientCalendarViewModel @Inject constructor(
                     )
 
                     val isAvailable = result.getOrDefault(false)
-
                     val displayTime = formatTimeForDisplay(startTime)
 
                     HourItem(displayTime, isAvailable)
@@ -146,13 +154,21 @@ class ClientCalendarViewModel @Inject constructor(
             }
         }
     }
+
     private fun formatTimeForDisplay(time: LocalTime): String {
         val formatter = DateTimeFormatter.ofPattern("h:mm", Locale.getDefault())
         return time.format(formatter)
     }
 
-    fun reserve(onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun confirmAction(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        if (isEditMode) {
+            updateReservation(onSuccess, onError)
+        } else {
+            createReservation(onSuccess, onError)
+        }
+    }
 
+    private fun createReservation(onSuccess: () -> Unit, onError: (String) -> Unit) {
         val date = _uiState.value.selectedDate
         val hour12 = _uiState.value.selectedHour
         val isAm = _uiState.value.isAm
@@ -189,6 +205,47 @@ class ClientCalendarViewModel @Inject constructor(
             } else {
                 _uiState.update { it.copy(isLoading = false) }
                 onError("No se encontró la sesión del usuario. Por favor inicia sesión nuevamente.")
+            }
+        }
+    }
+
+    private fun updateReservation(onSuccess: () -> Unit, onError: (String) -> Unit) {
+        val date = _uiState.value.selectedDate
+        val hour12 = _uiState.value.selectedHour
+        val isAm = _uiState.value.isAm
+
+        if (date == null || hour12 == null) {
+            onError("Por favor selecciona una fecha y una hora.")
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            val currentUserId = sessionManager.getCurrentUserId()
+
+            if (currentUserId != null && isEditMode) {
+                val reservationRequest = ReservationRequest(
+                    serviceId = serviceId,
+                    userId = currentUserId,
+                    barberId = barberId,
+                    date = date.toString(),
+                    timeStart = convertTo24HourFormat(hour12, isAm)
+                )
+
+                val result = editReservationUseCase(reservationId, reservationRequest)
+
+                _uiState.update { it.copy(isLoading = false) }
+
+                if (result.isSuccess) {
+                    onSuccess()
+                } else {
+                    val msg = result.exceptionOrNull()?.message ?: "Error desconocido al actualizar"
+                    onError(msg)
+                }
+            } else {
+                _uiState.update { it.copy(isLoading = false) }
+                onError("Error de sesión o identificación de reserva no válida.")
             }
         }
     }

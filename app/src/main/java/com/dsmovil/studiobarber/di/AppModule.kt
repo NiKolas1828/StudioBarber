@@ -21,6 +21,7 @@ import com.dsmovil.studiobarber.domain.usecases.admin.services.DeleteServiceUseC
 import com.dsmovil.studiobarber.domain.usecases.admin.services.GetServicesUseCase
 import com.dsmovil.studiobarber.domain.usecases.admin.services.UpdateServiceUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.EditReservationUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
 import dagger.Binds
 import dagger.Module
@@ -124,5 +125,12 @@ abstract class AppModule {
         fun providesDeleteReservationsUseCase(repository: ReservationRepository): DeleteReservationsUseCase {
             return DeleteReservationsUseCase(repository)
         }
+
+        @Provides
+        @Singleton
+        fun providesEditReservationUseCase(repository: ReservationRepository): EditReservationUseCase {
+            return EditReservationUseCase(repository)
+        }
+
     }
 }
