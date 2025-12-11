@@ -148,7 +148,7 @@ fun ClientCalendarScreen(
                     ReserveButton(
                         enabled = !state.isLoading && state.selectedHour != null && state.selectedDate != null,
                         onClick = {
-                            viewModel.reserve(
+                            viewModel.confirmAction(
                                 onSuccess = {
                                     scope.launch {
                                         snackbarHostState.showSnackbar("¡Reserva creada con éxito!")

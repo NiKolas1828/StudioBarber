@@ -71,14 +71,30 @@ fun NavGraphBuilder.authGraph(navController: NavController) {
 }
 
 fun NavGraphBuilder.clientGraph(navController: NavController) {
-    composable(Screen.ClientHome.route) {
+    composable(
+        route = Screen.ClientHome.route,
+        arguments = listOf(
+            navArgument("reservationId") { type = NavType.LongType; defaultValue = -1L },
+            navArgument("serviceId") { type = NavType.LongType; defaultValue = -1L },
+            navArgument("barberId") { type = NavType.LongType; defaultValue = -1L }
+        )) { backStackEntry ->
+        val argResId = backStackEntry.arguments?.getLong("reservationId") ?: -1L
+        val reservationId = if (argResId != -1L) argResId else null
+
         val viewModel: ClientHomeViewModel = hiltViewModel()
 
         ClientHomeScreen(
             onNavigateToClientReservarionts = { navController.navigate(Screen.ClientReservations.route) },
             onLogout = { navigateToAuthAndClearStack(navController) },
-            onContinueClick = { serviceId, barberId ->
-                navController.navigate(Screen.ClientCalendar.createRoute(serviceId, barberId))
+            onContinueClick = { serviceId, barberId, reservationId ->
+
+                val route = Screen.ClientCalendar.createRoute(
+                    serviceId,
+                    barberId,
+                    reservationId
+                )
+
+                navController.navigate(route)
             },
             viewModel = viewModel
         )
@@ -90,22 +106,32 @@ fun NavGraphBuilder.clientGraph(navController: NavController) {
         ClientReservationsScreen(
             onNavigateToClientHome = { navController.navigate(Screen.ClientHome.route) },
             viewModel = viewModel,
-            onLogout = { navigateToAuthAndClearStack(navController)}
+            onLogout = { navigateToAuthAndClearStack(navController)},
+            onNavigateToEditReservation = { reservationId, serviceId, barberId ->
+                val route = Screen.ClientHome.createRoute(reservationId, serviceId, barberId)
+                navController.navigate(route)
+            }
         )
     }
     composable(
         route = Screen.ClientCalendar.route,
         arguments = listOf(
             navArgument("serviceId") { type = NavType.LongType },
-            navArgument("barberId") { type = NavType.LongType }
+            navArgument("barberId") { type = NavType.LongType },
+            navArgument("reservationId") { type = NavType.LongType; defaultValue = -1L },
+            navArgument("prevDate") { type = NavType.StringType; nullable = true },
+            navArgument("prevTime") { type = NavType.StringType; nullable = true }
         )
     ) {
         val viewModel: ClientCalendarViewModel = hiltViewModel()
 
         ClientCalendarScreen(
             viewModel = viewModel,
-            onNavigateBack = { navController.navigate(Screen.ClientHome.route) },
-            onMyReservationsClick = { navController.navigate(Screen.ClientReservations.route) },
+            onNavigateBack = { navController.popBackStack() },
+            onMyReservationsClick = {
+                navController.navigate(Screen.ClientReservations.route) {
+                    popUpTo(Screen.ClientHome.route) { inclusive = true }
+                }},
             onLogout = { navigateToAuthAndClearStack(navController) }
         )
     }

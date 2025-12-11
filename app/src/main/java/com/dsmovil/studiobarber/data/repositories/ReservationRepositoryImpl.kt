@@ -102,4 +102,26 @@ class ReservationRepositoryImpl @Inject constructor(
             Result.failure(e)
         }
     }
+
+    override suspend fun editReservation(
+        id: Long,
+        request: ReservationRequest
+    ): Result<ReservationResponse> {
+        return try {
+            val response = apiService.editReservation(id, request)
+            if (response.isSuccessful && response.body() != null) {
+                val reservationResponse = response.body()!!
+                Result.success(reservationResponse)
+            } else {
+                val errorMsg = when (response.code()) {
+                    401 -> "No autorizado"
+                    403 -> "Sin permisos"
+                    else -> "Error inesperado (${response.code()})"
+                }
+                Result.failure(Exception("Error: $errorMsg"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
 }

@@ -10,6 +10,8 @@ data class ClientHomeUiState (
     val barbersState: BarbersDataState = BarbersDataState.Loading,
     val servicesState: ServicesDataState = ServicesDataState.Loading,
 
+    val reservationId: Long? = null,
+
     val selectedBarberId: Long? = null,
     val selectedServiceId: Long? = null,
     val selectedOption: SelectOptions = SelectOptions.SERVICIO
