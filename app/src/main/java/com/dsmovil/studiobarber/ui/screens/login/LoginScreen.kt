@@ -20,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import com.dsmovil.studiobarber.R
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.KeyboardType
 import com.dsmovil.studiobarber.domain.models.Role
 import com.dsmovil.studiobarber.ui.components.auth.AuthTextField
 
@@ -65,7 +66,8 @@ fun LoginScreen(
             AuthTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "Email"
+                label = "Email",
+                keyboardType = KeyboardType.Email
             )
 
             Spacer(modifier = Modifier.height(16.dp))

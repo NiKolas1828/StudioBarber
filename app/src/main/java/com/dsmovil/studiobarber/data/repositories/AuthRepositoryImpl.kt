@@ -73,7 +73,7 @@ class AuthRepositoryImpl @Inject constructor(
                     else -> "Ocurrió un error inesperado (${response.code()})"
                 }
 
-                Result.failure(Exception(errorMsg))
+                Result.failure(Exception("Error: $errorMsg"))
             }
         } catch (e: Exception) {
             Result.failure(e)

@@ -20,9 +20,10 @@ fun AuthTextField(
     onValueChange: (String) -> Unit,
     label: String,
     modifier: Modifier = Modifier,
-    isPasswordField: Boolean = false
+    isPasswordField: Boolean = false,
+    keyboardType: KeyboardType = KeyboardType.Text
 ) {
-    val keyboardType = if (isPasswordField) KeyboardType.Password else KeyboardType.Text
+    val finalKeyboardType = if (isPasswordField) KeyboardType.Password else keyboardType
     val visualTransformation = if (isPasswordField) PasswordVisualTransformation() else VisualTransformation.None
 
     OutlinedTextField(
@@ -31,7 +32,7 @@ fun AuthTextField(
         label = { Text(label) },
         modifier = modifier.fillMaxWidth(),
         singleLine = true,
-        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        keyboardOptions = KeyboardOptions(keyboardType = finalKeyboardType),
         visualTransformation = visualTransformation,
         colors = OutlinedTextFieldDefaults.colors(
             focusedTextColor = Color.White,

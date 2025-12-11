@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.text.font.FontWeight
 import com.dsmovil.studiobarber.R
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.input.KeyboardType
 import com.dsmovil.studiobarber.ui.components.auth.AuthTextField
 
 @Composable
@@ -75,7 +76,8 @@ fun RegisterScreen(
             AuthTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = "Email"
+                label = "Email",
+                keyboardType = KeyboardType.Email
             )
 
             Spacer(modifier = Modifier.height(16.dp))
@@ -83,7 +85,8 @@ fun RegisterScreen(
             AuthTextField(
                 value = phone,
                 onValueChange = { phone = it },
-                label = "Teléfono"
+                label = "Teléfono",
+                keyboardType = KeyboardType.Phone
             )
 
             Spacer(modifier = Modifier.height(16.dp))
