@@ -3,7 +3,7 @@ package com.dsmovil.studiobarber.ui.screens.admin.reservations
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
-import com.dsmovil.studiobarber.domain.usecases.home.GetReservationsUseCase
+import com.dsmovil.studiobarber.domain.usecases.home.GetAllReservationsUseCase
 import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import com.dsmovil.studiobarber.utils.MainDispatcherRule
 import io.mockk.coEvery
@@ -13,7 +13,6 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Rule
 import org.junit.Test
@@ -25,7 +24,7 @@ class AdminReservationsViewModelTest {
     @get:Rule
     val mainDispatcherRule = MainDispatcherRule()
 
-    private val getReservationsUseCase = mockk<GetReservationsUseCase>()
+    private val getReservationsUseCase = mockk<GetAllReservationsUseCase>()
     private val deleteReservationsUseCase = mockk<DeleteReservationsUseCase>()
     private val logoutUseCase = mockk<LogoutUseCase>(relaxed = true)
 
@@ -45,7 +44,7 @@ class AdminReservationsViewModelTest {
         viewModel = AdminReservationsViewModel(
             getReservationsUseCase,
             deleteReservationsUseCase,
-            logoutUseCase
+            logoutUseCase,
         )
 
         val state = viewModel.uiState.value
