@@ -1,5 +1,6 @@
 package com.dsmovil.studiobarber.ui.screens.admin.reservations
 
+import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.domain.models.Reservation
 import com.dsmovil.studiobarber.domain.usecases.LogoutUseCase
 import com.dsmovil.studiobarber.domain.usecases.home.DeleteReservationsUseCase
@@ -8,6 +9,7 @@ import com.dsmovil.studiobarber.ui.screens.client.calendar.DayItem
 import com.dsmovil.studiobarber.utils.MainDispatcherRule
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -27,6 +29,7 @@ class AdminReservationsViewModelTest {
     private val getReservationsUseCase = mockk<GetAllReservationsUseCase>()
     private val deleteReservationsUseCase = mockk<DeleteReservationsUseCase>()
     private val logoutUseCase = mockk<LogoutUseCase>(relaxed = true)
+    private val sessionManager = mockk<SessionManager>()
 
     private lateinit var viewModel: AdminReservationsViewModel
 
@@ -39,11 +42,14 @@ class AdminReservationsViewModelTest {
         }
         val reservations = listOf(reservation)
 
+        every { sessionManager.getCurrentUsername() } returns "Admin User"
+
         coEvery { getReservationsUseCase() } returns Result.success(reservations)
 
         viewModel = AdminReservationsViewModel(
             getReservationsUseCase,
             deleteReservationsUseCase,
+            sessionManager,
             logoutUseCase,
         )
 
@@ -73,12 +79,15 @@ class AdminReservationsViewModelTest {
             coEvery { date } returns tomorrow 
             coEvery { id } returns 2
         }
+
+        every { sessionManager.getCurrentUsername() } returns "Admin User"
         
         coEvery { getReservationsUseCase() } returns Result.success(listOf(resToday, resTomorrow))
 
         viewModel = AdminReservationsViewModel(
             getReservationsUseCase,
             deleteReservationsUseCase,
+            sessionManager,
             logoutUseCase
         )
 
@@ -101,13 +110,16 @@ class AdminReservationsViewModelTest {
             coEvery { date } returns today
             coEvery { id } returns 1
         }
-        
+
+        every { sessionManager.getCurrentUsername() } returns "Admin User"
+
         coEvery { getReservationsUseCase() } returns Result.success(listOf(reservation))
         coEvery { deleteReservationsUseCase(1) } returns Result.success(Unit)
 
         viewModel = AdminReservationsViewModel(
             getReservationsUseCase,
             deleteReservationsUseCase,
+            sessionManager,
             logoutUseCase
         )
 
@@ -130,6 +142,8 @@ class AdminReservationsViewModelTest {
             coEvery { date } returns today
             coEvery { id } returns 1
         }
+
+        every { sessionManager.getCurrentUsername() } returns "Admin User"
         
         coEvery { getReservationsUseCase() } returns Result.success(listOf(reservation))
         coEvery { deleteReservationsUseCase(1) } returns Result.failure(Exception("Error"))
@@ -137,6 +151,7 @@ class AdminReservationsViewModelTest {
         viewModel = AdminReservationsViewModel(
             getReservationsUseCase,
             deleteReservationsUseCase,
+            sessionManager,
             logoutUseCase
         )
 
