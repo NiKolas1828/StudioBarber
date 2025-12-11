@@ -32,7 +32,7 @@ fun BarberScheduleScreen(
 
         bottomBar = {
             Footer(
-                message = "Gracias por preferirnos",
+                message = "Que tengas un gran día",
                 modifier = Modifier.fillMaxWidth()
             ) {
                 LogoutButton(

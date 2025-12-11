@@ -6,13 +6,18 @@ import androidx.lifecycle.viewModelScope
 import com.dsmovil.studiobarber.data.local.SessionManager
 import com.dsmovil.studiobarber.data.remote.models.reservations.ReservationRequest
 import com.dsmovil.studiobarber.domain.usecases.home.AddReservationUseCase
+import com.dsmovil.studiobarber.domain.usecases.timeblock.VerifyAvailabilityUseCase
 import com.dsmovil.studiobarber.ui.components.client.selector.HourItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
@@ -20,6 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ClientCalendarViewModel @Inject constructor(
     private val addReservationUseCase: AddReservationUseCase,
+    private val verifyAvailabilityUseCase: VerifyAvailabilityUseCase,
     private val sessionManager: SessionManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -31,7 +37,7 @@ class ClientCalendarViewModel @Inject constructor(
 
     init {
         loadCalendarDays()
-        loadHours()
+        fetchAvailabilityForCurrentState()
     }
 
     private fun loadCalendarDays() {
@@ -65,7 +71,9 @@ class ClientCalendarViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 days = daysList,
-                selectedMonth = currentMonth
+                selectedMonth = currentMonth ,
+                selectedHour = null,
+                selectedDate = today
             )
         }
     }
@@ -77,7 +85,8 @@ class ClientCalendarViewModel @Inject constructor(
     }
 
     fun selectDate(dayItem: DayItem) {
-        _uiState.update { it.copy(selectedDate = dayItem.date) }
+        _uiState.update { it.copy(selectedDate = dayItem.date, selectedHour = null) }
+        fetchAvailabilityForCurrentState()
     }
 
     fun selectHour(hour: String) {
@@ -89,31 +98,57 @@ class ClientCalendarViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 isAm = newIsAmState,
-                hours = getHoursForState(newIsAmState),
                 selectedHour = null
             )
         }
+        fetchAvailabilityForCurrentState()
     }
 
-    private fun loadHours() {
-        _uiState.update { it.copy(hours = getHoursForState(true)) }
-    }
-    private fun getHoursForState(isAm: Boolean): List<HourItem> {
-        return if (isAm) {
-            listOf(
-                HourItem("8:00", true), HourItem("8:30", false),
-                HourItem("9:00", true), HourItem("9:30", false),
-                HourItem("10:00", true), HourItem("10:30", false),
-                HourItem("11:00", true), HourItem("11:30", false)
-            )
-        } else {
-            listOf(
-                HourItem("2:00", true), HourItem("2:30", false),
-                HourItem("3:00", true), HourItem("3:30", false),
-                HourItem("4:00", true), HourItem("4:30", false),
-                HourItem("5:00", true), HourItem("5:30", false)
-            )
+    private fun fetchAvailabilityForCurrentState() {
+        val selectedDate = _uiState.value.selectedDate ?: return
+        val isAm = _uiState.value.isAm
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            val baseHours = if (isAm) {
+                listOf("08:00", "08:30", "09:00", "09:30", "10:00", "10:30", "11:00", "11:30")
+            } else {
+                listOf("14:00", "14:30", "15:00", "15:30", "16:00", "16:30", "17:00", "17:30")
+            }
+            val hourItemsDeferred = baseHours.map { timeString ->
+                async {
+                    val startTime = LocalTime.parse(timeString)
+                    val endTime = startTime.plusMinutes(30)
+
+                    val result = verifyAvailabilityUseCase(
+                        barberId = barberId,
+                        date = selectedDate,
+                        startTime = startTime,
+                        endTime = endTime
+                    )
+
+                    val isAvailable = result.getOrDefault(false)
+
+                    val displayTime = formatTimeForDisplay(startTime)
+
+                    HourItem(displayTime, isAvailable)
+                }
+            }
+
+            val hourItems = hourItemsDeferred.awaitAll()
+
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    hours = hourItems
+                )
+            }
         }
+    }
+    private fun formatTimeForDisplay(time: LocalTime): String {
+        val formatter = DateTimeFormatter.ofPattern("h:mm", Locale.getDefault())
+        return time.format(formatter)
     }
 
     fun reserve(onSuccess: () -> Unit, onError: (String) -> Unit) {
