@@ -48,6 +48,10 @@ abstract class AppModule {
     @Singleton
     abstract fun bindReservationRepository(reservationRepositoryImpl: ReservationRepositoryImpl) : ReservationRepository
 
+    @Binds
+    @Singleton
+    abstract fun bindTimeBlockRepository(timeBlockRepositoryImpl: TimeBlockRepositoryImpl): TimeBlockRepository
+
     companion object {
         @Provides
         @Singleton
@@ -119,17 +123,6 @@ abstract class AppModule {
         @Singleton
         fun providesDeleteReservationsUseCase(repository: ReservationRepository): DeleteReservationsUseCase {
             return DeleteReservationsUseCase(repository)
-        }
-
-        @Module
-        @InstallIn(SingletonComponent::class)
-        abstract class RepositoryModule {
-
-            @Binds
-            @Singleton
-            abstract fun bindTimeBlockRepository(
-                impl: TimeBlockRepositoryImpl
-            ): TimeBlockRepository
         }
     }
 }

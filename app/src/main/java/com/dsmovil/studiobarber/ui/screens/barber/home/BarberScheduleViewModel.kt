@@ -21,9 +21,7 @@ import javax.inject.Inject
 class BarberScheduleViewModel @Inject constructor(
     private val getReservationsUseCase: GetAllReservationsUseCase,
     private val sessionManager: SessionManager,
-
     logoutUseCase: LogoutUseCase
-
 ) : BaseViewModel(logoutUseCase) {
 
     private val _uiState = MutableStateFlow(BarberScheduleUiState())

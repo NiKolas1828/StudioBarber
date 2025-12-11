@@ -21,7 +21,6 @@ import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle
 import java.util.Locale
 import javax.inject.Inject
-import kotlin.text.format
 
 @HiltViewModel
 class ClientCalendarViewModel @Inject constructor(
@@ -169,7 +168,6 @@ class ClientCalendarViewModel @Inject constructor(
             val currentUserId = sessionManager.getCurrentUserId()
 
             if (currentUserId != null) {
-
                 val reservationRequest = ReservationRequest(
                     serviceId = serviceId,
                     userId = currentUserId,
